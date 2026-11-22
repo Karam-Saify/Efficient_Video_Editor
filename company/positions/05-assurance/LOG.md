@@ -27,3 +27,9 @@
 - Evidence: company/handoffs/H-0004-review.md; company/handoffs/H-0004-repro.txt
 - Learned: JSON Schema 2020-12 accepts 2000.0 as "integer", so integer-ms contracts need an explicit type(x) is int check (this one crashed the validator). Always do one real render: the dry-run tests missed that audio-less sources validate but fail in ffmpeg. No data/heldout access, so no ACCESS_LOG entry.
 - Next: re-verify F1 (A1/A1b files) before merge, then F2 before M0. Tickets for F3/F4/F5/F7. Creative covers F6 and F10(iv) in H-0007.
+
+### 2026-11-22 · TTI-intake · T2 · PARTIAL
+- Did: recorded RR-012..RR-017 (TikTok Creative Center, Meta Ad Library, human-observed public URLs, IG Business Discovery/Hashtag Search, IG account connection, TikTok Display API) as pending, not usable, before first use. Terms not yet read from primary sources. Steps 1–2 (taxonomy, EXP-009, coding tool) are research/engineering work and not mine; T2 review pending their returns.
+- Evidence: company/positions/05-assurance/DATA_RIGHTS.md rows RR-012..RR-017
+- Learned: RR-014 (storing URLs and handles of third-party creators) is personal data; it needs a privacy assessment, not only platform ToS.
+- Next: primary-source terms check for each row; T2 review of Step 2 coding tool once engineering returns.
