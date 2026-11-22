@@ -3,19 +3,27 @@
 Every output is cached in cache/<video_id>/ and skipped if present (use --force to redo).
 
     python -m src.ingest samples/s01.mp4 [--model large-v3-turbo] [--language ar] [--no-scenes]
+
+Stage-contract interface (H-0003; manifest + skip, currently a stub that does not decode media):
+
+    python -m src.ingest --input <file> --out <dir> [--set key=value]
 """
 from __future__ import annotations
 
 import argparse
 import subprocess
+import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from src.common import cache_dir, probe, read_json, video_id, write_json
 
+if TYPE_CHECKING:  # numpy is imported lazily at call time; keep module import light
+    import numpy as np
 
-def load_audio(src: Path) -> "np.ndarray":
+
+def load_audio(src: Path) -> np.ndarray:
     """16 kHz mono float32 via the ffmpeg CLI (avoids faster-whisper's PyAV version coupling)."""
     import numpy as np
 
@@ -91,7 +99,8 @@ def keyframes(src: Path, scenes: list[dict[str, Any]], out_dir: Path, per_scene:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("video", type=Path)
-    ap.add_argument("--model", default="large-v3-turbo", help="faster-whisper model name (e.g. large-v3, large-v3-turbo, small)")
+    ap.add_argument("--model", default="large-v3-turbo",
+                    help="faster-whisper model name (e.g. large-v3, large-v3-turbo, small)")
     ap.add_argument("--language", default="ar", help="ISO code, or 'auto' to detect")
     ap.add_argument("--beam", type=int, default=5)
     ap.add_argument("--no-scenes", action="store_true")
@@ -127,5 +136,11 @@ def main() -> None:
             keyframes(src, scenes, d / "keyframes", a.keyframes)
 
 
+STAGE_DEFAULTS: dict[str, Any] = {"asr_model": "large-v3-turbo", "language": "ar", "beam": 5}
+
 if __name__ == "__main__":
+    from src.manifest import cli, wants_stage_cli
+
+    if wants_stage_cli(sys.argv[1:]):
+        sys.exit(cli("ingest", defaults=STAGE_DEFAULTS, tools=("ffmpeg",)))
     main()

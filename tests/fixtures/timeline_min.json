@@ -1,0 +1,8 @@
+{
+  "version": "0.1",
+  "video_id": "fixture-min",
+  "output": {"width": 1080, "height": 1920, "fps": 30},
+  "sources": {"src1": {"path": "samples/does_not_exist.mp4", "duration": 10.0}},
+  "clips": [{"id": "c1", "source": "src1", "in": 1.0, "out": 3.5}],
+  "captions": {"items": [{"text": "مرحبا", "start": 0.0, "end": 1.5}]}
+}

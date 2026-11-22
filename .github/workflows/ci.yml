@@ -1,0 +1,31 @@
+# CI: lint + unit tests on Python 3.11 (the floor in pyproject.toml).
+# Installs only requirements-dev.txt (core + dev, pinned); no ffmpeg, faster-whisper or opencv:
+# no current test needs them. Add them here only together with a test that does.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install pinned deps
+        run: |
+          python -m pip install --upgrade pip==26.3
+          python -m pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check .
+      - name: Test
+        run: python -m pytest -q
