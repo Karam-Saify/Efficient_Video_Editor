@@ -18,3 +18,9 @@
 - Evidence: company/handoffs/H-0006-ruling.md; render/frames_check/render.log l.135-136, 224-225, 284-285; fc-query charset coverage output in ruling §1.
 - Learned: my prereg listed non-Arabic code points but never checked font coverage for them; the prereg checklist needs a "font covers every code point" item. libass logs only the first missing glyph per event, so a log grep underestimates fallback.
 - Next: Assurance review of the ruling; write EXP-006-results.md (INVALID); draft EXP-007 with Eng + Creative consulted before the lock; H-0007 on hold.
+
+### 2026-11-22 · H-0010 · T2 · DONE
+- Did: wrote EXP-006-results.md (verdict INVALID, deviations D1-D5, evidence hashes, no PNG judged). Drafted EXP-007 (Lock: DRAFT) with the declared pair Noto Sans Arabic + Noto Sans, an exact run-splitting rule with expected tagged-text fingerprints, a coded coverage check, controls C0/C1/C2 and a consultation block.
+- Evidence: company/experiments/EXP-006-results.md; company/experiments/EXP-007.md; company/handoffs/H-0010-return.md; fc-query charset coverage of both fonts (Noto Sans covers every non-Arabic code point; U+0E01 is in neither).
+- Learned: the ID "EXP-007" was already reserved in the PLAYBOOK register, ROADMAP 4.2 and A-05 (revision diffs, M4). Check the register before assigning ids. libass \fn makes per-run fonts expressible, so no escalation.
+- Next: Operator resolves the ID collision; Eng + Creative sign the consultation; then lock EXP-007.
