@@ -36,3 +36,9 @@
 - Evidence: company/experiments/EXP-008.md sha256 5d3cdb54…73da, byte-identical to the asserted scratch build (diff → IDENTICAL_TO_VERIFIED); grep exp007 → ID note only; company/handoffs/H-0014-return.md.
 - Learned: build the locked text with count-asserted replacements in scratch and diff it after the Write. Assurance pre-lock verifiability was not signed separately. Add Assurance to future consultation blocks.
 - Next: Assurance reviews H-0014; Operator briefs engineering-lead for exp008_render.py and §5.4 steps 1–9.
+
+### 2026-11-22 · H-0018 · T2 · DONE
+- Did: appended §8 "Research analysis" to EXP-008-results.md: FAIL confirmed (N_correct 8, N_sev1 0), E2 with no downgrade, limited claim (failed: cross-font size 1.61–1.63× alef vs 1.3×; passed: per-run font assignment, shaping, bidi), deviations D1–D5 all non-invalidating, threats, successor named EXP-010; filled the header evidence-level placeholder.
+- Evidence: company/experiments/EXP-008-results.md §8; company/handoffs/H-0018-return.md; grep for EXP-010 returned no hits.
+- Learned: a single nominal font size cannot match Latin caps, digits and x-height to Arabic alef at once (x-height already 1.24×); the successor needs a Founder-calibrated band (upper and lower), set before lock.
+- Next: Assurance T2 review; Founder calibrates the ratio band; Operator adds A-11 and registers EXP-010; then draft EXP-010.
