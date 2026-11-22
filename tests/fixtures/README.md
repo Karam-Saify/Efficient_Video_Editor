@@ -1,4 +1,8 @@
 # Test fixtures
-Small, text-only, committed fixtures. Never media, never anything from `data/golden/`, `data/heldout/` or `quarantine/`.
-`timeline_min.json` is valid under the current `schemas/timeline.schema.json` (pre-H-0004) and
-must be updated together with the schema.
+Small, text-only, committed fixtures. Never media, never anything from `data/golden/`, `data/heldout/`,
+`quarantine/` or `samples/`.
+- `timeline_min.json`: minimal valid timeline v0 (used by the stage-CLI tests).
+- `timelines/valid/*.json`: 5 valid timeline v0 documents; `timelines/invalid/*.json`: 5 invalid ones, each
+  breaking exactly one validator rule (expected codes in `tests/unit/test_validate.py`).
+- `media/*.txt`: placeholder "source files" so the validator's existence and sha256 checks are testable.
+  Source paths are relative to the repo root; run tests and `python -m src.validate` from the repo root.

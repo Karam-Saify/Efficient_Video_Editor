@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from src.render.adapter import to_render_model
 from src.validate import validate
 
 POSITION_ALIGN = {"bottom": 2, "middle": 5, "top": 8}  # ASS numpad alignment, centered
@@ -101,13 +102,15 @@ def build_command(tl: dict[str, Any], out: Path, ass_path: Path | None, preset: 
 
 
 def render(tl: dict[str, Any], out: Path, preset: str = "veryfast", crf: int = 20) -> Path:
+    """`tl` is a timeline v0 document; it is validated, then adapted to the internal render model."""
     errors = validate(tl)
     if errors:
-        raise ValueError("invalid timeline:\n" + "\n".join(errors))
+        raise ValueError("invalid timeline:\n" + "\n".join(map(str, errors)))
+    model = to_render_model(tl)
     out.parent.mkdir(parents=True, exist_ok=True)
     ass_path = None
-    if tl.get("captions", {}).get("items"):
+    if model.get("captions", {}).get("items"):
         ass_path = out.with_suffix(".ass")
-        write_ass(tl, ass_path)
-    subprocess.run(build_command(tl, out, ass_path, preset, crf), check=True)
+        write_ass(model, ass_path)
+    subprocess.run(build_command(model, out, ass_path, preset, crf), check=True)
     return out

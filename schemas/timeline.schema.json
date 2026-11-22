@@ -1,100 +1,117 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "timeline.schema.json",
-  "title": "Timeline",
-  "description": "An edit as data. Clips play back-to-back in array order on one main track, so timeline positions are derived (cumulative) and clips cannot overlap. All times are seconds. Clip in/out are source time; caption and effect times are output (timeline) time.",
+  "title": "Timeline v0",
+  "description": "An edit as data (ARCHITECTURE.md 'Timeline schema v0'). All times are integer milliseconds. Video clips play back-to-back in array order, so timeline positions are derived by code (cumulative) and the total duration is the sum of (out_ms - in_ms). Clip in_ms/out_ms are source time; caption and effect times are output (timeline) time. Semantic rules the schema cannot express are enforced by src/validate.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "video_id", "output", "sources", "clips"],
+  "required": ["version", "canvas", "target_duration_ms", "sources", "tracks"],
+  "$defs": {
+    "ms": { "type": "integer", "minimum": 0 },
+    "id": { "type": "string", "minLength": 1 }
+  },
   "properties": {
     "version": { "const": "0.1" },
-    "video_id": { "type": "string", "minLength": 1 },
-    "output": {
+    "canvas": {
       "type": "object",
       "additionalProperties": false,
       "required": ["width", "height", "fps"],
       "properties": {
-        "width": { "type": "integer", "minimum": 16, "default": 1080 },
-        "height": { "type": "integer", "minimum": 16, "default": 1920 },
-        "fps": { "type": "number", "exclusiveMinimum": 0, "default": 30 },
-        "target_duration": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "description": "If set, the validator requires total clip duration to match within one frame."
-        },
-        "reframe": {
-          "enum": ["crop_center", "fit_blur", "fit_pad"],
-          "default": "crop_center",
-          "description": "How sources with a different aspect ratio fill the output frame."
-        }
+        "width": { "type": "integer", "minimum": 16 },
+        "height": { "type": "integer", "minimum": 16 },
+        "fps": { "type": "integer", "minimum": 1, "description": "Integer so the one-frame tolerance is exact integer arithmetic." }
       }
     },
+    "target_duration_ms": { "type": "integer", "minimum": 1 },
     "sources": {
-      "type": "object",
-      "description": "Media assets keyed by source id. Filled from ingest metadata; the LLM does not edit these.",
-      "minProperties": 1,
-      "additionalProperties": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["path", "duration"],
-        "properties": {
-          "path": { "type": "string" },
-          "duration": { "type": "number", "exclusiveMinimum": 0 },
-          "width": { "type": "integer" },
-          "height": { "type": "integer" },
-          "fps": { "type": "number" },
-          "has_audio": { "type": "boolean" }
-        }
-      }
-    },
-    "clips": {
       "type": "array",
       "minItems": 1,
+      "description": "Media assets. Filled from ingest metadata; the LLM does not edit these.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "source", "in", "out"],
+        "required": ["id", "path", "duration_ms"],
         "properties": {
-          "id": { "type": "string", "minLength": 1 },
-          "source": { "type": "string" },
-          "in": { "type": "number", "minimum": 0 },
-          "out": { "type": "number", "exclusiveMinimum": 0 },
-          "note": { "type": "string", "description": "Free text, e.g. the transcript of this clip. Ignored by the renderer." }
+          "id": { "$ref": "#/$defs/id" },
+          "path": { "type": "string", "minLength": 1, "description": "Relative paths resolve against the working directory (as the renderer does)." },
+          "duration_ms": { "type": "integer", "minimum": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
         }
       }
     },
-    "captions": {
+    "tracks": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["items"],
+      "required": ["video"],
       "properties": {
-        "style": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "font": { "type": "string", "default": "Noto Naskh Arabic" },
-            "size": { "type": "integer", "minimum": 8, "default": 80 },
-            "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#FFFFFF" },
-            "outline_color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#000000" },
-            "outline": { "type": "number", "minimum": 0, "default": 4 },
-            "bold": { "type": "boolean", "default": true },
-            "position": { "enum": ["bottom", "middle", "top"], "default": "bottom" },
-            "margin_v": { "type": "integer", "minimum": 0, "default": 320 }
+        "video": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "source", "in_ms", "out_ms"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "source": { "$ref": "#/$defs/id" },
+              "in_ms": { "$ref": "#/$defs/ms" },
+              "out_ms": { "$ref": "#/$defs/ms" },
+              "crop": { "enum": ["auto_face", "center"], "default": "center" }
+            }
           }
         },
-        "items": {
+        "captions": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["start", "end", "text"],
+            "required": ["id", "text", "start_ms", "end_ms", "dir"],
             "properties": {
-              "start": { "type": "number", "minimum": 0 },
-              "end": { "type": "number", "exclusiveMinimum": 0 },
-              "text": { "type": "string", "minLength": 1 }
+              "id": { "$ref": "#/$defs/id" },
+              "text": { "type": "string", "minLength": 1 },
+              "start_ms": { "$ref": "#/$defs/ms" },
+              "end_ms": { "$ref": "#/$defs/ms" },
+              "style": { "type": "string", "minLength": 1, "description": "Named style from the style guide, e.g. 'hook'." },
+              "dir": { "enum": ["rtl", "ltr"] }
+            }
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "target", "at_ms", "duration_ms"],
+            "properties": {
+              "type": { "enum": ["zoom"] },
+              "target": { "$ref": "#/$defs/id" },
+              "at_ms": { "$ref": "#/$defs/ms" },
+              "duration_ms": { "type": "integer", "minimum": 1 },
+              "scale": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          }
+        },
+        "audio": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source"],
+            "properties": {
+              "source": { "$ref": "#/$defs/id" },
+              "gain_db": { "type": "number" },
+              "duck_under_speech": { "type": "boolean" }
             }
           }
         }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "selection": { "type": "string" },
+        "prompt_versions": { "type": "object" },
+        "model_ids": { "type": "object" }
       }
     }
   }

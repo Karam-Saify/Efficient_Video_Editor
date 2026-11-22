@@ -38,7 +38,7 @@ def test_stage_writes_manifest_then_skips(stage: str, tmp_path: Path) -> None:
 def test_validate_stage_rejects_invalid_timeline_without_manifest(tmp_path: Path) -> None:
     bad = tmp_path / "bad.json"
     tl = json.loads(FIXTURE.read_text(encoding="utf-8"))
-    tl["clips"][0]["out"] = 99.0  # beyond source duration
+    tl["tracks"]["video"][0]["out_ms"] = 99000  # beyond source duration
     bad.write_text(json.dumps(tl), encoding="utf-8")
     r = run("-m", "src.validate", "--input", str(bad), "--out", str(tmp_path / "v"))
     assert r.returncode == 1
@@ -55,14 +55,15 @@ def test_validate_report_is_byte_identical_across_runs(tmp_path: Path) -> None:
 
 def test_legacy_validate_cli_still_works() -> None:
     r = run("-m", "src.validate", str(FIXTURE))
-    assert r.returncode == 0 and r.stdout.startswith("OK: 1 clips, 2.500s")
+    assert r.returncode == 0 and r.stdout.startswith("OK: 1 clips, 2500 ms")
 
 
 def test_legacy_render_command_builder_still_works(tmp_path: Path) -> None:
     from src.render import build_command
+    from src.render.adapter import to_render_model
 
     tl = json.loads(FIXTURE.read_text(encoding="utf-8"))
-    cmd = build_command(tl, tmp_path / "o.mp4", None, "veryfast", 20)
+    cmd = build_command(to_render_model(tl), tmp_path / "o.mp4", None, "veryfast", 20)
     assert cmd[0] == "ffmpeg" and str(tmp_path / "o.mp4") in cmd
 
 

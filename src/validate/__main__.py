@@ -1,4 +1,6 @@
-"""python -m src.validate timeline.json  — exits 1 and prints errors if invalid.
+"""python -m src.validate timeline.json  — exits 0 if valid; exits 1 and prints one issue per line if invalid.
+
+Relative source paths resolve against the current working directory (run from the repo root).
 
 Stage-contract interface (H-0003): validates, writes <dir>/report.json, then the manifest.
 An invalid timeline exits 1 and writes no manifest, so it is never cached as a success.
@@ -12,7 +14,7 @@ from typing import Any
 
 from src.common import read_json
 from src.manifest import StageError, cli, wants_stage_cli
-from src.validate import total_duration, validate
+from src.validate import total_duration_ms, validate
 
 
 def main(argv: list[str]) -> None:
@@ -21,19 +23,20 @@ def main(argv: list[str]) -> None:
     tl = read_json(Path(argv[0]))
     errors = validate(tl)
     if errors:
-        print("\n".join(errors))
+        print("\n".join(map(str, errors)))
         sys.exit(1)
-    print(f"OK: {len(tl['clips'])} clips, {total_duration(tl):.3f}s")
+    print(f"OK: {len(tl['tracks']['video'])} clips, {total_duration_ms(tl)} ms")
 
 
 def stage_work(inputs: list[Path], out_dir: Path, config: dict[str, Any]) -> str:
     if len(inputs) != 1 or not inputs[0].is_file():
         raise StageError("validate expects exactly one timeline.json file as --input")
     errors = validate(read_json(inputs[0]))
-    report = {"valid": not errors, "errors": errors}
+    report = {"valid": not errors, "errors": [e.to_dict() for e in errors]}
     (out_dir / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if errors:
-        raise StageError(f"{len(errors)} validation error(s); see {out_dir / 'report.json'}:\n" + "\n".join(errors))
+        lines = "\n".join(map(str, errors))
+        raise StageError(f"{len(errors)} validation error(s); see {out_dir / 'report.json'}:\n{lines}")
     return "ok"
 
 
