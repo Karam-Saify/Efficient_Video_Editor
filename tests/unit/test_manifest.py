@@ -161,3 +161,34 @@ def test_wants_stage_cli() -> None:
     assert m.wants_stage_cli(["--input", "x", "--out", "y"])
     assert m.wants_stage_cli(["--input=x"])
     assert not m.wants_stage_cli(["samples/clip.mp4", "--model", "small"])
+
+
+# H-0009 (H-0003 review F3): the skip key must not let a stub manifest stand in for real work.
+def test_stub_manifest_never_satisfies_real_work(setup: tuple[Path, Path, Counter]) -> None:
+    inp, out, work = setup
+    ran, man = m.run_stage("demo", [inp], out, CFG, m.stub_work)
+    assert ran and man["status"] == "stub"
+    ran, man = m.run_stage("demo", [inp], out, CFG, work)
+    assert ran and work.calls == 1 and man["status"] == "ok"
+    ran, _ = m.run_stage("demo", [inp], out, CFG, work)  # now fresh: skips
+    assert not ran and work.calls == 1
+
+
+def test_code_version_change_reruns(setup: tuple[Path, Path, Counter], monkeypatch: pytest.MonkeyPatch) -> None:
+    inp, out, work = setup
+    m.run_stage("demo", [inp], out, CFG, work)
+    monkeypatch.setattr(m, "__version__", "999.0.0")
+    ran, man = m.run_stage("demo", [inp], out, CFG, work)
+    assert ran and work.calls == 2 and man["versions"]["code"] == "999.0.0"
+
+
+# H-0009 (H-0003 review F6): --out inside an --input dir would hash its own outputs and never skip.
+def test_out_inside_input_dir_is_an_error(tmp_path: Path) -> None:
+    d = tmp_path / "d"
+    d.mkdir()
+    (d / "a.txt").write_text("a", encoding="utf-8")
+    work = Counter()
+    for out in (d / "out", d):
+        with pytest.raises(m.StageError, match="inside input"):
+            m.run_stage("demo", [d], out, CFG, work)
+    assert work.calls == 0 and not (d / "out" / "manifest.json").exists()

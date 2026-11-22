@@ -1,6 +1,7 @@
 # Runtime lock: core + milp + media extras of pyproject.toml, from .venv pip freeze (Python 3.14.2, 2026-11-22).
 # System packages (apt): ffmpeg coinor-cbc fonts-noto-core fonts-hosny-amiri
-# Requires Python >= 3.12 (PuLP 4.3.1, numpy 2.5.5). Dev/CI tools: requirements-dev.txt.
+# Requires Python >= 3.12 (ADR-0002: av, cpsat-logutils, numpy, orloge, PuLP have no 3.11 wheels).
+# Dev/CI tools: requirements-dev.txt. opencv-python only (scenedetect needs it; no -headless twin).
 annotated-types==0.8.0
 anyio==4.16.0
 attrs==26.1.0
@@ -23,7 +24,6 @@ jsonschema-specifications==2025.9.1
 numpy==2.5.5
 onnxruntime==1.32.0
 opencv-python==5.1.0.95
-opencv-python-headless==5.1.0.95
 orloge==1.0.0
 packaging==26.3
 platformdirs==4.14.8

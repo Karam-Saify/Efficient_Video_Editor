@@ -18,7 +18,7 @@ Changes to this file that alter a stage boundary or the schema are T2 and need a
   "version": "0.1",
   "canvas": {"width": 1080, "height": 1920, "fps": 30},
   "target_duration_ms": 45000,
-  "sources": [{"id": "src1", "path": "samples/x.mp4", "duration_ms": 600000, "sha256": "..."}],
+  "sources": [{"id": "src1", "path": "samples/x.mp4", "duration_ms": 600000, "sha256": "...", "has_audio": true}],
   "tracks": {
     "video": [{"id": "c1", "source": "src1", "in_ms": 42100, "out_ms": 51300, "crop": "auto_face"}],
     "captions": [{"id": "t1", "text": "السعر الحقيقي؟", "start_ms": 0, "end_ms": 1800, "style": "hook", "dir": "rtl"}],
@@ -31,6 +31,16 @@ Changes to this file that alter a stage boundary or the schema are T2 and need a
 Validator rules (minimum): every `source` exists and its hash matches · `0 ≤ in_ms < out_ms ≤ duration_ms` ·
 no overlapping clips on the video track · captions inside total duration · total duration equals
 `target_duration_ms` ± 1 frame · every caption has `dir` · only known effect types.
+H-0009 additions: every integer field is a real JSON integer (`2000.0` → `E_SCHEMA`) · source paths are
+repo-relative, resolve inside the repo and outside the protected roots (held-out, golden, quarantine) →
+`E_SOURCE_PATH`, checked before any file is opened · optional `has_audio` (default true; ingest fills it
+from ffprobe) makes the renderer use silence for that source. "No overlapping clips" is enforced as
+"no reuse of the same source range" (`E_OVERLAP`); see ADR-0003 (Proposed).
+
+Stage cache known properties (H-0003 review F8, WONTFIX): the input-hash key includes the repo-relative
+path (inputs outside the repo are keyed by absolute path), so identical content at another path reruns;
+`duration_s` excludes hashing time. Skip key = input hashes + config (incl. `stage_version`) + code version;
+a `stub` manifest never satisfies real work; `--out` inside an `--input` dir is an error (H-0009).
 
 ## LLM tool interface for stage 5 (from EditDuet, extended)
 `search(query) → top-5 segments` · `add_clip(segment_id, in_ms, out_ms, index)` · `remove_clip(index)` ·

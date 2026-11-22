@@ -24,3 +24,9 @@
 - Evidence: company/handoffs/H-0006-return.md; render/frames_check/strings_check.txt ALL_MATCH=True; 10× png,1080,1920,rgb24; SHA256SUMS identical across 2 runs.
 - Learned: libass falls back to NotoSans-Regular.ttf for 'i', '"', '–' (AR-05/08/10); libass wording is "Glyph 0x.. not found", which my first regex missed, so always grep render.log by hand.
 - Next: Research classifies fallback (§8) before H-0007; Assurance RR row for NotoSans-Regular.
+
+### 2026-11-22 · H-0009 · T2 · DONE
+- Did: fixed H-0003 F1–F6 and H-0004 F1–F4 (floor 3.12, CI 3.12+3.14 with a full-lock job, stub/code-aware skip key, out-in-input guard, clean bad-JSON error, strict int, E_SOURCE_PATH, optional has_audio, e6 deprecated, one opencv). ADR-0002 Accepted, ADR-0003 Proposed. Uncommitted.
+- Evidence: company/handoffs/H-0009-return.md; `ruff check .` clean; 116 passed on 3.14 (.venv) and on a fresh 3.12 full-lock venv; 108 passed + 8 skipped with the dev lock only.
+- Learned: JSON Schema "integer" accepts 2000.0 (spec-correct), so v0 needs a strict type checker; PuLP 4 replaced LpVariable(...) with prob.add_variable(...); the protect hook blocks the held-out literal in Bash, so tests read PROTECTED_SOURCE_ROOTS.
+- Next: Assurance H-0009 review; ingest must write has_audio from probe().

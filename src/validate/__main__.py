@@ -17,10 +17,23 @@ from src.manifest import StageError, cli, wants_stage_cli
 from src.validate import total_duration_ms, validate
 
 
+def load_timeline(path: Path) -> Any:
+    """Read the timeline JSON; unreadable or non-JSON input is a StageError with one plain line (H-0009)."""
+    try:
+        return read_json(path)
+    except (OSError, ValueError) as e:  # ValueError covers JSONDecodeError and UnicodeDecodeError
+        reason = " ".join(str(e).split()) or type(e).__name__
+        raise StageError(f"cannot read timeline JSON from {path}: {reason}") from None
+
+
 def main(argv: list[str]) -> None:
     if len(argv) != 1:
         sys.exit(__doc__)
-    tl = read_json(Path(argv[0]))
+    try:
+        tl = load_timeline(Path(argv[0]))
+    except StageError as e:
+        print(f"validate: error: {e}", file=sys.stderr)
+        sys.exit(1)
     errors = validate(tl)
     if errors:
         print("\n".join(map(str, errors)))
@@ -31,7 +44,7 @@ def main(argv: list[str]) -> None:
 def stage_work(inputs: list[Path], out_dir: Path, config: dict[str, Any]) -> str:
     if len(inputs) != 1 or not inputs[0].is_file():
         raise StageError("validate expects exactly one timeline.json file as --input")
-    errors = validate(read_json(inputs[0]))
+    errors = validate(load_timeline(inputs[0]))
     report = {"valid": not errors, "errors": [e.to_dict() for e in errors]}
     (out_dir / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if errors:

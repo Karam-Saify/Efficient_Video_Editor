@@ -3,9 +3,12 @@
 Every stage CLI (`python -m src.<stage> --input <path> --out <dir>`) goes through `run_stage`.
 
 Skip rule: a rerun is skipped (exit 0, no work) iff `<out>/manifest.json` exists, was written by the
-same stage, has identical `input_hashes` and `config_hash`, and every recorded output file still has
-its recorded sha256. `config` always contains the stage's `stage_version`, so bumping it forces a rerun.
+same stage, has identical `input_hashes` and `config_hash`, the same `versions.code` (package version),
+and every recorded output file still has its recorded sha256. `config` always contains the stage's
+`stage_version`, so bumping it forces a rerun. A `status: "stub"` manifest only satisfies stub work:
+once real `work` replaces `stub_work`, the stage reruns even if nobody bumped a version (H-0009).
 `versions.python` / `versions.tools` are recorded for provenance but are not part of the skip key.
+`--out` may not be inside an `--input` directory (the stage would hash its own outputs and never skip).
 
 The manifest is written last and atomically; a stale manifest is deleted before work starts, so a
 crash mid-stage can never leave a manifest that claims outputs it did not produce.
@@ -106,11 +109,18 @@ def read_manifest(out_dir: Path) -> dict[str, Any] | None:
         return None
 
 
-def is_fresh(out_dir: Path, stage: str, input_hashes: dict[str, str], cfg_hash: str) -> bool:
+def is_fresh(
+    out_dir: Path, stage: str, input_hashes: dict[str, str], cfg_hash: str, *, stub: bool = False
+) -> bool:
+    """`stub` says whether the work about to run is `stub_work`; a stub manifest never stands in for real work."""
     m = read_manifest(out_dir)
     if not m or m.get("stage") != stage:
         return False
     if m.get("input_hashes") != input_hashes or m.get("config_hash") != cfg_hash:
+        return False
+    if (m.get("versions") or {}).get("code") != __version__:
+        return False
+    if m.get("status") == "stub" and not stub:
         return False
     for rel, digest in (m.get("outputs") or {}).items():
         f = out_dir / rel
@@ -134,10 +144,15 @@ def run_stage(
     tools: Sequence[str] = (),
 ) -> tuple[bool, dict[str, Any]]:
     """Run `work` unless a fresh manifest exists. Returns (ran, manifest)."""
+    out_abs = out_dir.resolve()
+    for p in inputs:
+        d = Path(p).resolve()
+        if d.is_dir() and out_abs.is_relative_to(d):
+            raise StageError(f"--out {out_dir} is inside input dir {p}; choose an output dir outside every input")
     ins = hash_inputs(inputs)
     ch = config_hash(config)
     out_dir.mkdir(parents=True, exist_ok=True)
-    if is_fresh(out_dir, stage, ins, ch):
+    if is_fresh(out_dir, stage, ins, ch, stub=work is stub_work):
         return False, read_manifest(out_dir) or {}
     (out_dir / MANIFEST).unlink(missing_ok=True)
     t0 = time.perf_counter()

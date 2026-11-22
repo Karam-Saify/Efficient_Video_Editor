@@ -52,3 +52,16 @@ def test_dev_lock_matches_pyproject() -> None:
 
 def test_code_version_matches_pyproject() -> None:
     assert src.__version__ == PY["project"]["version"]
+
+
+# H-0009 / ADR-0002: Python floor is 3.12 everywhere it is declared.
+def test_python_floor_is_3_12() -> None:
+    assert PY["project"]["requires-python"] == ">=3.12"
+    assert PY["tool"]["ruff"]["target-version"] == "py312"
+    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert '"3.12"' in ci and '"3.14"' in ci and '"3.11"' not in ci
+
+
+# H-0009 (H-0003 review F4): exactly one distribution provides cv2.
+def test_one_opencv_distribution_in_runtime_lock() -> None:
+    assert [k for k in _lock("requirements.txt") if k.startswith("opencv")] == ["opencv-python"]

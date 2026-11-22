@@ -5,7 +5,10 @@ list can be fed back to the LLM verbatim for a fix. All issues are returned, not
 All time arithmetic is integer milliseconds, done here in code (I-4).
 
 Codes (rule numbers from brief H-0004 / ARCHITECTURE.md):
-  E_SCHEMA          structure/type error not covered by a more specific code
+  E_SCHEMA          structure/type error not covered by a more specific code. "integer" is strict here:
+                    2000.0 is rejected (JSON Schema itself accepts integral floats; H-0009)
+  E_SOURCE_PATH     source path is absolute, resolves (after symlinks) outside the repo, or lies under a
+                    protected root (held-out, golden, quarantine; I-6, I-9). Checked before any file is opened
   E_SOURCE_MISSING  rule 1: clip/audio `source` not declared, or a declared source file does not exist
   E_SOURCE_HASH     rule 1: file exists, `sha256` given, and the hash differs
   E_RANGE           rule 2: not 0 <= in_ms < out_ms <= source.duration_ms
@@ -26,7 +29,16 @@ from typing import Any
 
 import jsonschema
 
-from src.common import SCHEMA_PATH, read_json
+from src.common import ROOT, SCHEMA_PATH, read_json
+
+# Repo-relative roots a timeline source may never point into (CONSTITUTION I-6 held-out, I-9 rights).
+PROTECTED_SOURCE_ROOTS = ("data/heldout", "data/golden", "quarantine")
+
+# v0 says "integer milliseconds": a Python int, not an integral float and not a bool.
+_STRICT_TYPES = jsonschema.Draft202012Validator.TYPE_CHECKER.redefine(
+    "integer", lambda _checker, x: type(x) is int
+)
+_Validator = jsonschema.validators.extend(jsonschema.Draft202012Validator, type_checker=_STRICT_TYPES)
 
 
 @dataclass(frozen=True)
@@ -67,7 +79,7 @@ def _schema_code(err: jsonschema.ValidationError) -> str:
 
 
 def schema_issues(tl: Any) -> list[Issue]:
-    validator = jsonschema.Draft202012Validator(read_json(SCHEMA_PATH))
+    validator = _Validator(read_json(SCHEMA_PATH))
     out = [Issue(_schema_code(e), _pointer(e.absolute_path), e.message) for e in validator.iter_errors(tl)]
     return sorted(out, key=lambda i: (i.path, i.code, i.message))
 
@@ -96,6 +108,20 @@ def _duplicates(items: list[dict[str, Any]], prefix: str) -> list[Issue]:
     return out
 
 
+def _source_path_problem(raw: str, base_dir: Path) -> str | None:
+    """Why `raw` may not be used as a source path, or None. Never opens or stats the file itself."""
+    if Path(raw).is_absolute():
+        return "is absolute; use a path relative to the repo root"
+    resolved = (base_dir / raw).resolve()  # follows symlinks, so a link cannot smuggle a protected file in
+    root = ROOT.resolve()
+    if not resolved.is_relative_to(root):
+        return "resolves outside the repository"
+    for r in PROTECTED_SOURCE_ROOTS:
+        if resolved.is_relative_to(root / r):
+            return f"is under the protected root '{r}/'"
+    return None
+
+
 def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
     """Assumes `tl` passed the structural part of the schema (no E_SCHEMA issues)."""
     errs: list[Issue] = []
@@ -107,7 +133,11 @@ def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
 
     # Rule 1: declared source files exist (the renderer opens every declared source); hash only if given.
     for i, s in enumerate(tl["sources"]):
-        p = Path(s["path"]) if Path(s["path"]).is_absolute() else base_dir / s["path"]
+        why = _source_path_problem(s["path"], base_dir)
+        if why:
+            errs.append(Issue("E_SOURCE_PATH", f"/sources/{i}/path", f"source '{s['id']}' path {s['path']!r} {why}"))
+            continue
+        p = base_dir / s["path"]
         if not p.is_file():
             errs.append(Issue("E_SOURCE_MISSING", f"/sources/{i}/path",
                               f"source '{s['id']}' file not found: {s['path']}"))
@@ -153,7 +183,7 @@ def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
     fps, target = tl["canvas"]["fps"], tl["target_duration_ms"]
     if abs(total - target) * fps > 1000:
         errs.append(Issue("E_DURATION", "/target_duration_ms", f"total duration {total} ms differs from target "
-                          f"{target} ms by {total - target:+d} ms; allowed is one frame (1000/{fps} ms)"))
+                          f"{target} ms by {total - target:+} ms; allowed is one frame (1000/{fps} ms)"))
 
     # Rules 6 and 7 are schema enums (mapped to E_CAPTION_DIR / E_EFFECT_TYPE). Effect targets are clip ids.
     clip_ids = {c["id"] for c in clips}

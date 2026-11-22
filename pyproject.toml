@@ -1,11 +1,11 @@
 # Source of truth for dependencies. Direct deps are pinned exactly (==), versions taken from .venv
 # (`pip freeze`, 2026-11-22). Lock files with transitive pins:
-#   requirements.txt      runtime: core + milp + media (what `.venv` runs; needs Python >= 3.12, see below)
-#   requirements-dev.txt  CI/test: core + dev (installable on Python 3.11)
+#   requirements.txt      runtime: core + milp + media (what `.venv` runs)
+#   requirements-dev.txt  CI/test: core + dev
 # tests/unit/test_pins.py fails if a direct pin here and a lock file disagree.
 #
-# KNOWN GAP (H-0003 return): PuLP==4.3.1 and numpy==2.5.5 (via the media extra) require Python >= 3.12,
-# so the `milp` and `media` extras do not install on 3.11 even though requires-python says >= 3.11.
+# Python floor 3.12 (ADR-0002): av, cpsat-logutils, numpy, orloge and PuLP in the runtime lock publish no
+# 3.11 wheels (H-0003 review F1). CI runs 3.12 and 3.14 (the .venv minor version).
 
 [build-system]
 requires = ["setuptools==80.9.0"]
@@ -15,7 +15,7 @@ build-backend = "setuptools.build_meta"
 name = "video-as-code"
 version = "0.1.0"
 description = "Edit video by editing timeline.json: LLM decides, code enforces, local FFmpeg renders."
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "MIT"
 dependencies = [
     "jsonschema==4.26.0",
@@ -25,8 +25,7 @@ dependencies = [
 milp = ["PuLP==4.3.1"]
 media = [
     "faster-whisper==1.2.1",
-    "scenedetect==0.7.3",
-    "opencv-python-headless==5.1.0.95",
+    "scenedetect==0.7.3",  # pulls opencv-python; no -headless twin (both write cv2/, H-0003 review F4)
 ]
 dev = [
     "pytest==9.2.0",
@@ -37,7 +36,7 @@ dev = [
 include = ["src*"]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 line-length = 120
 # .claude/ (hooks) and company/ (position artifacts) are owned outside src/ and not linted here.
 extend-exclude = ["backup", "quarantine", "cache", "samples", "data", ".claude", "company"]

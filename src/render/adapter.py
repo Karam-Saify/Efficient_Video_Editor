@@ -4,6 +4,8 @@ Input adapter only: the FFmpeg graph and ASS writer are unchanged (H-0004 keeps 
 Not rendered yet (v0 fields accepted by the schema but ignored here): clip `crop` (always centre crop),
 caption `style` and `dir` (ASS uses one default style with Encoding -1, see experiments/E6.md),
 `effects`, `audio`. ms -> s conversion is code, never LLM (I-4).
+Source `has_audio` (optional, default true; H-0009) is passed through: false makes the FFmpeg graph use
+silence (anullsrc) for that source's clips instead of `[i:a]`, so silent sources render.
 """
 from __future__ import annotations
 
@@ -14,7 +16,8 @@ def to_render_model(tl: dict[str, Any]) -> dict[str, Any]:
     c = tl["canvas"]
     model: dict[str, Any] = {
         "output": {"width": c["width"], "height": c["height"], "fps": c["fps"], "reframe": "crop_center"},
-        "sources": {s["id"]: {"path": s["path"], "duration": s["duration_ms"] / 1000} for s in tl["sources"]},
+        "sources": {s["id"]: {"path": s["path"], "duration": s["duration_ms"] / 1000,
+                              "has_audio": s.get("has_audio", True)} for s in tl["sources"]},
         "clips": [{"id": v["id"], "source": v["source"], "in": v["in_ms"] / 1000, "out": v["out_ms"] / 1000}
                   for v in tl["tracks"]["video"]],
     }

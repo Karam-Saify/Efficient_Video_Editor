@@ -5,6 +5,11 @@ Generates a synthetic 16:9 source, builds a 3-clip vertical timeline with hard A
 for visual inspection.
 
     python experiments/e6_captions.py [--font "Noto Naskh Arabic"] [--seconds 30]
+
+DEPRECATED (H-0009, H-0004 review F4): this script builds the pre-v0 timeline shape (seconds, `output`,
+`clips`, caption `style` dict, `--reframe`), which timeline v0 and `src.validate` reject, and v0 has no
+fields for its font/reframe options. It is kept read-only as the record of how E6 was produced
+(experiments/E6.md). It exits 2 before doing any work. Use experiments/exp006_render.py (EXP-006) instead.
 """
 from __future__ import annotations
 
@@ -88,5 +93,9 @@ def main() -> None:
     print(f"frames: {out_dir}/frame_{tag}_*.png")
 
 
+DEPRECATION = ("e6_captions.py is deprecated: it builds the pre-v0 timeline shape that src.validate rejects. "
+               "Use experiments/exp006_render.py (EXP-006). See this file's docstring.")
+
 if __name__ == "__main__":
-    main()
+    print(f"error: {DEPRECATION}", file=sys.stderr)
+    sys.exit(2)
