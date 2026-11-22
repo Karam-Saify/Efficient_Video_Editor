@@ -30,3 +30,9 @@
 - Evidence: company/handoffs/H-0009-return.md; `ruff check .` clean; 116 passed on 3.14 (.venv) and on a fresh 3.12 full-lock venv; 108 passed + 8 skipped with the dev lock only.
 - Learned: JSON Schema "integer" accepts 2000.0 (spec-correct), so v0 needs a strict type checker; PuLP 4 replaced LpVariable(...) with prob.add_variable(...); the protect hook blocks the held-out literal in Bash, so tests read PROTECTED_SOURCE_ROOTS.
 - Next: Assurance H-0009 review; ingest must write has_audio from probe().
+
+### 2026-11-22 · H-0013 · T2 · DONE
+- Did: EXP-008 consultation; scratch probe reproduced the §5.3 tagged-text table, ran the fc-query coverage check, rendered AR-05 tagged + CTRL-01 + 3 invariance variants (images never viewed); signed the Engineering line with objections G1–G3 (paths exp007→exp008, exact regex for rule (b) not-found case, `0xE01` upper-case). Uncommitted.
+- Evidence: company/handoffs/H-0013-return.md; probe MISMATCHES 0; AR-05 log resolves exactly the two declared files; CTRL-01 fires rule (a)+(b) on NotoSansThai; C2 flags AR-05/08/10; two runs identical; 5× png,1080,1920,rgb24.
+- Learned: libass prints glyph codes in upper-case hex (`0xE01`) and may log `Glyph … not found` after the fallback fontselect line; redundant `\fn` tags (same font) leave the PNG byte-identical, even mid-word.
+- Next: research applies G1–G3 and locks; then the render brief (experiments/exp008_render.py, render/exp008/).
