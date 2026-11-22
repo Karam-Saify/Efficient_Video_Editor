@@ -18,3 +18,12 @@
 - Evidence: company/handoffs/H-0003-review.md; company/handoffs/H-0003-repro.txt
 - Learned: python3.12 here lacks ensurepip; conda (/opt/conda) can provide an isolated 3.11 for floor checks. Check per-pin wheel availability including transitive deps: the builder checked direct deps only and missed av, orloge and cpsat-logutils. No data/heldout access, so no ACCESS_LOG entry.
 - Next: owner responses to F1–F10; re-verify F1/F3/F4/F6 when fixed; Founder decides Python floor (Q1); RR-002 verification before first real ingest (F9).
+
+### 2026-11-22 · H-0008 · T1 · DONE
+- Did: added RR-011 (Noto Sans Regular v2.004, sha256 89c3c497…909d, OFL 1.1 confirmed from embedded name table ID 13/14 and Debian copyright `Files: *`), the libass Latin fallback seen in EXP-006 render.log l.135-136. Evidence: company/handoffs/H-0008-return.md
+
+### 2026-11-22 · H-0004-review · T2 · DONE
+- Did: independent T2 review of Task B (commit 4c156d8). Clean `git archive` extract, fresh 3.14.2 venv: ruff check clean, 70/70 tests. Ran the CLI on all 10 fixtures (each invalid one gives exactly one different code; exit 0/1 correct). 21 adversarial timelines in scratch. Real L4 render with AR-05/AR-08 captions plus ffprobe. Invariant, custody and secret scan. CI run 45045645473 green on 3.11. Ruled rule 3 (same-source reuse) acceptable for v0 and the render adapter in scope. Verdict APPROVE WITH FINDINGS (S1:0, S2:4, S3:6).
+- Evidence: company/handoffs/H-0004-review.md; company/handoffs/H-0004-repro.txt
+- Learned: JSON Schema 2020-12 accepts 2000.0 as "integer", so integer-ms contracts need an explicit type(x) is int check (this one crashed the validator). Always do one real render: the dry-run tests missed that audio-less sources validate but fail in ffmpeg. No data/heldout access, so no ACCESS_LOG entry.
+- Next: re-verify F1 (A1/A1b files) before merge, then F2 before M0. Tickets for F3/F4/F5/F7. Creative covers F6 and F10(iv) in H-0007.

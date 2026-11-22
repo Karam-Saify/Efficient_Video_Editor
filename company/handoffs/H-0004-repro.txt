@@ -1,0 +1,183 @@
+# H-0004 reproduction (assurance-lead, 2026-11-22)
+# source: git archive 4c156d8 | tar -x -C <tmp>; fresh venv Python 3.14.2 from requirements-dev.txt
+$ ruff check .
+All checks passed!
+exit=0
+$ ruff format --check .
+(diff output omitted; summary line follows)
+18 files would be reformatted, 15 files already formatted
+exit=1
+$ pytest -q
+......................................................................   [100%]
+70 passed in 2.78s
+exit=0
+$ pytest -q tests/unit/test_validate.py -v
+============================= test session starts ==============================
+platform linux -- Python 3.14.2, pytest-9.2.0, pluggy-1.7.0
+rootdir: /tmp/claude-1000/-workspaces-Efficient-Video-Editor/aaad3156-5fc0-4481-9dd9-f8ade7986944/scratchpad/h4/src_tree
+configfile: pyproject.toml
+collected 39 items
+
+tests/unit/test_validate.py .......................................      [100%]
+
+============================== 39 passed in 0.48s ==============================
+
+## CLI exit codes (cwd = clean export)
+$ python -m src.validate tests/fixtures/timelines/valid/v4_effects.json
+OK: 2 clips, 7000 ms
+exit=0
+$ python -m src.validate tests/fixtures/timelines/invalid/i3_overlap.json
+E_OVERLAP /tracks/video/1: clip 'c2' [2000, 4000) overlaps clip 'c1' [0, 3000) in source 'srcA'
+exit=1
+
+## Fixture -> codes (each invalid must yield exactly one code)
+--- tests/fixtures/timelines/invalid/i1_source_missing.json
+E_SOURCE_MISSING /tracks/video/0/source: unknown source 'srcZ' (declared: srcA)
+exit=1
+--- tests/fixtures/timelines/invalid/i2_range.json
+E_RANGE /tracks/video/0/out_ms: clip 'c1': out_ms (11000) exceeds source 'srcA' duration_ms (10000)
+exit=1
+--- tests/fixtures/timelines/invalid/i3_overlap.json
+E_OVERLAP /tracks/video/1: clip 'c2' [2000, 4000) overlaps clip 'c1' [0, 3000) in source 'srcA'
+exit=1
+--- tests/fixtures/timelines/invalid/i4_caption_bounds.json
+E_CAPTION_BOUNDS /tracks/captions/0/end_ms: caption 't1': end_ms (3500) is after the timeline end (3000 ms)
+exit=1
+--- tests/fixtures/timelines/invalid/i5_duration.json
+E_DURATION /target_duration_ms: total duration 3067 ms differs from target 3000 ms by +67 ms; allowed is one frame (1000/30 ms)
+exit=1
+--- tests/fixtures/timelines/valid/v1_single_clip.json
+OK: 1 clips, 2500 ms
+exit=0
+--- tests/fixtures/timelines/valid/v2_multi_clip.json
+OK: 3 clips, 9020 ms
+exit=0
+--- tests/fixtures/timelines/valid/v3_captions_rtl_ltr.json
+OK: 1 clips, 6000 ms
+exit=0
+--- tests/fixtures/timelines/valid/v4_effects.json
+OK: 2 clips, 7000 ms
+exit=0
+--- tests/fixtures/timelines/valid/v5_audio.json
+OK: 1 clips, 5000 ms
+exit=0
+
+## Adversarial (files in scratch dir, not in repo)
+--- A10_effect_far_past_end.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A11_source_is_directory.json
+E_SOURCE_MISSING /sources/0/path: source 'srcA' file not found: tests/fixtures/media
+exit=1
+--- A12_path_traversal.json
+E_SOURCE_MISSING /sources/0/path: source 'srcA' file not found: ../../../../etc/passwd
+exit=1
+--- A13_empty_video.json
+E_SCHEMA /tracks/video: [] should be non-empty
+exit=1
+--- A14_huge_int.json
+E_RANGE /tracks/video/0/out_ms: clip 'c1': out_ms (100000000000000000001) exceeds source 'srcA' duration_ms (10000)
+E_CAPTION_BOUNDS /tracks/captions/0/end_ms: caption 't1': end_ms (1800) is after the timeline end (1 ms)
+E_CAPTION_BOUNDS /tracks/captions/1/end_ms: caption 't2': end_ms (4000) is after the timeline end (1 ms)
+E_CAPTION_BOUNDS /tracks/captions/2/end_ms: caption 't3': end_ms (6000) is after the timeline end (1 ms)
+E_DURATION /target_duration_ms: total duration 1 ms differs from target 6000 ms by -5999 ms; allowed is one frame (1000/30 ms)
+exit=1
+--- A15_provenance_extra_and_audio_gain_400.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A16_empty_file.json
+  File "/home/codespace/.python/current/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.python/current/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+exit=1
+--- A17_json_array.json
+E_SCHEMA /: [] is not of type 'object'
+exit=1
+--- A18_nan.json
+E_SCHEMA /target_duration_ms: nan is not of type 'integer'
+exit=1
+--- A1_float_integral_ms_and_bad_duration.json
+    return errs + semantic_issues(tl, base_dir if base_dir is not None else Path.cwd())
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-1000/-workspaces-Efficient-Video-Editor/aaad3156-5fc0-4481-9dd9-f8ade7986944/scratchpad/h4/src_tree/src/validate/__init__.py", line 156, in semantic_issues
+    f"{target} ms by {total - target:+d} ms; allowed is one frame (1000/{fps} ms)"))
+                     ^^^^^^^^^^^^^^^^^^^
+ValueError: Unknown format code 'd' for object of type 'float'
+exit=1
+--- A1b_float_integral_ms_ok_duration.json
+OK: 1 clips, 6000.0 ms
+exit=0
+--- A1c_float_fps_target.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A2_out_eq_in.json
+E_RANGE /tracks/video/0: clip 'c1': out_ms (2000) must be greater than in_ms (2000)
+E_DURATION /target_duration_ms: total duration 0 ms differs from target 6000 ms by -6000 ms; allowed is one frame (1000/30 ms)
+exit=1
+--- A3a_off_by_1_frame_33ms.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A3b_off_by_2_frames_67ms.json
+E_DURATION /target_duration_ms: total duration 6000 ms differs from target 6067 ms by -67 ms; allowed is one frame (1000/30 ms)
+exit=1
+--- A3c_off_by_34ms_under.json
+E_DURATION /target_duration_ms: total duration 6000 ms differs from target 5966 ms by +34 ms; allowed is one frame (1000/30 ms)
+exit=1
+--- A4a_caption_end_eq_total.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A4b_caption_end_total_plus1.json
+E_CAPTION_BOUNDS /tracks/captions/2/end_ms: caption 't3': end_ms (6001) is after the timeline end (6000 ms)
+exit=1
+--- A4c_caption_start_eq_total.json
+E_CAPTION_BOUNDS /tracks/captions/2/end_ms: caption 't3': end_ms (6010) is after the timeline end (6000 ms)
+exit=1
+--- A5_missing_dir_and_null_dir.json
+E_CAPTION_DIR /tracks/captions/0: 'dir' is a required property
+E_CAPTION_DIR /tracks/captions/1/dir: None is not one of ['rtl', 'ltr']
+exit=1
+--- A6_AR05_AR08_text.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A7_whitespace_only_caption.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A7b_RLM_only_caption.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A7c_ass_override_injection_text.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A8_extreme_length_caption.json
+OK: 1 clips, 6000 ms
+exit=0
+--- A9_3000_clips_same_range.json
+E_OVERLAP /tracks/video/2999: clip 'k2999' [2000, 8000) overlaps clip 'k2993' [2000, 8000) in source 'srcA'
+E_OVERLAP /tracks/video/2999: clip 'k2999' [2000, 8000) overlaps clip 'k2994' [2000, 8000) in source 'srcA'
+E_OVERLAP /tracks/video/2999: clip 'k2999' [2000, 8000) overlaps clip 'k2995' [2000, 8000) in source 'srcA'
+E_OVERLAP /tracks/video/2999: clip 'k2999' [2000, 8000) overlaps clip 'k2996' [2000, 8000) in source 'srcA'
+E_OVERLAP /tracks/video/2999: clip 'k2999' [2000, 8000) overlaps clip 'k2997' [2000, 8000) in source 'srcA'
+E_OVERLAP /tracks/video/2999: clip 'k2999' [2000, 8000) overlaps clip 'k2998' [2000, 8000) in source 'srcA'
+exit=1
+
+## A9 scale: 4498500 issue lines, wall time real 0m11.802s
+## A1 via API: validate() raises ValueError: Unknown format code 'd' for object of type 'float'
+
+## L4 render smoke (scratch dir, generated lavfi media 1920x1080 30fps 4s, with and without audio)
+timeline: 2 clips [0,1500)+[2000,3500) of gen.mp4, captions AR-05 and AR-08, dir rtl, target 3000
+$ python -m src.render tl.json out.mp4 -> rendered out.mp4 in 3.2s, exit=0
+ffprobe: video 1080x1920 r=30/1; audio present; format duration=3.000000
+ASS: Dialogue: 0,0:00:00.00,0:00:01.50,Default,,0,0,0,,جربت iPhone 16 Pro امبارح
+ASS: Dialogue: 0,0:00:01.50,0:00:03.00,Default,,0,0,0,,"اقتباس" و(قوسين)
+same timeline on silent.mp4 (no audio stream): validate -> OK: 2 clips, 3000 ms (exit 0); render -> ffmpeg exit 234 on [0:a]atrim (CalledProcessError), render exit=1
+
+## CI
+gh run 45045645473 headSha=4c156d8d590465a631986f8af430a0702e9bd8c4 job test: success; setup-python 3.11; Lint: All checks passed!; Test: 70 passed in 1.38s
+
+## Scans
+data/golden|data/heldout|quarantine|samples/ in non-company files of 4c156d8: only tests/fixtures/README.md prohibition text
+secret patterns in diff: only the return's own 'no keys or tokens' sentence
+locked files (experiments/, CONSTITUTION, ARCHITECTURE, ADRs, data/) in diff: none
