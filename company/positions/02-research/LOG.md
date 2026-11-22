@@ -24,3 +24,9 @@
 - Evidence: company/experiments/EXP-006-results.md; company/experiments/EXP-007.md; company/handoffs/H-0010-return.md; fc-query charset coverage of both fonts (Noto Sans covers every non-Arabic code point; U+0E01 is in neither).
 - Learned: the ID "EXP-007" was already reserved in the PLAYBOOK register, ROADMAP 4.2 and A-05 (revision diffs, M4). Check the register before assigning ids. libass \fn makes per-run fonts expressible, so no escalation.
 - Next: Operator resolves the ID collision; Eng + Creative sign the consultation; then lock EXP-007.
+
+### 2026-11-22 · H-0012 · T1 · DONE
+- Did: applied creative-lead objections O1 (font-switch category, §6 after the "correct" definition) and O2 (line wrapping, §5.4 step 10 after "clipping,") to EXP-008.md verbatim from H-0011-return.md; added the "applied verbatim" note to the Creative sign-off line. Lock stays DRAFT; not committed.
+- Evidence: company/experiments/EXP-008.md (lines 125, 139-144, 213); `git diff --stat` = 9 insertions, 2 deletions (step-10 line and sign-off line changed in place); company/handoffs/H-0012-return.md.
+- Learned: two stale spots remain outside the brief: §8 threats row "Open consultation item C2" and the `exp007` paths/instrument name; fix before lock, not now.
+- Next: engineering-lead signs E1-E5; Creative one-line re-confirm (optional, text is verbatim); then research-lead locks EXP-008.
