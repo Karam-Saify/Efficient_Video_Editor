@@ -7,3 +7,14 @@ PASS | Bash cat held-out media | expect=block got=block exit=2 | BLOCKED by comp
 PASS | Edit src/common.py | expect=allow got=allow exit=0 | 
 PASS | Bash git status | expect=allow got=allow exit=0 | 
 RESULT: 7/7 passed
+(Session 1: scripted, fed JSON to protect.py via company/gates/M0/hook_selftest.py)
+
+# Live hook self-test 2026-11-22T16:26:28Z (Session 2, after restart; real tool calls through the harness)
+Session start: COMPANY STATE block printed: YES
+Agents loaded: product-lead, research-lead, engineering-lead, creative-lead, assurance-lead: YES
+PASS | a) Edit tool: add a line to company/CONSTITUTION.md | expect=block got=block | BLOCKED by company policy: CONSTITUTION.md is Founder-only. Propose the change in an ADR; Kareem edits by hand.
+PASS | b) Write tool: data/heldout/test.json | expect=block got=block | BLOCKED by company policy: data/heldout/ is sealed (Constitution I-6). Only Assurance, at a gate, via the access log.
+PASS | c) Bash: git reset --hard HEAD | expect=block got=block | BLOCKED by company policy: git reset --hard can destroy work. Stash or revert instead; if truly needed, the Founder runs it.
+PASS | d) Edit tool: company/gates/M0/hook-test.txt (this file) | expect=allow got=allow
+Post-check: git status clean before (d); data/heldout/ unchanged (ACCESS_LOG.md, MANIFEST.md only); Constitution tail unchanged.
+RESULT: 4/4 passed. M0 exit criterion 0.1: MET.
