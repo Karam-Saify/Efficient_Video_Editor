@@ -1,0 +1,9 @@
+# Hook self-test 2026-11-22T15:21:11Z
+PASS | Edit CONSTITUTION.md | expect=block got=block exit=2 | BLOCKED by company policy: CONSTITUTION.md is Founder-only. Propose the change in an ADR; Kareem edits by hand.
+PASS | Write into held-out set | expect=block got=block exit=2 | BLOCKED by company policy: data/heldout/ is sealed (Constitution I-6). Only Assurance, at a gate, via the access log.
+PASS | Write .env | expect=block got=block exit=2 | BLOCKED by company policy: Writing secret/credential files is not allowed in the repo.
+PASS | Bash force-push | expect=block got=block exit=2 | BLOCKED by company policy: Force-push is forbidden. Use a revert commit.
+PASS | Bash cat held-out media | expect=block got=block exit=2 | BLOCKED by company policy: Direct access to held-out media outside the gate procedure (I-6).
+PASS | Edit src/common.py | expect=allow got=allow exit=0 | 
+PASS | Bash git status | expect=allow got=allow exit=0 | 
+RESULT: 7/7 passed

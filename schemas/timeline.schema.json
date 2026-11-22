@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "timeline.schema.json",
+  "title": "Timeline",
+  "description": "An edit as data. Clips play back-to-back in array order on one main track, so timeline positions are derived (cumulative) and clips cannot overlap. All times are seconds. Clip in/out are source time; caption and effect times are output (timeline) time.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "video_id", "output", "sources", "clips"],
+  "properties": {
+    "version": { "const": "0.1" },
+    "video_id": { "type": "string", "minLength": 1 },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "fps"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 16, "default": 1080 },
+        "height": { "type": "integer", "minimum": 16, "default": 1920 },
+        "fps": { "type": "number", "exclusiveMinimum": 0, "default": 30 },
+        "target_duration": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "If set, the validator requires total clip duration to match within one frame."
+        },
+        "reframe": {
+          "enum": ["crop_center", "fit_blur", "fit_pad"],
+          "default": "crop_center",
+          "description": "How sources with a different aspect ratio fill the output frame."
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "description": "Media assets keyed by source id. Filled from ingest metadata; the LLM does not edit these.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "duration"],
+        "properties": {
+          "path": { "type": "string" },
+          "duration": { "type": "number", "exclusiveMinimum": 0 },
+          "width": { "type": "integer" },
+          "height": { "type": "integer" },
+          "fps": { "type": "number" },
+          "has_audio": { "type": "boolean" }
+        }
+      }
+    },
+    "clips": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "source", "in", "out"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "source": { "type": "string" },
+          "in": { "type": "number", "minimum": 0 },
+          "out": { "type": "number", "exclusiveMinimum": 0 },
+          "note": { "type": "string", "description": "Free text, e.g. the transcript of this clip. Ignored by the renderer." }
+        }
+      }
+    },
+    "captions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "style": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "font": { "type": "string", "default": "Noto Naskh Arabic" },
+            "size": { "type": "integer", "minimum": 8, "default": 80 },
+            "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#FFFFFF" },
+            "outline_color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#000000" },
+            "outline": { "type": "number", "minimum": 0, "default": 4 },
+            "bold": { "type": "boolean", "default": true },
+            "position": { "enum": ["bottom", "middle", "top"], "default": "bottom" },
+            "margin_v": { "type": "integer", "minimum": 0, "default": 320 }
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["start", "end", "text"],
+            "properties": {
+              "start": { "type": "number", "minimum": 0 },
+              "end": { "type": "number", "exclusiveMinimum": 0 },
+              "text": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

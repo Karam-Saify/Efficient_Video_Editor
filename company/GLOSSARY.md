@@ -1,0 +1,13 @@
+# Glossary
+- **Operator:** the main Claude Code session; routes work, never votes, never does T2+ position work itself.
+- **Position:** one of five subagents with a charter, decision rights and a workspace folder.
+- **Tier (T0–T3, E):** size/risk class of a unit of work; decides who is involved and what review is needed.
+- **Brief / Return / Review:** the three documents of every T2 handoff.
+- **Door (one-way / two-way):** irreversible vs reversible decision.
+- **Evidence level (E0–E4):** opinion → demo → golden-set prereg → held-out replication → real audience.
+- **Golden set:** curated development dataset (`data/golden/`). **Held-out set:** sealed test dataset used only at gates.
+- **Gate:** milestone review where all five positions vote blind and the Founder signs.
+- **HALT:** stop-the-line flag at the top of STATE.md; only the Founder clears it.
+- **Preregistration:** experiment plan with thresholds, locked before running.
+- **ADR:** Architecture/Any Decision Record; immutable once Accepted.
+- **DoD:** Definition of Done checklist per position.
