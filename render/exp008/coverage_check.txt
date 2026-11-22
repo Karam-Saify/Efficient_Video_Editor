@@ -1,0 +1,14 @@
+AR-01  missing=[]
+AR-02  missing=[]
+AR-03  missing=[]
+AR-04  missing=[]
+AR-05  missing=[]
+AR-06  missing=[]
+AR-07  missing=[]
+AR-08  missing=[]
+AR-09  missing=[]
+AR-10  missing=[]
+COVERAGE_OK=True
+
+# Control C0 (CTRL-01 hand assignment, not one of the 10)
+CTRL-01  missing=['U+0E01 not in NotoSans-Regular.ttf']  expected=['U+0E01 not in NotoSans-Regular.ttf']  C0_OK=True

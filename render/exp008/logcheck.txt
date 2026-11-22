@@ -1,0 +1,75 @@
+# Control C2: render/frames_check/render.log, events attributed by 'Added subtitle file:' lines
+== C2 AR-01  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+== C2 AR-02  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+== C2 AR-03  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+== C2 AR-04  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+== C2 AR-05  FLAGGED=True  rule_a=1  rule_b=0  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    rule(a)    | Glyph 0x69 not found, selecting one more font for (Noto Sans Arabic, 400, 0)
+== C2 AR-06  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+== C2 AR-07  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+== C2 AR-08  FLAGGED=True  rule_a=1  rule_b=0  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    rule(a)    | Glyph 0x22 not found, selecting one more font for (Noto Sans Arabic, 400, 0)
+== C2 AR-09  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+== C2 AR-10  FLAGGED=True  rule_a=1  rule_b=0  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    rule(a)    | Glyph 0x2013 not found, selecting one more font for (Noto Sans Arabic, 400, 0)
+C2 flagged=['AR-05', 'AR-08', 'AR-10'] expected=['AR-05', 'AR-08', 'AR-10'] C2_OK=True
+
+# Control C1: render/exp008/control/CTRL-01.log (never judged, never viewed)
+== C1 CTRL-01  FLAGGED=True  rule_a=1  rule_b=1  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf', 'NotoSansThai-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    fontselect | fontselect: (Noto Sans, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansThai-Regular.ttf, 0, NotoSansThai-Regular
+    rule(a)    | Glyph 0xE01 not found, selecting one more font for (Noto Sans, 400, 0)
+    rule(b)    | fontselect: (Noto Sans, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansThai-Regular.ttf, 0, NotoSansThai-Regular
+C1 rule_a_fired=True rule_b_fired=True fontselect_visible=True C1_OK=True
+CTRL_OK=True
+
+# Real strings AR-01..AR-10 (one log each)
+== AR-01  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    AR-01 CLEAN=True expected_files=['NotoSansArabic-Regular.ttf']
+== AR-02  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    AR-02 CLEAN=True expected_files=['NotoSansArabic-Regular.ttf']
+== AR-03  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    AR-03 CLEAN=True expected_files=['NotoSansArabic-Regular.ttf']
+== AR-04  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    AR-04 CLEAN=True expected_files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+== AR-05  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    AR-05 CLEAN=True expected_files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+== AR-06  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    AR-06 CLEAN=True expected_files=['NotoSansArabic-Regular.ttf']
+== AR-07  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    AR-07 CLEAN=True expected_files=['NotoSansArabic-Regular.ttf']
+== AR-08  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    AR-08 CLEAN=True expected_files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+== AR-09  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    AR-09 CLEAN=True expected_files=['NotoSansArabic-Regular.ttf']
+== AR-10  FLAGGED=False  rule_a=0  rule_b=0  files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+    fontselect | fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+    fontselect | fontselect: (Noto Sans, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf, 0, NotoSans-Regular
+    AR-10 CLEAN=True expected_files=['NotoSans-Regular.ttf', 'NotoSansArabic-Regular.ttf']
+LOG_OK=True

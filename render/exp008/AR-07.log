@@ -1,0 +1,27 @@
+Input #0, lavfi, from 'color=c=0x808080:s=1080x1920:r=30:d=1':
+  Duration: N/A, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: wrapped_avframe, yuv420p, 1080x1920 [SAR 1:1 DAR 9:16], 30 fps, 30 tbr, 30 tbn
+[Parsed_ass_0 @ 0x64fea426bb80] libass API version: 0x1701000
+[Parsed_ass_0 @ 0x64fea426bb80] libass source: tarball: 0.17.1
+[Parsed_ass_0 @ 0x64fea426bb80] Shaper: FriBidi 1.0.13 (SIMPLE) HarfBuzz-ng 8.3.0 (COMPLEX)
+[Parsed_ass_0 @ 0x64fea426bb80] Using font provider fontconfig
+[Parsed_ass_0 @ 0x64fea426bb80] Added subtitle file: 'render/exp008/AR-07.ass' (2 styles, 1 events)
+Stream mapping:
+  Stream #0:0 -> #0:0 (wrapped_avframe (native) -> png (native))
+Press [q] to stop, [?] for help
+[Parsed_ass_0 @ 0x64fea426bb80] libass API version: 0x1701000
+[Parsed_ass_0 @ 0x64fea426bb80] libass source: tarball: 0.17.1
+[Parsed_ass_0 @ 0x64fea426bb80] Shaper: FriBidi 1.0.13 (SIMPLE) HarfBuzz-ng 8.3.0 (COMPLEX)
+[Parsed_ass_0 @ 0x64fea426bb80] Using font provider fontconfig
+[Parsed_ass_0 @ 0x64fea426bb80] Added subtitle file: 'render/exp008/AR-07.ass' (2 styles, 1 events)
+[Parsed_ass_0 @ 0x64fea426bb80] fontselect: (Noto Sans Arabic, 400, 0) -> /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+Output #0, image2, to 'render/exp008/AR-07.png':
+  Metadata:
+    encoder         : Lavf60.16.100
+  Stream #0:0: Video: png, rgb24(pc, gbr/unknown/unknown, progressive), 1080x1920 [SAR 1:1 DAR 9:16], q=2-31, 200 kb/s, 30 fps, 30 tbn
+    Metadata:
+      encoder         : Lavc60.31.102 png
+[image2 @ 0x64fea4267900] The specified filename 'render/exp008/AR-07.png' does not contain an image sequence pattern or a pattern is invalid.
+[image2 @ 0x64fea4267900] Use a pattern such as %03d for an image sequence or use the -update option (with -frames:v 1 if needed) to write a single image.
+frame=    0 fps=0.0 q=-0.0 size=       0kB time=00:00:00.00 bitrate=N/A speed=N/A    [out#0/image2 @ 0x64fea4266d40] video:16kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: unknown
+frame=    1 fps=0.0 q=-0.0 Lsize=N/A time=00:00:00.00 bitrate=N/A speed=   0x    

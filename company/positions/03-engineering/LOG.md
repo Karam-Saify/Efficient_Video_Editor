@@ -36,3 +36,9 @@
 - Evidence: company/handoffs/H-0013-return.md; probe MISMATCHES 0; AR-05 log resolves exactly the two declared files; CTRL-01 fires rule (a)+(b) on NotoSansThai; C2 flags AR-05/08/10; two runs identical; 5× png,1080,1920,rgb24.
 - Learned: libass prints glyph codes in upper-case hex (`0xE01`) and may log `Glyph … not found` after the fallback fontselect line; redundant `\fn` tags (same font) leave the PNG byte-identical, even mid-word.
 - Next: research applies G1–G3 and locks; then the render brief (experiments/exp008_render.py, render/exp008/).
+
+### 2026-11-22 · H-0015 · T2 · DONE
+- Did: wrote experiments/exp008_render.py (EXP-008 §5.4 steps 1–9) + tests/unit/test_exp008_splitter.py; ran it twice from a clean render/exp008/; not judged, images never viewed. Uncommitted.
+- Evidence: company/handoffs/H-0015-return.md; COVERAGE_OK/CTRL_OK/LOG_OK/PNG_OK/INSTRUMENT_UNCHANGED all True; C2 flags AR-05/08/10; 10× png,1080,1920,rgb24; PNG/.ass/check files identical across runs; ruff clean, 125 passed.
+- Learned: ffmpeg default-level logs are not byte-reproducible (context pointers + stats lines); compare the normalised logcheck.txt instead, and add -nostats to future locked commands. §5.3 has U+061C both in the A range and the X list.
+- Next: Assurance review of H-0015; then Creative judges AR-01..10 (step 10).
