@@ -23,3 +23,6 @@ data/heldout/*
 
 # Archives
 *.zip
+
+# Quarantined files (unverified origin; never open or use)
+quarantine/
