@@ -30,3 +30,9 @@
 - Evidence: company/experiments/EXP-008.md (lines 125, 139-144, 213); `git diff --stat` = 9 insertions, 2 deletions (step-10 line and sign-off line changed in place); company/handoffs/H-0012-return.md.
 - Learned: two stale spots remain outside the brief: §8 threats row "Open consultation item C2" and the `exp007` paths/instrument name; fix before lock, not now.
 - Next: engineering-lead signs E1-E5; Creative one-line re-confirm (optional, text is verbatim); then research-lead locks EXP-008.
+
+### 2026-11-22 · H-0014 · T2 · DONE
+- Did: LOCKED EXP-008. Applied Eng G1–G3 verbatim (14 render/exp008 paths, 2 exp008_render.py, rule-(b) regex, 0xE01). Fixed stale §8 C2 threats row (O1 resolved it). Recorded the Operator ruling that Creative need not re-sign. Single Write of the complete file. Not committed.
+- Evidence: company/experiments/EXP-008.md sha256 5d3cdb54…73da, byte-identical to the asserted scratch build (diff → IDENTICAL_TO_VERIFIED); grep exp007 → ID note only; company/handoffs/H-0014-return.md.
+- Learned: build the locked text with count-asserted replacements in scratch and diff it after the Write. Assurance pre-lock verifiability was not signed separately. Add Assurance to future consultation blocks.
+- Next: Assurance reviews H-0014; Operator briefs engineering-lead for exp008_render.py and §5.4 steps 1–9.
