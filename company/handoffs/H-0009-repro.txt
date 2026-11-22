@@ -1,0 +1,169 @@
+H-0009 re-review reproduction (assurance-lead, 2026-11-22). Commit c179693. <S> = assurance scratch dir.
+Clean export: git archive c179693 | tar -x -C <S>/h9x/tree. Venvs: v312 = virtualenv -p /usr/bin/python3.12 (3.12.3; no ensurepip on system 3.12) + requirements.txt + requirements-dev.txt; v314 = python3.14 -m venv (3.14.2) + requirements-dev.txt.
+
+=================== PART A: setup ===================
+## A1 venv 3.12 full runtime lock + dev
+Python 3.12.3
+
+[notice] A new release of pip is available: 26.2.2 -> 26.3
+[notice] To update, run: <S>/h9x/v312/bin/python -m pip install --upgrade pip
+pip exit=0
+No broken requirements found.
+opencv-python==5.1.0.95
+## A2 venv 3.14 dev lock
+Python 3.14.2
+
+[notice] A new release of pip is available: 25.3 -> 26.3
+[notice] To update, run: <S>/h9x/v314/bin/python3.14 -m pip install --upgrade pip
+No broken requirements found.
+
+=================== PART B: ruff + pytest ===================
+## B1 3.12 full: ruff
+All checks passed!
+exit=0
+## B2 3.12 full: VAC_FULL_RUNTIME=1 pytest -q
+........................................................................ [ 62%]
+............................................                             [100%]
+116 passed in 3.68s
+## B3 3.14 dev: ruff
+All checks passed!
+exit=0
+## B4 3.14 dev: pytest -q
+<frozen site>:101: RuntimeWarning: Unexpected value in sys.prefix, expected <S>/h9x/v314, got <S>/h9x/tree/../v314
+<frozen site>:101: RuntimeWarning: Unexpected value in sys.exec_prefix, expected <S>/h9x/v314, got <S>/h9x/tree/../v314
+........................ssssssss........................................ [ 62%]
+............................................                             [100%]
+=========================== short test summary info ============================
+SKIPPED [7] tests/unit/test_runtime_imports.py:13: full runtime lock not installed
+SKIPPED [1] tests/unit/test_runtime_imports.py:18: full runtime lock not installed
+108 passed, 8 skipped in 4.13s
+## B5 3.14 dev with VAC_FULL_RUNTIME=1 (expect import failures: dev lock lacks runtime deps)
+FAILED tests/unit/test_runtime_imports.py::test_runtime_module_imports[cv2]
+FAILED tests/unit/test_runtime_imports.py::test_pulp_solves_a_tiny_milp - Mod...
+7 failed, 109 passed in 3.81s
+
+=================== PART C: new tests against parent code (c179693~1) ===================
+## new tests (c179693) against parent code c179693~1, 3.12 full venv
+ERROR tests/unit/test_validate.py
+ImportError while importing test module '<S>
+E   ImportError: cannot import name 'PROTECTED_SOURCE_ROOTS' from 'src.validate' (/tmp/claude-1000/-workspaces-Efficient-Video-Editor/aaad31
+ERROR tests/unit/test_validate.py
+FAILED tests/unit/test_manifest.py::test_stub_manifest_never_satisfies_real_work
+FAILED tests/unit/test_manifest.py::test_code_version_change_reruns - assert ...
+FAILED tests/unit/test_manifest.py::test_out_inside_input_dir_is_an_error - I...
+FAILED tests/unit/test_pins.py::test_python_floor_is_3_12 - AssertionError: a...
+FAILED tests/unit/test_pins.py::test_one_opencv_distribution_in_runtime_lock
+5 failed, 39 passed, 1 error in 2.55s
+
+=================== PART D: adversarial validator / cache (scripts/adv.py, cwd=tree, v312) ===================
+(symlinks: link_out -> /etc/passwd, link_golden -> data/golden; held-out root not exercised: policy hook blocks naming it outside a gate)
+PROTECTED_SOURCE_ROOTS count: 3
+== H-0004 F1 float/bool ms ==
+in_ms=float (A1): E_SCHEMA /tracks/video/0/in_ms | 1000.0 is not of type 'integer'
+out_ms float + duration off (A1 crash case): E_SCHEMA /tracks/video/0/out_ms | 3500.0 is not of type 'integer'
+target_duration_ms float (A1b): E_SCHEMA /target_duration_ms | 2500.0 is not of type 'integer'
+fps=30.0 (A1c): E_SCHEMA /canvas/fps | 30.0 is not of type 'integer'
+width=1080.0: E_SCHEMA /canvas/width | 1080.0 is not of type 'integer'
+in_ms=True: E_SCHEMA /tracks/video/0/in_ms | True is not of type 'integer'
+duration_ms=NaN: E_SCHEMA /sources/0/duration_ms | nan is not of type 'integer'
+out_ms=inf: E_SCHEMA /tracks/video/0/out_ms | inf is not of type 'integer'
+has_audio='yes': E_SCHEMA /sources/0/has_audio | 'yes' is not of type 'boolean'
+has_audio=false: VALID
+== H-0004 F3 source path confinement ==
+path '/etc/passwd': E_SOURCE_PATH /sources/0/path | source 'srcA' path '/etc/passwd' is absolute; use a path relative to the repo root
+path '../../../../etc/passwd': E_SOURCE_PATH /sources/0/path | source 'srcA' path '../../../../etc/passwd' resolves outside the repository
+path 'data/golden/g.mp4': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'data/golden/g.mp4' is under the protected root 'data/golden/'
+path 'data/golden': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'data/golden' is under the protected root 'data/golden/'
+path 'quarantine/q.mp4': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'quarantine/q.mp4' is under the protected root 'quarantine/'
+path 'data/./golden/g.mp4': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'data/./golden/g.mp4' is under the protected root 'data/golden/'
+path 'data//golden/g.mp4': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'data//golden/g.mp4' is under the protected root 'data/golden/'
+path 'src/../quarantine/q.mp4': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'src/../quarantine/q.mp4' is under the protected root 'quarantine/'
+path 'tests/fixtures/../../../outside.mp4': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'tests/fixtures/../../../outside.mp4' resolves outside the repository
+path '~/x.mp4': E_SOURCE_MISSING /sources/0/path | source 'srcA' file not found: ~/x.mp4
+path 'link_out': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'link_out' resolves outside the repository
+path 'link_golden/g.mp4': E_SOURCE_PATH /sources/0/path | source 'srcA' path 'link_golden/g.mp4' is under the protected root 'data/golden/'
+path 'data/goldenX/g.mp4': E_SOURCE_MISSING /sources/0/path | source 'srcA' file not found: data/goldenX/g.mp4
+path '.': E_SOURCE_MISSING /sources/0/path | source 'srcA' file not found: .
+path 'a\x00b': CRASH ValueError: embedded null byte
+base_dir=/tmp: [('E_SOURCE_PATH', "source 'srcA' path 'tests/fixtures/media/src_a.txt' resolves outside the repository")]
+base_dir=/: [('E_SOURCE_PATH', "source 'srcA' path 'tests/fixtures/media/src_a.txt' resolves outside the repository")]
+== H-0003 F3 stub manifest then real work ==
+stub ran=True; stub again ran=False; real after stub ran=True status=done outputs=['r.txt']; real again ran=False; code-version bump ran=True
+real logic changed, no version bump: ran=False  (residual: stale real->real)
+
+=================== PART E: CLI checks (bad JSON, --out in input, NUL byte, strace) ===================
+## H-0003 F5 / bad JSON via CLI
+$ python -m src.validate empty.json
+validate: error: cannot read timeline JSON from <S>/h9x/adv/empty.json: Expecting value: line 1 column 1 (char 0)
+exit=1
+$ python -m src.validate bad.json
+validate: error: cannot read timeline JSON from <S>/h9x/adv/bad.json: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+exit=1
+$ python -m src.validate bin.json
+validate: error: cannot read timeline JSON from <S>/h9x/adv/bin.json: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+exit=1
+$ python -m src.validate d9
+validate: error: cannot read timeline JSON from <S>/h9x/adv/d9: [Errno 21] Is a directory: '<S>/h9x/adv/d9'
+exit=1
+$ python -m src.validate nope.json
+validate: error: cannot read timeline JSON from <S>/h9x/adv/nope.json: [Errno 2] No such file or directory: '<S>/h9x/adv/nope.json'
+exit=1
+$ stage mode: python -m src.validate --input bad.json --out <S>/h9x/adv/vo
+validate: error: cannot read timeline JSON from <S>/h9x/adv/bad.json: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+exit=1; manifest present: no
+## H-0003 F6 --out inside --input dir (A9)
+score: error: --out <S>/h9x/adv/d9/out is inside input dir <S>/h9x/adv/d9; choose an output dir outside every input
+exit=1
+score: error: --out <S>/h9x/adv/d9 is inside input dir <S>/h9x/adv/d9; choose an output dir outside every input
+exit=1
+score: error: --out <S>/h9x/adv/d9/out2 is inside input dir <S>/h9x/adv/d9link; choose an output dir outside every input
+symlinked input exit=1
+## null byte via JSON file
+  File "<frozen posixpath>", line 476, in _joinrealpath
+ValueError: embedded null byte
+exit=1
+## strace: quarantine source with sha256 is never opened
+E_SOURCE_PATH /sources/0/path: source 'srcA' path 'quarantine/q.mp4' is under the protected root 'quarantine/'
+exit=1
+openat lines naming q.mp4: 0
+
+=================== PART F: L4 render, has_audio ===================
+silent streams: video 
+## render ha_false
+E_CAPTION_DIR /tracks/captions/0: 'dir' is a required property
+validate exit=1
+render exit=1
+ValueError: invalid timeline:
+E_CAPTION_DIR /tracks/captions/0: 'dir' is a required property
+## render ha_absent
+E_CAPTION_DIR /tracks/captions/0: 'dir' is a required property
+validate exit=1
+render exit=1
+ValueError: invalid timeline:
+E_CAPTION_DIR /tracks/captions/0: 'dir' is a required property
+## render ha_false (caption AR with RLM + Arabic-Indic digit)
+OK: 2 clips, 4000 ms
+validate exit=0
+render exit=0
+stream|codec_type=video|width=1080|height=1920
+stream|codec_type=audio|channels=2
+format|duration=4.000000
+## render ha_absent (caption AR with RLM + Arabic-Indic digit)
+OK: 2 clips, 4000 ms
+validate exit=0
+render exit=1
+[fc#0 @ 0x5f751eb4b540] Stream specifier ':a' in filtergraph description [0:v]trim=start=0.0:end=2.0,setpts=PTS-STARTPTS,fps=30[vt0];[vt0]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080
+Error initializing complex filters: Invalid argument
+## silence check on ha_false: volumedetect over first 2 s (silent clip) and 2-4 s (voiced clip)
+[Parsed_volumedetect_0 @ 0x61785ab8d380] mean_volume: -91.0 dB [Parsed_volumedetect_0 @ 0x61785ab8d380] max_volume: -60.8 dB  [ss=0]
+[Parsed_volumedetect_0 @ 0x6441c20ab380] mean_volume: -24.1 dB [Parsed_volumedetect_0 @ 0x6441c20ab380] max_volume: -20.4 dB  [ss=2]
+
+=================== PART G: e6_captions.py deprecation ===================
+error: e6_captions.py is deprecated: it builds the pre-v0 timeline shape that src.validate rejects. Use experiments/exp006_render.py (EXP-006). See this file's docstring.
+exit=2
+
+=================== PART H: CI run 45047570814 (headSha c179693) ===================
+runtime (3.14) success: coinor-cbc 2.10.11 installed; pip check: No broken requirements found; 116 passed in 4.35s
+runtime (3.12) success: coinor-cbc 2.10.11 installed; pip check: No broken requirements found; 116 passed in 3.91s
+test (3.14) success: ruff All checks passed!; 108 passed, 8 skipped
+test (3.12) success: ruff All checks passed!; 108 passed, 8 skipped

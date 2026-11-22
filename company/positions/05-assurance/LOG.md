@@ -33,3 +33,9 @@
 - Evidence: company/positions/05-assurance/DATA_RIGHTS.md rows RR-012..RR-017
 - Learned: RR-014 (storing URLs and handles of third-party creators) is personal data; it needs a privacy assessment, not only platform ToS.
 - Next: primary-source terms check for each row; T2 review of Step 2 coding tool once engineering returns.
+
+### 2026-11-22 · H-0009-review · T2 · DONE
+- Did: T2 re-review of fix pass c179693. Clean `git archive` export. Fresh 3.12.3 venv with the full lock + dev: pip check clean, one opencv, ruff clean, 116 passed. Fresh 3.14 venv with the dev lock: ruff clean, 108 passed + 8 skipped. New tests against the parent code fail. More than 30 adversarial attempts (float/bool/NaN/inf ms, 15 path shapes including symlinks and NUL, bad JSON, out-in-input, strace). L4 silent-source render with an AR caption. CI 45047570814: all 4 jobs green. Every H-0003/H-0004 finding confirmed FIX/DEFER/WONTFIX. Verdict ACCEPT WITH FIXES (S1:0, S2:1, S3:4). Task A mergeable; Task B mergeable after N1.
+- Evidence: company/handoffs/H-0009-review.md; company/handoffs/H-0009-repro.txt
+- Learned: a fix can add a new crash path (N1: `Path.resolve()` raises on NUL while `is_file()` swallows it), so every new rule needs the earlier adversarial set rerun. The policy hook blocks naming the held-out path in any command, even for a confinement test that never reads it; held-out confinement is verified by inspection outside gates. A grep of the return exposed the builder's CONFIDENCE line before the verdict: grep the return only after the verdict is written.
+- Next: re-verify N1 (one row of adv.py); ADR-0004 for has_audio before M0 (N2); add the stage_version Done-when to Phase 1 briefs (N3).
