@@ -1,0 +1,31 @@
+AR-01  OK  codepoints=19 (expected 19)  sha256_16=bafd0595bb2e96ed (expected bafd0595bb2e96ed)  same_as_prereg_text=True
+    codepoints: U+0645 U+0631 U+062D U+0628 U+0627 U+0020 U+0628 U+0643 U+0645 U+0020 U+0641 U+064A U+0020 U+0627 U+0644 U+0642 U+0646 U+0627 U+0629
+    utf8_hex:   d985d8b1d8add8a8d8a720d8a8d983d98520d981d98a20d8a7d984d982d986d8a7d8a9
+AR-02  OK  codepoints=18 (expected 18)  sha256_16=402abdb0d3a2e767 (expected 402abdb0d3a2e767)  same_as_prereg_text=True
+    codepoints: U+0644 U+0627 U+060C U+0020 U+0647 U+0630 U+0627 U+0020 U+0644 U+064A U+0633 U+0020 U+0635 U+062D U+064A U+062D U+0627 U+064B
+    utf8_hex:   d984d8a7d88c20d987d8b0d8a720d984d98ad8b320d8b5d8add98ad8add8a7d98b
+AR-03  OK  codepoints=19 (expected 19)  sha256_16=3bc41624d07409d6 (expected 3bc41624d07409d6)  same_as_prereg_text=True
+    codepoints: U+0627 U+0644 U+0633 U+0639 U+0631 U+0020 U+0662 U+0665 U+0660 U+0020 U+062F U+0648 U+0644 U+0627 U+0631 U+0020 U+0641 U+0642 U+0637
+    utf8_hex:   d8a7d984d8b3d8b9d8b120d9a2d9a5d9a020d8afd988d984d8a7d8b120d981d982d8b7
+AR-04  OK  codepoints=19 (expected 19)  sha256_16=fbe1a2e4e5940fb6 (expected fbe1a2e4e5940fb6)  same_as_prereg_text=True
+    codepoints: U+0627 U+0644 U+0633 U+0639 U+0631 U+0020 U+0032 U+0035 U+0030 U+0020 U+062F U+0648 U+0644 U+0627 U+0631 U+0020 U+0641 U+0642 U+0637
+    utf8_hex:   d8a7d984d8b3d8b9d8b12032353020d8afd988d984d8a7d8b120d981d982d8b7
+AR-05  OK  codepoints=25 (expected 25)  sha256_16=44a815ac352fe4cc (expected 44a815ac352fe4cc)  same_as_prereg_text=True
+    codepoints: U+062C U+0631 U+0628 U+062A U+0020 U+0069 U+0050 U+0068 U+006F U+006E U+0065 U+0020 U+0031 U+0036 U+0020 U+0050 U+0072 U+006F U+0020 U+0627 U+0645 U+0628 U+0627 U+0631 U+062D
+    utf8_hex:   d8acd8b1d8a8d8aa206950686f6e652031362050726f20d8a7d985d8a8d8a7d8b1d8ad
+AR-06  OK  codepoints=8 (expected 8)  sha256_16=11be98205de0fe16 (expected 11be98205de0fe16)  same_as_prereg_text=True
+    codepoints: U+0634 U+0648 U+0020 U+0631 U+0623 U+064A U+0643 U+061F
+    utf8_hex:   d8b4d98820d8b1d8a3d98ad983d89f
+AR-07  OK  codepoints=9 (expected 9)  sha256_16=6a7a72780e0b1344 (expected 6a7a72780e0b1344)  same_as_prereg_text=True
+    codepoints: U+0642 U+064F U+0644 U+0652 U+0020 U+0647 U+064F U+0648 U+064E
+    utf8_hex:   d982d98fd984d99220d987d98fd988d98e
+AR-08  OK  codepoints=17 (expected 17)  sha256_16=ce169e962acb9906 (expected ce169e962acb9906)  same_as_prereg_text=True
+    codepoints: U+0022 U+0627 U+0642 U+062A U+0628 U+0627 U+0633 U+0022 U+0020 U+0648 U+0028 U+0642 U+0648 U+0633 U+064A U+0646 U+0029
+    utf8_hex:   22d8a7d982d8aad8a8d8a7d8b32220d98828d982d988d8b3d98ad98629
+AR-09  OK  codepoints=19 (expected 19)  sha256_16=92079e97c6ad4cb2 (expected 92079e97c6ad4cb2)  same_as_prereg_text=True
+    codepoints: U+0640 U+0640 U+0640 U+0640 U+0640 U+0640 U+0640 U+0020 U+0645 U+062F U+0651 U+0020 U+0640 U+0640 U+0640 U+0640 U+0640 U+0640 U+0640
+    utf8_hex:   d980d980d980d980d980d980d98020d985d8afd99120d980d980d980d980d980d980d980
+AR-10  OK  codepoints=14 (expected 14)  sha256_16=d8d6e1db7de33132 (expected d8d6e1db7de33132)  same_as_prereg_text=True
+    codepoints: U+0661 U+0660 U+066A U+0020 U+062E U+0635 U+0645 U+0020 U+2013 U+0020 U+0662 U+0660 U+0662 U+0666
+    utf8_hex:   d9a1d9a0d9aa20d8aed8b5d98520e2809320d9a2d9a0d9a2d9a6
+ALL_MATCH=True

@@ -18,3 +18,9 @@
 - Evidence: company/handoffs/H-0004-return.md; `.venv/bin/python -m pytest -q` 70 passed; `.venv/bin/ruff check .` clean; clean-copy run 70 passed; validate report byte-identical twice.
 - Learned: v0 clips are back-to-back, so rule 3 "overlap" only makes sense as same-source range reuse (flagged). experiments/e6_captions.py still builds the old shape and now fails validation.
 - Next: Assurance review H-0004; port e6_captions.py to v0 before H-0006.
+
+### 2026-11-22 · H-0006 · T2 · DONE
+- Did: ran EXP-006 §5 (preconditions, ENV, fingerprint check, 10 renders, SHA256SUMS) via new experiments/exp006_render.py, twice; not judged, images never viewed. Uncommitted.
+- Evidence: company/handoffs/H-0006-return.md; render/frames_check/strings_check.txt ALL_MATCH=True; 10× png,1080,1920,rgb24; SHA256SUMS identical across 2 runs.
+- Learned: libass falls back to NotoSans-Regular.ttf for 'i', '"', '–' (AR-05/08/10); libass wording is "Glyph 0x.. not found", which my first regex missed, so always grep render.log by hand.
+- Next: Research classifies fallback (§8) before H-0007; Assurance RR row for NotoSans-Regular.
