@@ -6,3 +6,9 @@
 - Evidence: company/positions/05-assurance/
 - Learned: —
 - Next: contribute to M0 pre-mortem.
+
+### 2026-11-22 · H-0002 · T1 · DONE
+- Did: recorded RR-001 Noto Sans Arabic as SIL OFL 1.1 (v2.005, commercial use yes); added RR-006..RR-009 (G-C01..04 clips) and RR-010 (quarantined zip) as UNVERIFIED – source unknown, not usable. Media listed by name only.
+- Evidence: company/positions/05-assurance/DATA_RIGHTS.md; embedded name table ID 13/14 + /usr/share/doc/fonts-noto-core/copyright; company/handoffs/H-0002-return.md
+- Learned: fontTools/otfinfo are not installed; fc-query doesn't show the license, so a stdlib name-table parser is needed. Derived cache artifacts inherit the rights status of their source.
+- Next: Founder proof of origin (RR-006..010); Creative to put RR IDs in MANIFEST; Amiri needs a row before use.
