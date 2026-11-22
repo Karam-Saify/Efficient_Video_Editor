@@ -33,8 +33,11 @@ no overlapping clips on the video track · captions inside total duration · tot
 `target_duration_ms` ± 1 frame · every caption has `dir` · only known effect types.
 H-0009 additions: every integer field is a real JSON integer (`2000.0` → `E_SCHEMA`) · source paths are
 repo-relative, resolve inside the repo and outside the protected roots (held-out, golden, quarantine) →
-`E_SOURCE_PATH`, checked before any file is opened · optional `has_audio` (default true; ingest fills it
-from ffprobe) makes the renderer use silence for that source. "No overlapping clips" is enforced as
+`E_SOURCE_PATH`, checked before any file is opened (H-0017: a control character such as NUL, a lone
+surrogate, or a path `os` cannot resolve is also `E_SOURCE_PATH`, never an exception) · optional `has_audio`
+(default true) makes the renderer use silence for that source; see ADR-0004 (Proposed). Nothing fills it
+yet: ingest is a stub that writes no timeline. It is to be filled by ingest from ffprobe: next ingest brief.
+Until then a silent source without `has_audio:false` passes validation and fails at render. "No overlapping clips" is enforced as
 "no reuse of the same source range" (`E_OVERLAP`); see ADR-0003 (Proposed).
 
 Stage cache known properties (H-0003 review F8, WONTFIX): the input-hash key includes the repo-relative

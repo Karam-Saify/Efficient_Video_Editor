@@ -8,7 +8,9 @@ Codes (rule numbers from brief H-0004 / ARCHITECTURE.md):
   E_SCHEMA          structure/type error not covered by a more specific code. "integer" is strict here:
                     2000.0 is rejected (JSON Schema itself accepts integral floats; H-0009)
   E_SOURCE_PATH     source path is absolute, resolves (after symlinks) outside the repo, or lies under a
-                    protected root (held-out, golden, quarantine; I-6, I-9). Checked before any file is opened
+                    protected root (held-out, golden, quarantine; I-6, I-9), or is unusable as a path (control
+                    character such as NUL, lone surrogate, cannot be resolved; H-0017).
+                    Checked before any file is opened
   E_SOURCE_MISSING  rule 1: clip/audio `source` not declared, or a declared source file does not exist
   E_SOURCE_HASH     rule 1: file exists, `sha256` given, and the hash differs
   E_RANGE           rule 2: not 0 <= in_ms < out_ms <= source.duration_ms
@@ -109,10 +111,23 @@ def _duplicates(items: list[dict[str, Any]], prefix: str) -> list[Issue]:
 
 
 def _source_path_problem(raw: str, base_dir: Path) -> str | None:
-    """Why `raw` may not be used as a source path, or None. Never opens or stats the file itself."""
-    if Path(raw).is_absolute():
-        return "is absolute; use a path relative to the repo root"
-    resolved = (base_dir / raw).resolve()  # follows symlinks, so a link cannot smuggle a protected file in
+    """Why `raw` may not be used as a source path, or None.
+
+    Never opens the file; it resolves path metadata only (`resolve()` runs lstat/readlink on the path
+    components to follow symlinks). Never raises: strings that `os`/`pathlib` refuse are coded issues (H-0017).
+    """
+    if any(ord(ch) < 0x20 or 0x7F <= ord(ch) <= 0x9F for ch in raw):
+        return "contains a control character (e.g. NUL or newline)"
+    try:
+        raw.encode("utf-8")
+    except UnicodeEncodeError:
+        return "is not valid Unicode text (lone surrogate)"
+    try:
+        if Path(raw).is_absolute():
+            return "is absolute; use a path relative to the repo root"
+        resolved = (base_dir / raw).resolve()  # follows symlinks, so a link cannot smuggle a protected file in
+    except (OSError, ValueError, RuntimeError) as e:  # RuntimeError: symlink loop on Python < 3.13
+        return f"cannot be resolved ({type(e).__name__})"
     root = ROOT.resolve()
     if not resolved.is_relative_to(root):
         return "resolves outside the repository"
@@ -138,10 +153,17 @@ def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
             errs.append(Issue("E_SOURCE_PATH", f"/sources/{i}/path", f"source '{s['id']}' path {s['path']!r} {why}"))
             continue
         p = base_dir / s["path"]
-        if not p.is_file():
+        try:  # Python 3.12 is_file() re-raises e.g. ENAMETOOLONG/EACCES; a coded issue, never a traceback (H-0017)
+            is_file = p.is_file()
+            digest = _sha256(p) if is_file and "sha256" in s else None
+        except OSError as e:
+            errs.append(Issue("E_SOURCE_MISSING", f"/sources/{i}/path",
+                              f"source '{s['id']}' file cannot be read ({type(e).__name__}): {s['path']}"))
+            continue
+        if not is_file:
             errs.append(Issue("E_SOURCE_MISSING", f"/sources/{i}/path",
                               f"source '{s['id']}' file not found: {s['path']}"))
-        elif "sha256" in s and _sha256(p) != s["sha256"]:
+        elif digest is not None and digest != s["sha256"]:
             errs.append(Issue("E_SOURCE_HASH", f"/sources/{i}/sha256",
                               f"source '{s['id']}' sha256 does not match {s['path']}"))
     known = ", ".join(srcs)

@@ -36,7 +36,7 @@
           "path": { "type": "string", "minLength": 1, "description": "Relative to the working directory (the repo root, as the renderer runs). The validator rejects absolute paths, paths that resolve outside the repo, and protected roots (E_SOURCE_PATH)." },
           "duration_ms": { "type": "integer", "minimum": 1 },
           "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-          "has_audio": { "type": "boolean", "default": true, "description": "False when the file has no audio stream (e.g. no-speech product or sports clips); the renderer then uses silence for this source's clips. Filled from ingest metadata (ffprobe), not by the LLM. Optional; absent means true." }
+          "has_audio": { "type": "boolean", "default": true, "description": "False when the file has no audio stream (e.g. no-speech product or sports clips); the renderer then uses silence for this source's clips. To be filled by ingest from ffprobe (not yet implemented; set by hand until then), never by the LLM (ADR-0004). Optional; absent means true." }
         }
       }
     },

@@ -42,3 +42,9 @@
 - Evidence: company/handoffs/H-0015-return.md; COVERAGE_OK/CTRL_OK/LOG_OK/PNG_OK/INSTRUMENT_UNCHANGED all True; C2 flags AR-05/08/10; 10× png,1080,1920,rgb24; PNG/.ass/check files identical across runs; ruff clean, 125 passed.
 - Learned: ffmpeg default-level logs are not byte-reproducible (context pointers + stats lines); compare the normalised logcheck.txt instead, and add -nostats to future locked commands. §5.3 has U+061C both in the A range and the X list.
 - Next: Assurance review of H-0015; then Creative judges AR-01..10 (step 10).
+
+### 2026-11-22 · H-0017 · T2 · DONE
+- Did: closed H-0009 review N1 (control char / lone surrogate / unresolvable source path → E_SOURCE_PATH; is_file/hash OSError → E_SOURCE_MISSING) and N4 docstring; wrote ADR-0004 (has_audio, Proposed) + INDEX; corrected ARCHITECTURE has_audio wording. Uncommitted.
+- Evidence: company/handoffs/H-0017-return.md; new tests 14 failed before, 30 passed after; ruff clean; 155 passed + 8 skipped on 3.14 and on a fresh 3.12.3 dev venv.
+- Learned: Python 3.12 Path.is_file() re-raises errnos outside ENOENT/ENOTDIR/EBADF/ELOOP (3.14 swallows them), so validator stat calls need their own try; python3.12 -m venv lacks ensurepip here, use `virtualenv -p python3.12`.
+- Next: Assurance N1 spot re-check; ingest brief must write has_audio from probe().
