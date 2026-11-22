@@ -39,3 +39,9 @@
 - Evidence: company/handoffs/H-0009-review.md; company/handoffs/H-0009-repro.txt
 - Learned: a fix can add a new crash path (N1: `Path.resolve()` raises on NUL while `is_file()` swallows it), so every new rule needs the earlier adversarial set rerun. The policy hook blocks naming the held-out path in any command, even for a confinement test that never reads it; held-out confinement is verified by inspection outside gates. A grep of the return exposed the builder's CONFIDENCE line before the verdict: grep the return only after the verdict is written.
 - Next: re-verify N1 (one row of adv.py); ADR-0004 for has_audio before M0 (N2); add the stage_version Done-when to Phase 1 briefs (N3).
+
+### 2026-11-22 · H-0019 · T1 · DONE
+- Did: re-scored all 15 risks and added R-16..R-25. These include the Founder-named R-16 (font fallback), R-18 (single AI judge), R-19 (shell-write hook bypass) and R-20 (false positives on quoted text), plus no footage, trend privacy, stale cache, has_audio, size mismatch and prereg feasibility. Added Was and Check columns. Every row has one owner position. None closed. Sev-1 count is 11.
+- Evidence: company/state/RISK_REGISTER.md; company/handoffs/H-0019-return.md
+- Learned: R-15's "secret scan in CI" mitigation does not exist (grep of the workflows: no match). A register mitigation is a claim and needs I-1 evidence like any other.
+- Next: re-run the hook self-test with shell-write and quoted-text cases on the H-0020 return; verify RR-002 before the first real ingest.
