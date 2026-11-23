@@ -60,3 +60,9 @@
 - Evidence: company/handoffs/H-0025-return.md; ruff clean; 266 passed + 8 skipped; all runs within 1 frame of timeline; run 1 rerun byte-identical mp4/timeline/ass; fontselect only the EXP-008 pair.
 - Learned: validator's quarantine protection blocks dev renders, so I added an explicit allow_dev opt-in (D1, needs Assurance ruling); "no ASR words" is not silence on music clips; tail snap in source time can land exactly at the 1-frame limit.
 - Next: Assurance H-0026 reproduces run 1; fix tail snap to output grid; audio-energy gap test with creative-lead.
+
+### 2026-11-23 · H-0027 · T2 · DONE
+- Did: `src/timings.py` (`run_measured` via os.wait4, `measure`, `record` → cache/<id>/timings.json, cost model); `src.demo` records ingest/edit/render; `experiments/cost_baseline.py` measure+report; measured 8 unique dev clips cold; `docs/COST_BASELINE.md`.
+- Evidence: company/handoffs/H-0027-return.md; experiments/results/H-0027_cost_measurements.json; ruff clean; 279 passed + 8 skipped. Median $0.0080 (under $0.01, over $0.005); P90 $0.0111; planning big-model miss is 68% (estimate).
+- Learned: RUSAGE_CHILDREN maxrss is the largest child ever reaped, so it is useless for per-stage RSS (use wait4 per child); whisper model load is a ~20 CPU-s floor per ASR run; the 1080x1920 CRF-20 export is larger than the TikTok source.
+- Next: replace the token ESTIMATE with count_tokens/usage.jsonl actuals once the recipe prompt exists.

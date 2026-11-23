@@ -1,0 +1,499 @@
+{
+  "asr_model": "large-v3-turbo",
+  "brief": "H-0027",
+  "clips": {
+    "Download (1).mp4": {
+      "arabic_chars": 0,
+      "asr_runtime_sec_self_reported": 26.5,
+      "demo_total": {
+        "cpu_s": 54.563,
+        "cpu_sys_s": 5.506,
+        "cpu_user_s": 49.057,
+        "peak_rss_mb": 2052.8,
+        "rss_scope": "process_tree",
+        "wall_s": 44.957
+      },
+      "export_ms": 18118,
+      "language": "en",
+      "scenes": 7,
+      "segments": 0,
+      "sha256": "bd7083d89efdc15d40a368bad5780f8734695fb5ba3be992a2e43f1a15b20274",
+      "source_bytes": 2029290,
+      "source_ms": 18118,
+      "stages": {
+        "edit": {
+          "bytes": 2417,
+          "cpu_s": 0.003,
+          "cpu_sys_s": 0.002,
+          "cpu_user_s": 0.001,
+          "peak_rss_mb": 2052.8,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.011
+        },
+        "ingest": {
+          "bytes": 402,
+          "cached": false,
+          "cpu_s": 23.408,
+          "cpu_sys_s": 5.124,
+          "cpu_user_s": 18.284,
+          "peak_rss_mb": 2052.8,
+          "rss_scope": "process_tree",
+          "wall_s": 27.043
+        },
+        "render": {
+          "bytes": 6826170,
+          "cpu_s": 30.934,
+          "cpu_sys_s": 0.33,
+          "cpu_user_s": 30.604,
+          "peak_rss_mb": 334.3,
+          "rss_scope": "process_tree",
+          "wall_s": 17.625
+        },
+        "scenes_keyframes": {
+          "bytes": 136311,
+          "cpu_s": 3.699,
+          "cpu_sys_s": 0.459,
+          "cpu_user_s": 3.24,
+          "peak_rss_mb": 99.5,
+          "rss_scope": "process_tree",
+          "wall_s": 10.041
+        }
+      },
+      "text_chars": 0,
+      "video_id": "Download (1)-dec8a22656",
+      "words": 0
+    },
+    "Download (2).mp4": {
+      "arabic_chars": 0,
+      "asr_runtime_sec_self_reported": 34.1,
+      "demo_total": {
+        "cpu_s": 150.878,
+        "cpu_sys_s": 8.553,
+        "cpu_user_s": 142.325,
+        "peak_rss_mb": 2093.5,
+        "rss_scope": "process_tree",
+        "wall_s": 115.183
+      },
+      "export_ms": 30033,
+      "language": "en",
+      "scenes": 306,
+      "segments": 0,
+      "sha256": "fcc9134b3f421b2a3e83343bfb86b082fb2ec6fb3d394f2ef76f9a307666f6e6",
+      "source_bytes": 110821380,
+      "source_ms": 503066,
+      "stages": {
+        "edit": {
+          "bytes": 2441,
+          "cpu_s": 0.004,
+          "cpu_sys_s": 0.001,
+          "cpu_user_s": 0.004,
+          "peak_rss_mb": 2093.5,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.007
+        },
+        "ingest": {
+          "bytes": 409,
+          "cached": false,
+          "cpu_s": 28.854,
+          "cpu_sys_s": 6.46,
+          "cpu_user_s": 22.394,
+          "peak_rss_mb": 2093.5,
+          "rss_scope": "process_tree",
+          "wall_s": 34.752
+        },
+        "render": {
+          "bytes": 24209941,
+          "cpu_s": 121.69,
+          "cpu_sys_s": 2.035,
+          "cpu_user_s": 119.655,
+          "peak_rss_mb": 342.9,
+          "rss_scope": "process_tree",
+          "wall_s": 79.9
+        },
+        "scenes_keyframes": {
+          "bytes": 7771173,
+          "cpu_s": 140.25,
+          "cpu_sys_s": 12.707,
+          "cpu_user_s": 127.543,
+          "peak_rss_mb": 105.8,
+          "rss_scope": "process_tree",
+          "wall_s": 104.71
+        }
+      },
+      "text_chars": 0,
+      "video_id": "Download (2)-838765b62a",
+      "words": 0
+    },
+    "Download (3).mp4": {
+      "arabic_chars": 0,
+      "asr_runtime_sec_self_reported": 118.8,
+      "demo_total": {
+        "cpu_s": 216.244,
+        "cpu_sys_s": 23.279,
+        "cpu_user_s": 192.965,
+        "peak_rss_mb": 2158.5,
+        "rss_scope": "process_tree",
+        "wall_s": 173.272
+      },
+      "export_ms": 30000,
+      "language": "en",
+      "scenes": 24,
+      "segments": 38,
+      "sha256": "6b6e3fd4f2bf841529bd06b33aeee68bd6a9b4bf5c18c06e6175cd1bc27b92e3",
+      "source_bytes": 20792336,
+      "source_ms": 91100,
+      "stages": {
+        "edit": {
+          "bytes": 55717,
+          "cpu_s": 0.021,
+          "cpu_sys_s": 0.0,
+          "cpu_user_s": 0.021,
+          "peak_rss_mb": 2158.5,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.021
+        },
+        "ingest": {
+          "bytes": 29421,
+          "cached": false,
+          "cpu_s": 125.18,
+          "cpu_sys_s": 22.075,
+          "cpu_user_s": 103.105,
+          "peak_rss_mb": 2158.5,
+          "rss_scope": "process_tree",
+          "wall_s": 119.41
+        },
+        "render": {
+          "bytes": 28689219,
+          "cpu_s": 90.727,
+          "cpu_sys_s": 1.154,
+          "cpu_user_s": 89.573,
+          "peak_rss_mb": 1453.6,
+          "rss_scope": "process_tree",
+          "wall_s": 53.41
+        },
+        "scenes_keyframes": {
+          "bytes": 541457,
+          "cpu_s": 20.621,
+          "cpu_sys_s": 1.439,
+          "cpu_user_s": 19.182,
+          "peak_rss_mb": 104.6,
+          "rss_scope": "process_tree",
+          "wall_s": 16.571
+        }
+      },
+      "text_chars": 1023,
+      "video_id": "Download (3)-8cee77d697",
+      "words": 209
+    },
+    "Download (5).mp4": {
+      "arabic_chars": 0,
+      "asr_runtime_sec_self_reported": 63.0,
+      "demo_total": {
+        "cpu_s": 144.357,
+        "cpu_sys_s": 12.375,
+        "cpu_user_s": 131.982,
+        "peak_rss_mb": 2102.7,
+        "rss_scope": "process_tree",
+        "wall_s": 113.062
+      },
+      "export_ms": 29997,
+      "language": "en",
+      "scenes": 1,
+      "segments": 7,
+      "sha256": "f4da94a6fb29bf28df7949c6bb0d073ecea8ed000fce3c603b81a3da37d84ad4",
+      "source_bytes": 8742516,
+      "source_ms": 37466,
+      "stages": {
+        "edit": {
+          "bytes": 30786,
+          "cpu_s": 0.015,
+          "cpu_sys_s": 0.001,
+          "cpu_user_s": 0.014,
+          "peak_rss_mb": 2102.7,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.015
+        },
+        "ingest": {
+          "bytes": 11771,
+          "cached": false,
+          "cpu_s": 64.376,
+          "cpu_sys_s": 11.277,
+          "cpu_user_s": 53.099,
+          "peak_rss_mb": 2102.7,
+          "rss_scope": "process_tree",
+          "wall_s": 63.631
+        },
+        "render": {
+          "bytes": 31405459,
+          "cpu_s": 79.711,
+          "cpu_sys_s": 1.042,
+          "cpu_user_s": 78.669,
+          "peak_rss_mb": 1240.4,
+          "rss_scope": "process_tree",
+          "wall_s": 49.1
+        },
+        "scenes_keyframes": {
+          "bytes": 33430,
+          "cpu_s": 6.525,
+          "cpu_sys_s": 0.331,
+          "cpu_user_s": 6.194,
+          "peak_rss_mb": 103.8,
+          "rss_scope": "process_tree",
+          "wall_s": 4.575
+        }
+      },
+      "text_chars": 503,
+      "video_id": "Download (5)-7d44a0f2d0",
+      "words": 88
+    },
+    "Download (6).mp4": {
+      "arabic_chars": 0,
+      "asr_runtime_sec_self_reported": 61.6,
+      "demo_total": {
+        "cpu_s": 137.887,
+        "cpu_sys_s": 11.289,
+        "cpu_user_s": 126.597,
+        "peak_rss_mb": 2102.9,
+        "rss_scope": "process_tree",
+        "wall_s": 107.513
+      },
+      "export_ms": 30000,
+      "language": "en",
+      "scenes": 7,
+      "segments": 4,
+      "sha256": "9c3034df85881e4d46fa07785e248de02effd62a8f224217d89ca444b800d550",
+      "source_bytes": 6999988,
+      "source_ms": 35989,
+      "stages": {
+        "edit": {
+          "bytes": 23346,
+          "cpu_s": 0.01,
+          "cpu_sys_s": 0.0,
+          "cpu_user_s": 0.01,
+          "peak_rss_mb": 2102.9,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.012
+        },
+        "ingest": {
+          "bytes": 9625,
+          "cached": false,
+          "cpu_s": 61.67,
+          "cpu_sys_s": 10.58,
+          "cpu_user_s": 51.091,
+          "peak_rss_mb": 2102.9,
+          "rss_scope": "process_tree",
+          "wall_s": 62.078
+        },
+        "render": {
+          "bytes": 26368216,
+          "cpu_s": 75.96,
+          "cpu_sys_s": 0.664,
+          "cpu_user_s": 75.296,
+          "peak_rss_mb": 334.9,
+          "rss_scope": "process_tree",
+          "wall_s": 45.164
+        },
+        "scenes_keyframes": {
+          "bytes": 194010,
+          "cpu_s": 7.729,
+          "cpu_sys_s": 0.547,
+          "cpu_user_s": 7.181,
+          "peak_rss_mb": 103.9,
+          "rss_scope": "process_tree",
+          "wall_s": 5.42
+        }
+      },
+      "text_chars": 386,
+      "video_id": "Download (6)-0a3dd01e4b",
+      "words": 74
+    },
+    "Download (7).mp4": {
+      "arabic_chars": 0,
+      "asr_runtime_sec_self_reported": 24.8,
+      "demo_total": {
+        "cpu_s": 74.503,
+        "cpu_sys_s": 5.696,
+        "cpu_user_s": 68.808,
+        "peak_rss_mb": 2052.7,
+        "rss_scope": "process_tree",
+        "wall_s": 53.588
+      },
+      "export_ms": 21855,
+      "language": "en",
+      "scenes": 6,
+      "segments": 0,
+      "sha256": "a38f99a9d9d23c488082913db9ea70a34cda3b7946cd104a049065065e91b989",
+      "source_bytes": 3161342,
+      "source_ms": 21855,
+      "stages": {
+        "edit": {
+          "bytes": 2417,
+          "cpu_s": 0.003,
+          "cpu_sys_s": 0.0,
+          "cpu_user_s": 0.003,
+          "peak_rss_mb": 2052.7,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.003
+        },
+        "ingest": {
+          "bytes": 406,
+          "cached": false,
+          "cpu_s": 23.722,
+          "cpu_sys_s": 5.258,
+          "cpu_user_s": 18.464,
+          "peak_rss_mb": 2052.7,
+          "rss_scope": "process_tree",
+          "wall_s": 25.367
+        },
+        "render": {
+          "bytes": 12843632,
+          "cpu_s": 50.573,
+          "cpu_sys_s": 0.399,
+          "cpu_user_s": 50.174,
+          "peak_rss_mb": 333.3,
+          "rss_scope": "process_tree",
+          "wall_s": 28.012
+        },
+        "scenes_keyframes": {
+          "bytes": 149318,
+          "cpu_s": 5.015,
+          "cpu_sys_s": 0.407,
+          "cpu_user_s": 4.609,
+          "peak_rss_mb": 103.4,
+          "rss_scope": "process_tree",
+          "wall_s": 3.255
+        }
+      },
+      "text_chars": 0,
+      "video_id": "Download (7)-61494d967d",
+      "words": 0
+    },
+    "Download (8).mp4": {
+      "arabic_chars": 11,
+      "asr_runtime_sec_self_reported": 55.0,
+      "demo_total": {
+        "cpu_s": 125.007,
+        "cpu_sys_s": 11.864,
+        "cpu_user_s": 113.143,
+        "peak_rss_mb": 2095.6,
+        "rss_scope": "process_tree",
+        "wall_s": 108.987
+      },
+      "export_ms": 30033,
+      "language": "ar",
+      "scenes": 5,
+      "segments": 1,
+      "sha256": "e51e4d1ff9916f82ff6b1045a80fa53351f61f0256b400e30a8e31c74a20429a",
+      "source_bytes": 17950330,
+      "source_ms": 60000,
+      "stages": {
+        "edit": {
+          "bytes": 3754,
+          "cpu_s": 0.004,
+          "cpu_sys_s": 0.0,
+          "cpu_user_s": 0.004,
+          "peak_rss_mb": 2095.6,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.006
+        },
+        "ingest": {
+          "bytes": 882,
+          "cached": false,
+          "cpu_s": 46.471,
+          "cpu_sys_s": 9.941,
+          "cpu_user_s": 36.53,
+          "peak_rss_mb": 2095.6,
+          "rss_scope": "process_tree",
+          "wall_s": 55.908
+        },
+        "render": {
+          "bytes": 33711460,
+          "cpu_s": 78.198,
+          "cpu_sys_s": 1.853,
+          "cpu_user_s": 76.345,
+          "peak_rss_mb": 1998.9,
+          "rss_scope": "process_tree",
+          "wall_s": 52.141
+        },
+        "scenes_keyframes": {
+          "bytes": 141672,
+          "cpu_s": 10.359,
+          "cpu_sys_s": 0.558,
+          "cpu_user_s": 9.801,
+          "peak_rss_mb": 104.5,
+          "rss_scope": "process_tree",
+          "wall_s": 7.772
+        }
+      },
+      "text_chars": 13,
+      "video_id": "Download (8)-eea67ecc36",
+      "words": 3
+    },
+    "Download.mp4": {
+      "arabic_chars": 0,
+      "asr_runtime_sec_self_reported": 47.0,
+      "demo_total": {
+        "cpu_s": 125.305,
+        "cpu_sys_s": 9.764,
+        "cpu_user_s": 115.542,
+        "peak_rss_mb": 2094.4,
+        "rss_scope": "process_tree",
+        "wall_s": 94.553
+      },
+      "export_ms": 30033,
+      "language": "en",
+      "scenes": 29,
+      "segments": 2,
+      "sha256": "023a46e676f1ff2a1d4ada320baee412abfaf668a5ec47fc23c0a7718b59211d",
+      "source_bytes": 15910523,
+      "source_ms": 65000,
+      "stages": {
+        "edit": {
+          "bytes": 10538,
+          "cpu_s": 0.006,
+          "cpu_sys_s": 0.0,
+          "cpu_user_s": 0.006,
+          "peak_rss_mb": 2094.4,
+          "rss_scope": "process_hwm",
+          "wall_s": 0.006
+        },
+        "ingest": {
+          "bytes": 3559,
+          "cached": false,
+          "cpu_s": 43.399,
+          "cpu_sys_s": 8.457,
+          "cpu_user_s": 34.942,
+          "peak_rss_mb": 2094.4,
+          "rss_scope": "process_tree",
+          "wall_s": 47.891
+        },
+        "render": {
+          "bytes": 26197608,
+          "cpu_s": 81.644,
+          "cpu_sys_s": 1.253,
+          "cpu_user_s": 80.39,
+          "peak_rss_mb": 1307.1,
+          "rss_scope": "process_tree",
+          "wall_s": 46.239
+        },
+        "scenes_keyframes": {
+          "bytes": 645673,
+          "cpu_s": 18.208,
+          "cpu_sys_s": 1.526,
+          "cpu_user_s": 16.683,
+          "peak_rss_mb": 100.7,
+          "rss_scope": "process_tree",
+          "wall_s": 12.932
+        }
+      },
+      "text_chars": 118,
+      "video_id": "Download-acb767d195",
+      "words": 25
+    }
+  },
+  "duplicates": [
+    "Download (4).mp4 == Download (2).mp4"
+  ],
+  "language": "auto",
+  "unique_clips": 8
+}

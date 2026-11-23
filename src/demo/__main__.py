@@ -7,7 +7,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -19,6 +18,7 @@ from src.demo import resolve_time, resolve_words
 from src.edit import ops as edit_ops
 from src.edit.history import History
 from src.edit.ops import EditContext, OpError, total_ms
+from src.timings import TIMINGS, measure, record, run_measured, tree_bytes
 
 SOURCE_ID = "src0"
 CANVAS = {"width": 1080, "height": 1920, "fps": 30}
@@ -30,16 +30,20 @@ class DemoError(Exception):
 
 
 def _ingest(video: Path, model: str, language: str) -> tuple[dict[str, Any], dict[str, Any], Path]:
+    """Runs the ingest CLI (ASR only) and records its wall/CPU/peak RSS as stage `ingest` (H-0027)."""
     from src.ingest.__main__ import transcript_name
 
     cmd = [sys.executable, "-m", "src.ingest", str(video), "--model", model, "--language", language, "--no-scenes"]
-    r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-    if r.returncode != 0:
-        raise DemoError("ingest", (r.stderr.strip().splitlines() or [f"exit {r.returncode}"])[-1])
+    rc, out, err, m = run_measured(cmd, cwd=ROOT)
+    if rc != 0:
+        raise DemoError("ingest", (err.strip().splitlines() or [f"exit {rc}"])[-1])
     d = cache_dir(video_id(video))
     tr_p = d / transcript_name(model, language)
     if not tr_p.is_file():
         raise DemoError("ingest", f"no transcript at {tr_p}")
+    m["cached"] = "transcript cached" in out
+    m["bytes"] = tree_bytes([d / "meta.json", tr_p])
+    record(d / TIMINGS, "ingest", m)
     return read_json(d / "meta.json"), read_json(tr_p), d
 
 
@@ -61,8 +65,17 @@ def _apply(step: dict[str, Any], tl: dict[str, Any], ctx: EditContext, hist: His
     raise OpError("E_OP_UNKNOWN", f"unknown op {name!r}; known: {', '.join([*edit_ops.OPS, 'undo'])}")
 
 
+def _render(tl_path: Path, out: Path, allow_dev: bool) -> dict[str, Any]:
+    """Render in a child process so its CPU and peak RSS are measured exactly (H-0027)."""
+    cmd = [sys.executable, "-m", "src.render", str(tl_path), str(out), *(["--allow-dev"] if allow_dev else [])]
+    rc, _, err, m = run_measured(cmd, cwd=ROOT)
+    if rc != 0:
+        raise DemoError("render", (err.strip().splitlines() or [f"exit {rc}"])[-1])
+    m["bytes"] = tree_bytes([out, out.with_suffix(".ass")])
+    return m
+
+
 def run(video: Path, ops_path: Path, out_dir: Path, language: str, model: str) -> dict[str, Any]:
-    from src.render import render
     from src.validate import DEV_SOURCE_ROOT, validate
 
     t0 = time.time()
@@ -83,44 +96,45 @@ def run(video: Path, ops_path: Path, out_dir: Path, language: str, model: str) -
         raise DemoError("ops", f"cannot read an {{\"ops\": [...]}} list from {ops_path}: {e}") from None
 
     meta, tr, cdir = _ingest(video, model, language)
-    words = words_from_transcript(tr, SOURCE_ID)
-    write_json(cdir / "edit" / "words.json", words)
-    dur = int(meta["duration"] * 1000)
-    clips = [{"id": "c1", "source": SOURCE_ID, "in_ms": 0, "out_ms": dur}]
-    ctx = EditContext(words=tuple(words), source_id=SOURCE_ID, base_dir=ROOT, allow_dev=allow_dev)
-    tl: dict[str, Any] = {
-        "version": "0.1", "canvas": dict(CANVAS), "target_duration_ms": dur,
-        "sources": [{"id": SOURCE_ID, "path": rel, "duration_ms": dur, "has_audio": bool(meta["has_audio"])}],
-        "tracks": {"video": clips, "captions": captions_from_words(words, clips, SOURCE_ID)},
-        "provenance": {"selection": f"src.demo ops={ops_path.name} language={tr['language']}"},
-    }
-    issues = validate(tl, ROOT, allow_dev=allow_dev)
-    if issues:
-        raise DemoError("captions", "v0 timeline is invalid:\n  " + "\n  ".join(map(str, issues)))
-    hist = History(cdir / "edit" / "history")
-    hist.clear()
-    hist.save(tl)
-    for i, step in enumerate(steps):
-        try:
-            tl = _apply(step, tl, ctx, hist)
-        except OpError as e:
-            raise DemoError(f"op {i} ({step.get('op') if isinstance(step, dict) else step!r})", str(e)) from None
-        if not (isinstance(step, dict) and step.get("op") == "undo"):
-            hist.save(tl)
-        print(f"op {i} {step.get('op')}: {total_ms(tl)} ms, {len(tl['tracks']['video'])} clips")
+    with measure() as edit_t:  # captions + ops + validate, in-process (H-0027)
+        words = words_from_transcript(tr, SOURCE_ID)
+        write_json(cdir / "edit" / "words.json", words)
+        dur = int(meta["duration"] * 1000)
+        clips = [{"id": "c1", "source": SOURCE_ID, "in_ms": 0, "out_ms": dur}]
+        ctx = EditContext(words=tuple(words), source_id=SOURCE_ID, base_dir=ROOT, allow_dev=allow_dev)
+        tl: dict[str, Any] = {
+            "version": "0.1", "canvas": dict(CANVAS), "target_duration_ms": dur,
+            "sources": [{"id": SOURCE_ID, "path": rel, "duration_ms": dur, "has_audio": bool(meta["has_audio"])}],
+            "tracks": {"video": clips, "captions": captions_from_words(words, clips, SOURCE_ID)},
+            "provenance": {"selection": f"src.demo ops={ops_path.name} language={tr['language']}"},
+        }
+        issues = validate(tl, ROOT, allow_dev=allow_dev)
+        if issues:
+            raise DemoError("captions", "v0 timeline is invalid:\n  " + "\n  ".join(map(str, issues)))
+        hist = History(cdir / "edit" / "history")
+        hist.clear()
+        hist.save(tl)
+        for i, step in enumerate(steps):
+            try:
+                tl = _apply(step, tl, ctx, hist)
+            except OpError as e:
+                raise DemoError(f"op {i} ({step.get('op') if isinstance(step, dict) else step!r})", str(e)) from None
+            if not (isinstance(step, dict) and step.get("op") == "undo"):
+                hist.save(tl)
+            print(f"op {i} {step.get('op')}: {total_ms(tl)} ms, {len(tl['tracks']['video'])} clips")
 
-    stem = re.sub(r"[^A-Za-z0-9]+", "_", video.stem).strip("_")
-    out = out_dir / f"{stem}__{ops_path.stem}.mp4"
-    write_json(out.with_suffix(".timeline.json"), tl)
-    try:
-        render(tl, out, allow_dev=allow_dev)
-    except (ValueError, subprocess.CalledProcessError) as e:
-        raise DemoError("render", str(e)) from None
+        stem = re.sub(r"[^A-Za-z0-9]+", "_", video.stem).strip("_")
+        out = out_dir / f"{stem}__{ops_path.stem}.mp4"
+        tl_path = out.with_suffix(".timeline.json")
+        write_json(tl_path, tl)
+    edit_t["bytes"] = tree_bytes([cdir / "edit", tl_path])
+    record(cdir / TIMINGS, "edit", edit_t)
+    record(cdir / TIMINGS, "render", _render(tl_path, out, allow_dev))
     p = probe(out)
     return {"output": str(out), "timeline_ms": total_ms(tl), "ffprobe_s": p["duration"], "fps": p.get("fps"),
             "size": f"{p.get('width')}x{p.get('height')}", "language": tr["language"],
             "language_probability": tr.get("language_probability"), "versions": hist.versions()[-1],
-            "wall_s": round(time.time() - t0, 1)}
+            "wall_s": round(time.time() - t0, 1), "timings": str(cdir / TIMINGS)}
 
 
 def main(argv: list[str] | None = None) -> int:
