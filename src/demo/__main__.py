@@ -106,7 +106,8 @@ def run(video: Path, ops_path: Path, out_dir: Path, language: str, model: str) -
             "version": "0.1", "canvas": dict(CANVAS), "target_duration_ms": dur,
             "sources": [{"id": SOURCE_ID, "path": rel, "duration_ms": dur, "has_audio": bool(meta["has_audio"])}],
             "tracks": {"video": clips, "captions": captions_from_words(words, clips, SOURCE_ID)},
-            "provenance": {"selection": f"src.demo ops={ops_path.name} language={tr['language']}"},
+            "provenance": {"selection": f"src.demo ops={ops_path.name} language={tr['language']}"
+                                         + (" ADR-0006 dev-only" if allow_dev else "")},  # H-0026 F2
         }
         issues = validate(tl, ROOT, allow_dev=allow_dev)
         if issues:
