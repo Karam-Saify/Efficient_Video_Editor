@@ -21,6 +21,8 @@ listed and are changed only by ADR.
 | Tokens per revision (median) | Engineering | same | M4 | < 2,000 |
 | Render minutes per Short | Engineering | timing log | M2 | < 5 min |
 | Codespace core-hours per week | Engineering | GitHub billing page | M1 | within free quota |
+| **Cost per successful export** (incl. retries + failures, ADR-0015) | Engineering (Product owns target) | `src/cost` ledger: total $ ÷ successful exports | Week 1 baseline (`docs/COST_BASELINE.md`) | ≤ $0.01, stretch ≤ $0.005 |
+| **Quality ÷ cost** (ADR-0015) | Product | golden rubric mean ÷ cost per successful export | M2 | higher than the previous release |
 
 ## Operating-health metrics (is the company OS working?)
 | Metric | Owner | Healthy | Warning |

@@ -14,3 +14,11 @@
 | ADR-0011 | Cost ceiling $0.01 per exported free video (stretch $0.005) | Accepted (Founder) | two-way | 2026-11-23 |
 | ADR-0012 | Experiment brief format | Accepted (Founder) | two-way | 2026-11-23 |
 | ADR-0013 | Edit diffs are sensitive personal data | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0014 | (reserved for H-0029 schema change, if any) | — | — | 2026-11-23 |
+| ADR-0015 | Efficiency metrics: cost per successful export, and quality÷cost | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0016 | Architecture: orchestrator, model_router, recipes, cost; describe/score/select get new roles | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0017 | Router rule: deterministic → cache → small model → large model | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0018 | Adaptive evidence selection (training-free) | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0019 | Prompt caching on all Claude API calls | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0020 | No custom model training or GPU infra until data shows need | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0021 | Recipe photos_to_video | Accepted (Founder) | two-way | 2026-11-23 |
