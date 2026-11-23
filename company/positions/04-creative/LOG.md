@@ -18,3 +18,9 @@
 - Evidence: company/experiments/EXP-008-results.md, company/handoffs/H-0016-return.md
 - Learned: Noto Sans vs Noto Sans Arabic at the same size gives about 1.6× cap/alef, so mixed captions need a per-script size factor. Measure O1 anchors from pixel segments; my eye misjudged the AR-09 tatweel lengths, which measured equal.
 - Next: Founder spot-check to calibrate the 1.3× anchor; judge the size-parity fix under its new EXP id.
+
+### 2026-11-23 · H-0028 · T1 · DONE
+- Did: wrote 12 recipes (beats, hook rule, pacing, preset, typed params, principles, needs) and a principles table; tiered against today's ops: A=4 (R01 R03 R07 R08), B=7, C=1 (R11).
+- Evidence: company/handoffs/H-0028-recipes.md, company/handoffs/H-0028-return.md
+- Learned: set_caption_style is global, so per-beat hook looks are a need; captions exist only for spoken words, so any unspoken text (price, title, badges) needs a text overlay; R12 stays ship-gated by the EXP-008 Sev-2 font-switch.
+- Next: confirm escalation reading with Operator; judge tier-A recipes once H-0029 formalises them.
