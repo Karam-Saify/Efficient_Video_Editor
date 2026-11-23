@@ -72,3 +72,9 @@
 - Evidence: company/handoffs/H-0029-return.md (36-cell matrix: 33 valid timelines + 3 designed E_RECIPE_SOURCE_KIND); 363 passed + 8 skipped; ruff clean; R05 recompile cmp IDENTICAL; renders out/h0029/{Download5__R01,Download3__R05,Download6__R10}.mp4 at 35.001/35.001/18.000 s.
 - Learned: without a model, beats can only be proportional windows; clean/bold_box presets sit at ~83 % height, below the style guide's 72 % bound; a schema-property classification test is what keeps "never silently dropped" true.
 - Next: Assurance H-0029 review; text-overlay op (unblocks 7 recipes); image sources need a source-type ADR.
+
+### 2026-11-23 · H-0032 · T2 · DONE
+- Did: `src/cost/` (meter moved from timings, model + usage_cost cached/uncached, usage.jsonl hook, attempt Ledger, expected_cost_per_success); `src/timings.py` re-export; cost-per-successful-export sweep in `experiments/cost_baseline.py` + COST_BASELINE.md; ARCHITECTURE.md module map + router order. Commits 258b07d, 99f954a, d92e7ad (not pushed).
+- Evidence: company/handoffs/H-0032-return.md; 381 passed + 8 skipped; ruff clean; report byte-identical on rerun; old §3 output unchanged. Per successful export median/P90: 0 % $0.0080/$0.0111, 5 % $0.0084/$0.0117, 20 % $0.0100/$0.0139.
+- Learned: a 20 % failure rate uses up the whole ceiling at the median; cached retries save only ~0.4 m$ because planning + render dominate a retry; Sonnet/Opus 5.5 cache-read prices are not 0.1x of input (they are 0.05x), so price dicts carry explicit cache prices.
+- Next: wire Ledger.add and log_llm_call into the first orchestrator/LLM-stage brief; replace OBSERVED with ledger actuals.
