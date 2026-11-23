@@ -48,3 +48,9 @@
 - Evidence: company/handoffs/H-0017-return.md; new tests 14 failed before, 30 passed after; ruff clean; 155 passed + 8 skipped on 3.14 and on a fresh 3.12.3 dev venv.
 - Learned: Python 3.12 Path.is_file() re-raises errnos outside ENOENT/ENOTDIR/EBADF/ELOOP (3.14 swallows them), so validator stat calls need their own try; python3.12 -m venv lacks ensurepip here, use `virtualenv -p python3.12`.
 - Next: Assurance N1 spot re-check; ingest brief must write has_audio from probe().
+
+### 2026-11-23 · H-0024 · T2 · DONE
+- Did: G2a stubs exit 2 NOT_IMPLEMENTED (no manifest); G2b UNSUPPORTED_FIELD from src/capabilities.py + generated docs/CAPABILITIES.md; G3 ingest --language auto, src/captions.caption_track, src/bidi, EXP-008 font pair in render (src/render/fontrun.py); G1 experiments/dev_catalog.py run on 9 clips. Commits 21b24a6, 01a48a7, 9f05860, e526cdb (not pushed).
+- Evidence: company/handoffs/H-0024-return.md; ruff clean; 221 passed + 8 skipped; out/h0024/frame_ar_en.png libass resolves only NotoSansArabic-Regular + NotoSans-Regular, byte-identical on rerun.
+- Learned: ASS cannot force RTL (Encoding -1 = first strong char), so `dir` is only honest when it matches that; Download (2)=(4) duplicate; faster-whisper reports en 0.601 on no-speech clips; dev set has no Arabic speech clip.
+- Next: H-0025 flips style/zoom rows in src/capabilities.py; resolve majority-vs-first-strong dir for Latin-initial Arabic lines.
