@@ -152,3 +152,50 @@ The Operator used ~270k. No LLM is in the product loop yet, so a Short costs 0 t
 3. Accept ADR-0014 now, or defer it to the M1 gate.
 4. Pricing-door anchor numbers; pick the form tool (no collection before F1–F3 are fixed).
 5. Still open: the F1 render-determinism standard, and the failure/miss rate to budget for.
+
+---
+
+# Part 4 (night): Founding Creator Data Program, pilot day 0 (Daily, pilot)
+
+## Decision
+**ADR-0023**: the Founding Creator Data Program runs as a zero-cost concierge pilot. Tools are local and open-source; annotation and Director reasoning happen inside Claude Code sessions, with no paid API. Targets for days 1–10: 5 partners, 20–30 rights-cleared source videos, 5 jobs × 2 versions, every choice and correction logged. Daily reporting goes through the new `/daily` command.
+
+## Done
+| Item | Status | Evidence |
+|---|---|---|
+| Consent kit, ar + en: 3 separate permissions (evaluation / product development / training, **default OFF**), partner warranty, withdrawal without email | Done | `company/positions/05-assurance/CONSENT_KIT.md` |
+| Partner intake form + feedback form (fields 1:1 with the ADR-0023 job fields) | Done | `PARTNER_INTAKE_FORM.md`, `PARTNER_FEEDBACK_FORM.md` |
+| H-0033 S2 findings F1 (consent "not shared"), F2 (prompts in the backlog), F3 (rights warranty), F5 (bench RR rows) | **Closed** | H-0034 return; RR-031..037 |
+| ADR-0024: 90-day maximum retention, amending DATA_POLICY §4 | Proposed, **Founder to sign** | `company/decisions/` |
+| Eval-set licences (primary sources, 2026-11-23) | Done | RR-026..030 |
+| Annotation schema + Footage Intelligence v0 storyboard (H-0035) | **Running** (schema in progress) | — |
+| Common Voice Arabic baseline EXP-013 (H-0036) | Queued after H-0035 | brief |
+
+## Eval-set licence verdicts
+| Set | Verdict |
+|---|---|
+| Common Voice Arabic 27.0 | **Usable**, internal eval (CC0; no re-hosting, no speaker identification; whether download needs a sign-in is unverified) |
+| SHAMS (Levantine) | **NOT usable**. The card says BY-SA, but LangMedia's own page says BY-NC-SA, which covers all 316 Lebanese rows. The other 393 rows are BY-NC-ND. **Escalated to the Founder** |
+| Arabic Speech Corpus | **Usable**, internal eval only. It is CC BY 4.0, not non-commercial; ADR-0023 is corrected |
+| TimelineBench | Apache-2.0 code/tasks: reference only, never training. Media: **NOT usable** (no access; contradictory terms) |
+
+## Pilot progress (targets for days 1–10)
+| Metric | Now | Target |
+|---|---|---|
+| Partners recruited (with signed consent) | 0 | 5 (Founder's store = #1) |
+| Source videos with rights | 0 | 20–30 |
+| Jobs delivered (2 versions each) | 0 | 5 |
+| human_verified labels / feedback records | 0 / 0 | all choices + corrections |
+
+## Cost and plan usage
+- **Cash cost today: $0.** No paid API calls, tools or storage; everything ran locally or inside this Claude Code session.
+- **Plan usage today (estimate): ~1.6 M tokens.** Subagents used ~1.29 M, the Operator ~300k. The pilot share so far is H-0034 at 108k, about 7 %. H-0035 is still running and not counted.
+
+## Founder asks (updated, in order)
+1. **Confirm that the Claude account's model-training setting is OFF** before any partner data reaches a session.
+2. **Sign ADR-0024** (90-day retention).
+3. **SHAMS:** ask LangMedia or the authors for written permission, get a lawyer's opinion, or drop it and find another Lebanese eval source?
+4. **Fill `quarantine/dev/LABELS.csv`**; it blocks EXP-012.
+5. Partner #1 (your store): intake form + signed consent, then upload the clips.
+6. Common Voice: if the download needs an account, research-lead will send you the steps.
+7. Still open: re-upload the ~4 missing clips; ADR-0014; pricing-door anchors; form tool; the F1 determinism standard; the budget failure rate.

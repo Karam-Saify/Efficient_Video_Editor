@@ -19,9 +19,11 @@
 - Week 1 A–D done: H-0027/H-0032 cost (`src/cost`), H-0028/H-0029 recipes (33/36; photos_to_video gap), H-0030 bench, H-0031 product
 - H-0033 review: ACCEPT WITH FINDINGS (S1 0 · S2 5 · S3 8). Details in `company/reports/2026-11-23/README.md` Part 3
 - **Founder S1:** catalog language labels are wrong (ASR fails on Arabic). ADR-0022. 10 clips in quarantine/dev; `LABELS.csv` awaiting Founder
+- **ADR-0023 Founding Creator pilot** (zero-cost): H-0034 consent kit + licences DONE (SHAMS not usable, escalated; ADR-0024 retention Proposed); H-0035 schema + storyboard RUNNING; H-0036 Common Voice baseline queued. Daily via `/daily`
 
 ## Next (ordered)
-0. **Founder fills `quarantine/dev/LABELS.csv`** → EXP-012 ASR diagnostic (prereg, Demucs = new dep T2) → pipeline fixes after the Founder verdict
+0. **Founder:** training setting OFF on the Claude account; sign ADR-0024; SHAMS route; partner #1 intake
+0a. **Founder fills `quarantine/dev/LABELS.csv`** → EXP-012 ASR diagnostic (prereg, Demucs = new dep T2) → pipeline fixes after the Founder verdict
 0b. H-0033 S2 fixes F1–F3 (consent, backlog, rights warranty) and F5 (RR rows for bench assets)
 1. Tomorrow's goal: fix H-0026 F1 (MP4 render not byte-deterministic: pin x264 threads/settings, or Founder-approved frame/PSNR equality), F2 (dev-only marker on outputs), F4 (coded error for malformed ops.json), F5/F6 (validator ↔ renderer caption text and length bounds)
 2. First Arabic speech demo run, once the Founder supplies a clip
