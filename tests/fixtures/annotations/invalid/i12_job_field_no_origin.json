@@ -1,0 +1,106 @@
+{
+  "record_type": "job",
+  "annotation_version": "0.1",
+  "job_id": "J-001",
+  "partner_id": "P001",
+  "rights_ids": [
+    "RR-P001-01"
+  ],
+  "consent_version": "CK-v0.1",
+  "permissions": {
+    "evaluation": true,
+    "product_development": false,
+    "training_consented": false
+  },
+  "training_usable": false,
+  "brief": {
+    "value": "فيديو قصير للعرض الجديد",
+    "label_origin": "human_verified"
+  },
+  "audience": {
+    "value": "نساء ٢٥-٤٠ في بيروت",
+    "label_origin": "human_verified"
+  },
+  "platform": {
+    "value": "tiktok",
+    "label_origin": "human_verified"
+  },
+  "objective": {
+    "value": {
+      "kind": "offer",
+      "text": "خصم الأسبوع"
+    },
+    "label_origin": "human_verified"
+  },
+  "edits_delivered": {
+    "value": [
+      {
+        "version_label": "A",
+        "recipe_id": "product_demo",
+        "timeline_sha256": "0000000000000000000000000000000000000000000000000000000000000001",
+        "delivered_on": "2026-11-24"
+      },
+      {
+        "version_label": "B",
+        "recipe_id": "hook_first",
+        "timeline_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "delivered_on": "2026-11-24"
+      }
+    ],
+    "label_origin": "machine"
+  },
+  "partner_choice": {
+    "value": {
+      "choice": "B",
+      "display_order": [
+        "B",
+        "A"
+      ]
+    },
+    "label_origin": "human_verified"
+  },
+  "likes_dislikes": {
+    "value": {
+      "A": {
+        "likes": "الألوان",
+        "dislikes": "بطيء"
+      },
+      "B": {
+        "likes": "البداية",
+        "dislikes": ""
+      }
+    },
+    "label_origin": "human_verified"
+  },
+  "corrections": {
+    "value": [
+      {
+        "version_label": "B",
+        "text": "احذف أول 3 ثوانٍ",
+        "t_start_ms": 0
+      },
+      {
+        "version_label": "B",
+        "text": "الترجمة خطأ",
+        "t_start_ms": null
+      }
+    ],
+    "label_origin": "human_verified"
+  },
+  "would_publish": {
+    "value": "after_corrections",
+    "label_origin": "human_verified"
+  },
+  "would_pay": {
+    "value": "le_5"
+  },
+  "published_version": {
+    "value": {
+      "published": true,
+      "version_label": "B",
+      "modified": true,
+      "file_ref": null
+    },
+    "label_origin": "human_verified"
+  }
+}
