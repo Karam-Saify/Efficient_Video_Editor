@@ -23,3 +23,7 @@
 8. **Escalate if:** no CDN-hosted Whisper runtime works without a build step; a needed lib has a licence problem.
 9. **Termination condition:** committed (do not push), return written.
 10. **Consulted:** none. The Operator decides hosting with the Founder.
+
+## Addendum (Operator, Founder memo 2)
+- The Founder will include the **lowest-end phone** in the 3. Model choice is automatic: try base on WebGPU, then tiny on WebGPU, then tiny on WASM. Record which one ran. Also make the 30 s export resolution-safe: if 1080×1920 encoding is unsupported or fails, log it as FAIL and retry at 720×1280. Report both, and never silently downgrade.
+- Show the device's memory hints (`navigator.deviceMemory`, `hardwareConcurrency`) in the results.
