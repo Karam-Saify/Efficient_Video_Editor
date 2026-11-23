@@ -20,3 +20,5 @@ Deliverables:
 Cost (target $0) and plan usage are reported daily via `/daily`.
 
 **Consistent with:** ADR-0013 (edit diffs are sensitive), ADR-0020 (no training; the training permission is collected but unused), ADR-0022 (human-verified labels are evidence; machine labels are not).
+
+**Correction (2026-11-23, H-0034 primary-source check):** the Arabic Speech Corpus is CC BY 4.0, not non-commercial. Internal eval only stays as our own choice. SHAMS is NOT USABLE until permission is granted (its LangMedia Lebanese rows are BY-NC-SA). TimelineBench media is not usable; the Apache-2.0 code and tasks are a reference only. See RR rows in DATA_RIGHTS.md.
