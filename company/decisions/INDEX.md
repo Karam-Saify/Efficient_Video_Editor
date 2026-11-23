@@ -22,3 +22,4 @@
 | ADR-0019 | Prompt caching on all Claude API calls | Accepted (Founder) | two-way | 2026-11-23 |
 | ADR-0020 | No custom model training or GPU infra until data shows need | Accepted (Founder) | two-way | 2026-11-23 |
 | ADR-0021 | Recipe photos_to_video | Accepted (Founder) | two-way | 2026-11-23 |
+| ADR-0014 | Timeline `provenance.recipe` (additive, meta only) | Proposed (engineering-lead, H-0029) | two-way | 2026-11-23 |

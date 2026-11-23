@@ -39,3 +39,31 @@ A field with kind `render` and rendered `n` is rejected by `src.validate` with `
 | `provenance.selection` | meta | y | n | free text; type-checked only |
 | `provenance.prompt_versions` | meta | y | n | object; type-checked only |
 | `provenance.model_ids` | meta | y | n | object; type-checked only |
+| `provenance.recipe.id` | meta | y | n | recipe id the timeline was compiled from (H-0029, ADR-0014 Proposed) |
+| `provenance.recipe.version` | meta | y | n | recipe version (integer) |
+| `provenance.recipe.params` | meta | y | n | the full fill: every param value used, defaults included |
+| `provenance.recipe.principles` | meta | y | n | principle ids the recipe cites (ADR-0009 explanations) |
+| `provenance.recipe.unrendered` | meta | y | n | recipe fields that compiled to nothing (UNRENDERED) |
+
+## Recipe features (H-0029)
+
+A recipe that asks for an unrendered feature still compiles, and the compile result lists the recipe field as `UNRENDERED` (`src/recipe`, `docs/RECIPE_LANGUAGE.md`).
+
+| feature | recipe field | timeline field | rendered | notes |
+|---|---|---|---|---|
+| music_bed | `sound.music_bed` | `tracks.audio[].source` | n | extra audio is not mixed; no rights-cleared track |
+| sfx | `sound.sfx` | `tracks.audio[].source` | n | same as music_bed |
+| text_overlay | `overlays` | none | n | unspoken on-screen text; captions only show ASR words |
+| per_beat_caption_style | `captions.per_beat` | none | n | set_caption_style is global (one preset) |
+| reorder | `structure.reorder` | none | n | no reorder/splice op; trim keeps one window |
+| transitions | `needs[]=transitions` | none | n | no transition renderer |
+| b_roll | `needs[]=b_roll` | none | n | single-source timelines only |
+| stickers | `needs[]=stickers` | none | n | no sticker renderer |
+| speed_ramp | `needs[]=speed_ramp` | none | n | no speed op |
+| zoom_ease | `needs[]=zoom_ease` | none | n | zoom is instant in/out |
+| beat_sync | `needs[]=beat_sync` | none | n | no beat detection |
+| keyword_highlight | `needs[]=keyword_highlight` | none | n | no caption emphasis |
+| per_script_size | `needs[]=per_script_size` | none | n | EXP-008 O1 size fix not landed (Sev-2) |
+| second_source | `needs[]=second_source` | none | n | one source per recipe |
+| image_source | `needs[]=image_source` | none | n | timeline v0 sources are video files; no still-image input path in the renderer |
+| pan_zoom | `needs[]=pan_zoom` | none | n | no animated pan/zoom (Ken Burns); zoom is a static punch-in |

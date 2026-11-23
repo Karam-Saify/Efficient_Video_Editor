@@ -112,7 +112,20 @@
       "properties": {
         "selection": { "type": "string" },
         "prompt_versions": { "type": "object" },
-        "model_ids": { "type": "object" }
+        "model_ids": { "type": "object" },
+        "recipe": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version", "params", "principles", "unrendered"],
+          "description": "Set by src.recipe (H-0029, ADR-0014 Proposed): what the timeline was compiled from, for ADR-0009 explanations. Meta only; never a render instruction.",
+          "properties": {
+            "id": { "type": "string", "pattern": "^(R[0-9]{2}|[a-z][a-z0-9_]*)$" },
+            "version": { "type": "integer", "minimum": 1 },
+            "params": { "type": "object", "additionalProperties": { "type": ["integer", "number", "boolean", "string"] } },
+            "principles": { "type": "array", "items": { "type": "string", "pattern": "^P-[A-Z0-9-]+$" } },
+            "unrendered": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          }
+        }
       }
     }
   }

@@ -78,6 +78,47 @@ FIELDS: tuple[Field, ...] = (
     Field("provenance.selection", "meta", "y", "n", "free text; type-checked only"),
     Field("provenance.prompt_versions", "meta", "y", "n", "object; type-checked only"),
     Field("provenance.model_ids", "meta", "y", "n", "object; type-checked only"),
+    Field("provenance.recipe.id", "meta", "y", "n",
+          "recipe id the timeline was compiled from (H-0029, ADR-0014 Proposed)"),
+    Field("provenance.recipe.version", "meta", "y", "n", "recipe version (integer)"),
+    Field("provenance.recipe.params", "meta", "y", "n", "the full fill: every param value used, defaults included"),
+    Field("provenance.recipe.principles", "meta", "y", "n", "principle ids the recipe cites (ADR-0009 explanations)"),
+    Field("provenance.recipe.unrendered", "meta", "y", "n", "recipe fields that compiled to nothing (UNRENDERED)"),
+)
+
+
+@dataclass(frozen=True)
+class Feature:
+    """A recipe-level feature (H-0029). `timeline_field` set: rendered iff that FIELDS row is rendered; None: there
+    is no timeline field or op for it yet, so it is unrendered. src.recipe reports every unrendered feature a recipe
+    asks for as UNRENDERED with the recipe field path; it never drops one silently."""
+    name: str
+    recipe_field: str  # dotted path in the recipe (`needs[]=x` = that value in the needs list)
+    timeline_field: str | None
+    notes: str
+
+    @property
+    def rendered(self) -> bool:
+        if self.timeline_field is None:
+            return False
+        rows = [f for f in FIELDS if f.path == self.timeline_field and f.value is None]
+        return bool(rows) and not rows[0].unsupported
+
+
+FEATURES: tuple[Feature, ...] = (
+    Feature("music_bed", "sound.music_bed", "tracks.audio[].source",
+            "extra audio is not mixed; no rights-cleared track"),
+    Feature("sfx", "sound.sfx", "tracks.audio[].source", "same as music_bed"),
+    Feature("text_overlay", "overlays", None, "unspoken on-screen text; captions only show ASR words"),
+    Feature("per_beat_caption_style", "captions.per_beat", None, "set_caption_style is global (one preset)"),
+    Feature("reorder", "structure.reorder", None, "no reorder/splice op; trim keeps one window"),
+    *(Feature(n, f"needs[]={n}", None, notes) for n, notes in (
+        ("transitions", "no transition renderer"), ("b_roll", "single-source timelines only"),
+        ("stickers", "no sticker renderer"), ("speed_ramp", "no speed op"), ("zoom_ease", "zoom is instant in/out"),
+        ("beat_sync", "no beat detection"), ("keyword_highlight", "no caption emphasis"),
+        ("per_script_size", "EXP-008 O1 size fix not landed (Sev-2)"), ("second_source", "one source per recipe"),
+        ("image_source", "timeline v0 sources are video files; no still-image input path in the renderer"),
+        ("pan_zoom", "no animated pan/zoom (Ken Burns); zoom is a static punch-in"))),
 )
 
 
@@ -129,6 +170,19 @@ def markdown() -> str:
     for f in FIELDS:
         name = f"`{f.path}`" + (f' = `"{f.value}"`' if f.value is not None else "")
         lines.append(f"| {name} | {f.kind} | {f.validated} | {f.rendered} | {f.notes.replace('|', '/')} |")
+    lines += [
+        "",
+        "## Recipe features (H-0029)",
+        "",
+        "A recipe that asks for an unrendered feature still compiles, and the compile result lists the recipe field "
+        "as `UNRENDERED` (`src/recipe`, `docs/RECIPE_LANGUAGE.md`).",
+        "",
+        "| feature | recipe field | timeline field | rendered | notes |",
+        "|---|---|---|---|---|",
+    ]
+    for ft in FEATURES:
+        tf = f"`{ft.timeline_field}`" if ft.timeline_field else "none"
+        lines.append(f"| {ft.name} | `{ft.recipe_field}` | {tf} | {'y' if ft.rendered else 'n'} | {ft.notes} |")
     return "\n".join(lines) + "\n"
 
 
