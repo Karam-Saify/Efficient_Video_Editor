@@ -1,0 +1,119 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R08",
+  "version": 1,
+  "name": "FAQ answer",
+  "tier": "A",
+  "use_case": "clinic, lawyer, real-estate, telecom; goal: search-like trust and leads",
+  "source": {
+    "speech": "required"
+  },
+  "beats": [
+    {
+      "id": "question",
+      "label": "Question",
+      "share_pct": 12
+    },
+    {
+      "id": "answer",
+      "label": "Short answer",
+      "share_pct": 38
+    },
+    {
+      "id": "reason",
+      "label": "Reason or example",
+      "share_pct": 35
+    },
+    {
+      "id": "next",
+      "label": "Next step",
+      "share_pct": 15
+    }
+  ],
+  "hook": {
+    "rule": "The question is the first caption, within 0.5 s; the answer's first sentence is the verdict. If the question is unspoken, a title overlay is needed (tier B).",
+    "cut_greeting": true,
+    "lead_in_ms": 500
+  },
+  "pacing": {
+    "duration_mode": "tighten",
+    "wpm": {
+      "question": [
+        150,
+        150
+      ],
+      "answer": [
+        145,
+        160
+      ],
+      "reason": [
+        140,
+        155
+      ],
+      "next": [
+        130,
+        130
+      ]
+    }
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    }
+  },
+  "zoom": {
+    "placement": "beats",
+    "beats": [
+      "answer"
+    ],
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "speech"
+  },
+  "needs": [
+    "keyword_highlight"
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 30,
+      "min": 20,
+      "max": 50,
+      "label": "How long"
+    },
+    "cut_fillers": {
+      "type": "bool",
+      "default": true,
+      "label": "Remove ums and pauses"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.1,
+      "min": 1.05,
+      "max": 1.2,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "bold_box",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-Q-FIRST",
+    "P-ANSWER-FIRST",
+    "P-MUTED-CAPTION"
+  ],
+  "language": {
+    "ar": "Question and answer in the language spoken; a Latin term in an Arabic question is a mixed line (gate applies).",
+    "en": "Same.",
+    "fr": "Same."
+  },
+  "notes": "The optional question title card is only required when the question is unspoken; not declared as an overlay, so tier A holds for spoken questions."
+}

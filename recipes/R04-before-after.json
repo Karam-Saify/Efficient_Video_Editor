@@ -1,0 +1,129 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R04",
+  "version": 1,
+  "name": "Before/after reveal",
+  "tier": "B",
+  "use_case": "renovation, beauty, fitness; goal: proof and shares",
+  "source": {
+    "speech": "any"
+  },
+  "beats": [
+    {
+      "id": "before",
+      "label": "Before",
+      "share_pct": 35
+    },
+    {
+      "id": "build",
+      "label": "Build / process",
+      "share_pct": 25
+    },
+    {
+      "id": "reveal",
+      "label": "Reveal",
+      "share_pct": 30
+    },
+    {
+      "id": "cta",
+      "label": "CTA",
+      "share_pct": 10
+    }
+  ],
+  "hook": {
+    "rule": "The first 1.5 s show or state the contrast; the source must be one continuous take with both states (no after-first).",
+    "cut_greeting": true,
+    "lead_in_ms": 300
+  },
+  "pacing": {
+    "duration_mode": "window",
+    "wpm": {
+      "before": [
+        140,
+        140
+      ],
+      "cta": [
+        130,
+        130
+      ]
+    },
+    "cut_interval_s": [
+      3,
+      4
+    ]
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    }
+  },
+  "zoom": {
+    "placement": "fraction",
+    "fraction": 0.65,
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "source",
+    "music_bed": {
+      "kind": "riser_then_drop"
+    }
+  },
+  "overlays": [
+    {
+      "id": "before_after",
+      "kind": "label",
+      "beat": "before",
+      "required": true
+    }
+  ],
+  "structure": {
+    "reorder": "after_first"
+  },
+  "needs": [
+    "transitions",
+    "second_source"
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 25,
+      "min": 15,
+      "max": 40,
+      "label": "How long"
+    },
+    "start_at_s": {
+      "type": "float",
+      "default": 0.0,
+      "min": 0,
+      "max": "source_duration",
+      "label": "Start from this moment"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.2,
+      "min": 1.05,
+      "max": 1.2,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "bold_box",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-CONTRAST-REVEAL",
+    "P-HOOK-3S",
+    "P-PAYOFF-END"
+  ],
+  "language": {
+    "ar": "If the take is silent no captions exist; otherwise identical across ar/en/fr.",
+    "en": "Same.",
+    "fr": "Same."
+  }
+}

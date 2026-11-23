@@ -1,0 +1,133 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R10",
+  "version": 1,
+  "name": "Trend format",
+  "tier": "B",
+  "use_case": "creators and brands riding a known format; goal: reach",
+  "source": {
+    "speech": "required"
+  },
+  "beats": [
+    {
+      "id": "hook",
+      "label": "Hook",
+      "share_pct": 15
+    },
+    {
+      "id": "setup",
+      "label": "Setup",
+      "share_pct": 25
+    },
+    {
+      "id": "drop",
+      "label": "Punchline / drop",
+      "share_pct": 40
+    },
+    {
+      "id": "loop",
+      "label": "Loop",
+      "share_pct": 20
+    }
+  ],
+  "hook": {
+    "rule": "The format's recognisable first beat in <= 1 s; no explanation.",
+    "cut_greeting": true,
+    "lead_in_ms": 300
+  },
+  "pacing": {
+    "duration_mode": "tighten",
+    "wpm": {
+      "hook": [
+        170,
+        190
+      ],
+      "setup": [
+        170,
+        190
+      ],
+      "drop": [
+        170,
+        190
+      ],
+      "loop": [
+        170,
+        190
+      ]
+    },
+    "cut_interval_s": [
+      2,
+      3
+    ]
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    }
+  },
+  "zoom": {
+    "placement": "rhythm",
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "speech",
+    "music_bed": {
+      "kind": "trending_audio"
+    }
+  },
+  "overlays": [
+    {
+      "id": "template_text",
+      "kind": "title",
+      "beat": "hook",
+      "required": true
+    }
+  ],
+  "needs": [
+    "transitions",
+    "stickers"
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 18,
+      "min": 10,
+      "max": 25,
+      "label": "How long"
+    },
+    "punch_in_every_s": {
+      "type": "float",
+      "default": 3.0,
+      "min": 3,
+      "max": 5,
+      "label": "How often to zoom in"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.15,
+      "min": 1.05,
+      "max": 1.2,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "hook",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-HOOK-3S",
+    "P-TREND-RECOGNITION",
+    "P-LOOP-END"
+  ],
+  "language": {
+    "ar": "Same beats with Arabic ASR words; the trend catchphrase is not translated unless the creator does it.",
+    "en": "Format text is usually en."
+  },
+  "notes": "Trending audio needs a DATA_RIGHTS record first; none exists. cut_fillers is not a param (H-0028), so fillers are kept."
+}

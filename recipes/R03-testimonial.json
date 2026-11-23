@@ -1,0 +1,134 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R03",
+  "version": 1,
+  "name": "Testimonial",
+  "tier": "A",
+  "use_case": "clinic, course, service business; goal: trust and leads",
+  "source": {
+    "speech": "required"
+  },
+  "beats": [
+    {
+      "id": "result",
+      "label": "Result hook",
+      "share_pct": 15
+    },
+    {
+      "id": "problem",
+      "label": "Problem before",
+      "share_pct": 25
+    },
+    {
+      "id": "turning_point",
+      "label": "Turning point",
+      "share_pct": 30
+    },
+    {
+      "id": "outcome",
+      "label": "Outcome + recommendation",
+      "share_pct": 30
+    }
+  ],
+  "hook": {
+    "rule": "Start at the customer's most specific outcome sentence (a number, a duration, a named change); if none in the first 10 s, the recipe misses (RECIPE_BACKLOG).",
+    "cut_greeting": true,
+    "lead_in_ms": 300
+  },
+  "pacing": {
+    "duration_mode": "tighten",
+    "wpm": {
+      "result": [
+        130,
+        150
+      ],
+      "problem": [
+        130,
+        150
+      ],
+      "turning_point": [
+        130,
+        150
+      ],
+      "outcome": [
+        130,
+        150
+      ]
+    },
+    "cut_interval_s": [
+      6,
+      10
+    ]
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    }
+  },
+  "zoom": {
+    "placement": "beats",
+    "beats": [
+      "turning_point"
+    ],
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "speech"
+  },
+  "overlays": [
+    {
+      "id": "name_title",
+      "kind": "lower_third",
+      "beat": "result"
+    }
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 40,
+      "min": 25,
+      "max": 60,
+      "label": "How long"
+    },
+    "cut_fillers": {
+      "type": "bool",
+      "default": false,
+      "label": "Remove ums and pauses"
+    },
+    "punch_in_every_s": {
+      "type": "float",
+      "default": 8.0,
+      "min": 3,
+      "max": 12,
+      "label": "How often to zoom in"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.08,
+      "min": 1.05,
+      "max": 1.15,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "clean",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-SOCIAL-PROOF-SPECIFIC",
+    "P-MUTED-CAPTION",
+    "P-ONE-IDEA"
+  ],
+  "language": {
+    "ar": "Dialect fidelity matters most: a customer speaking Lebanese is shown in Lebanese spelling; never swap in MSA words.",
+    "en": "Same.",
+    "fr": "Same."
+  },
+  "notes": "punch_in_every_s is kept from H-0028 but unused: placement is the turning-point beat only (H-0028: 'zoom only at the turning point')."
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R06",
+  "version": 1,
+  "name": "Event / offer promo",
+  "tier": "B",
+  "use_case": "restaurant, retail, salon; goal: footfall and bookings",
+  "source": {
+    "speech": "required"
+  },
+  "beats": [
+    {
+      "id": "offer",
+      "label": "Offer hook",
+      "share_pct": 15
+    },
+    {
+      "id": "details",
+      "label": "Details (what/when/where)",
+      "share_pct": 45
+    },
+    {
+      "id": "urgency",
+      "label": "Urgency",
+      "share_pct": 20
+    },
+    {
+      "id": "cta",
+      "label": "CTA",
+      "share_pct": 20
+    }
+  ],
+  "hook": {
+    "rule": "Lead with the offer itself (\"50 % until Friday\"); never open with the business name.",
+    "cut_greeting": true,
+    "lead_in_ms": 300
+  },
+  "pacing": {
+    "duration_mode": "tighten",
+    "wpm": {
+      "offer": [
+        175,
+        175
+      ],
+      "details": [
+        150,
+        150
+      ],
+      "urgency": [
+        160,
+        160
+      ],
+      "cta": [
+        130,
+        130
+      ]
+    }
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    }
+  },
+  "zoom": {
+    "placement": "rhythm",
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "speech",
+    "music_bed": {
+      "kind": "upbeat"
+    },
+    "sfx": [
+      "sting"
+    ]
+  },
+  "overlays": [
+    {
+      "id": "date_price_place",
+      "kind": "end_card",
+      "beat": "cta",
+      "required": true
+    }
+  ],
+  "needs": [
+    "stickers"
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 25,
+      "min": 15,
+      "max": 40,
+      "label": "How long"
+    },
+    "cut_fillers": {
+      "type": "bool",
+      "default": true,
+      "label": "Remove ums and pauses"
+    },
+    "punch_in_every_s": {
+      "type": "float",
+      "default": 3.0,
+      "min": 3,
+      "max": 6,
+      "label": "How often to zoom in"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.15,
+      "min": 1.05,
+      "max": 1.2,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "bold_box",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-HOOK-3S",
+    "P-CTA-ONE",
+    "P-URGENCY-SPECIFIC"
+  ],
+  "language": {
+    "ar": "Dates, prices, addresses: Arabic QA checks digit shaping and order on every one; keep ASR spelling, never convert digits silently.",
+    "en": "Base.",
+    "fr": "Same as ar."
+  },
+  "notes": "H-0028 wants the punch-in on the date/price word; the compiler cannot find that word without a model, so it uses the rhythm placement (DEVIATIONS, H-0029)."
+}
