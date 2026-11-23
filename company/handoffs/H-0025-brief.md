@@ -27,3 +27,7 @@
 8. **Escalate if:** a schema change would invalidate existing valid timelines; FFmpeg cannot render a needed preset or zoom without a new dependency; no non-Arabic speech clip exists among the 9 (report it, then run on the best available and say so).
 9. **Termination condition:** G4–G5 committed, 3 outputs in `out/`, suite green, return written. Or a goal has failed twice → STATUS: BLOCKED.
 10. **Consulted positions:** Assurance reviews this demo once at day end (H-0026). It will reproduce one run, check durations with ffprobe, and check captions on 3 extracted frames, so make each run reproducible from the return alone.
+
+## Addendum (Operator, after H-0024 return)
+- **Demo clips:** `Download (3).mp4`, `(5)`, `(6)` (English speech, 123–141 wpm). The dev set has no Arabic speech clip (H-0024 OQ3, asked of the Founder). Arabic correctness stays covered by unit tests and one rendered Arabic caption frame. If time allows, add a 4th run on `Download (8).mp4` with `--language ar`, labelled as weak (3 wpm).
+- **Caption `dir` rule (H-0024 OQ1), decided by the Operator under the Founder's medium-term delegation:** `caption_track` sets `dir` from the first strong character, matching libass, so it never emits a caption the validator rejects. No RLM injection; that would need an EXP-008 amendment, which is deferred. Per-run font size scaling (OQ2) is out of scope and goes to creative-lead later.
