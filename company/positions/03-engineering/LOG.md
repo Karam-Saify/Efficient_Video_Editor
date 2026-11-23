@@ -84,3 +84,9 @@
 - Evidence: company/handoffs/H-0030-return.md; experiments/results/H-0030_*; headless Chrome for Testing 143: 0 console errors, export_1080 ffprobe h264 High 1080x1920 30/1 900 frames 30.000 s; tiny/WASM RTF 0.47; 404 passed + 8 skipped.
 - Learned: open-source Chromium and the headless shell have no H.264 WebCodecs encoder (use Playwright channel "chromium" = Chrome for Testing); Linux Chrome has no AAC encoder (Opus fallback); WebCodecs H.264 is not byte-identical run to run (audio is); performance.memory is coarse, so a crash is the real memory signal.
 - Next: Assurance H-0030 review; Founder phone runs; ADR on determinism scope if render moves on-device; Mediabunny replaces deprecated mp4-muxer later.
+
+### 2026-11-23 · H-0035 · T2 · DONE
+- Did: `schemas/annotation.schema.json` v0.1 (source + job; label_origin on every label; rights_id; 11 job keys 1:1 with FF-v0.1) + validator + 6/12 fixtures; ADR-0025 Proposed; `src/describe` Footage Intelligence v0 (annotate, descriptions to-do, offline storyboard with Export, apply-descriptions, import-corrections, validate); docs/FOOTAGE_INTELLIGENCE.md; experiments/storyboard_offline_check.mjs. Commits 3644b41, bb67e00, 726c845 on t2/H-0035 (not pushed).
+- Evidence: company/handoffs/H-0035-return.md; 463 passed + 8 skipped; ruff clean; 2 dev clips validate with machine + human_verified labels; headless check: 0 external requests, a real Export download imported back.
+- Learned: jsonschema accepts 3000.0 as an integer (needs an explicit float guard); a blob: download is the only way to export from a file:// page without a network; the two "0 wpm" dev clips are music-only by VAD, so the right flag is LOW_VAD_SPEECH, not ASR_SUSPICIOUS.
+- Next: Assurance review; rerun on a dev clip with speech; t_start_ms ruling.
