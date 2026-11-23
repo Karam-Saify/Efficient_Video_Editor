@@ -2,7 +2,7 @@
 <!-- The Operator updates this at the end of every session (/close). Keep it under 60 lines.
      If a HALT line exists at the very top, ALL work stops until the Founder clears it. -->
 
-**Last updated:** 2026-11-23 · **By:** Operator · **Session:** 3 (closed)
+**Last updated:** 2026-11-23 (evening) · **By:** Operator · **Session:** 3 (continued; waiting on Founder LABELS.csv)
 
 ## Current milestone
 **M0 → M1 in BUILD MODE** (ADR-0006, 2026-11-23 → review 2026-12-07): fast lane for non-engine work; ONE Assurance review per day on the end-to-end demo; product/research/creative on sonnet; no parallel agents; no new governance docs; scraper/trend tooling postponed.
@@ -14,7 +14,15 @@
 - H-0026 (assurance): **ACCEPT WITH FINDINGS (S1 0 · S2 1 · S3 7)**; `allow_dev` (D1) accepted with condition F2
 - H-0020 WIP tests (59 red) parked in `company/handoffs/H-0020-wip/` (not collected)
 
+## Since the session-3 close (afternoon/evening)
+- ADR-0007..0013, 0015..0022 (Founder); ADR-0014 Proposed (Assurance: accept with F13)
+- Week 1 A–D done: H-0027/H-0032 cost (`src/cost`), H-0028/H-0029 recipes (33/36; photos_to_video gap), H-0030 bench, H-0031 product
+- H-0033 review: ACCEPT WITH FINDINGS (S1 0 · S2 5 · S3 8). Details in `company/reports/2026-11-23/README.md` Part 3
+- **Founder S1:** catalog language labels are wrong (ASR fails on Arabic). ADR-0022. 10 clips in quarantine/dev; `LABELS.csv` awaiting Founder
+
 ## Next (ordered)
+0. **Founder fills `quarantine/dev/LABELS.csv`** → EXP-012 ASR diagnostic (prereg, Demucs = new dep T2) → pipeline fixes after the Founder verdict
+0b. H-0033 S2 fixes F1–F3 (consent, backlog, rights warranty) and F5 (RR rows for bench assets)
 1. Tomorrow's goal: fix H-0026 F1 (MP4 render not byte-deterministic: pin x264 threads/settings, or Founder-approved frame/PSNR equality), F2 (dev-only marker on outputs), F4 (coded error for malformed ops.json), F5/F6 (validator ↔ renderer caption text and length bounds)
 2. First Arabic speech demo run, once the Founder supplies a clip
 3. F3: set_duration/delete_words must not cut music/B-roll as "silence" (audio-energy gap check, with creative-lead)

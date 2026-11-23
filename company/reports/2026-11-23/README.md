@@ -85,3 +85,70 @@ About **1.2 M** in total. Subagents used about 950k: H-0024 144k, H-0025 184k, H
 5. Whether to drop the duplicate `Download (4).mp4`.
 
 Process: since the Founder's instruction, finished units are committed as they complete and pushed every 5 min by an Operator loop. The loop never commits and refuses to push media, cache or quarantine paths.
+
+---
+
+# Part 3 (evening): Week 1 A–D finished, daily review, Founder S1 correction
+
+## Week 1 final status
+| Task | Status | Result |
+|---|---|---|
+| A. Cost | Done | See Part 2. Assurance reproduced the doc's numbers within 0.01 %. **But the ASR cost and P90 may be understated** if ASR is missing Arabic speech (F4) |
+| B. Bench | Done | `bench/`: Whisper base→tiny on WebGPU→WASM, 30 s 1080×1920 export with a 720 fallback, watchdog, Copy results. In headless Chrome: 0 errors, ffprobe 1080×1920/30 fps/900 frames, ASR tiny-WASM RTF 0.47. WebGPU and AAC were not exercised. Phone run: see "Bench instructions" below |
+| C. Recipes | Done, with a gap | 33/36 compiles valid. `photos_to_video` fails by design (no still-image sources yet). **The "3 English speech clips" choice is unverified** (F4) |
+| D. Product | Done | Prompt form, 3+1 fake doors, EXP-011 Brand Brain (DRAFT: pass at ≥ 11/15 blind picks and ≥ 2/3 businesses), AdKraft entry (~$3/video = ad packs 5 for $15 / 25 for $75, source apps.shopify.com/adkraft, E1; Founder to eyeball once). Pricing-door anchors are placeholders [X] |
+
+## Daily Assurance review H-0033: ACCEPT WITH FINDINGS (S1 0 · S2 5 · S3 8)
+- **S2 (fix before anything is published or collected):**
+  - F1: the consent says "not shared", but the form host and LLM provider are processors, and there is no deletion path.
+  - F2: the form sends prompt text to RECIPE_BACKLOG, which breaks DATA_POLICY §5.
+  - F3: EXP-011 has no rights warranty for business clips or the people in them.
+  - F4: H-0027 and H-0029 rely on unverified speech/language labels.
+  - F5: bench libraries, Whisper weights and fonts have no RR rows, so they can't be used under I-9 until recorded.
+- **S3:**
+  - F6: LLM prices cite a cached skill table, not the vendor page.
+  - F7: MiB vs GB units.
+  - F8: captions collide with on-screen source text.
+  - F9: the bench passes ASR on a hallucinated transcript of a beep file.
+  - F10: no SRI on the CDN code, and ORT web is a prerelease.
+  - F11: "coming soon" fake doors imply a promise.
+  - F12: an unclear error for a dev source used without `--allow-dev`.
+  - F13: ADR-0014 accepts unbounded string params.
+- **Rulings:**
+  - ADR-0014: recommend Accept, with F13 as a condition. **Founder or M1 gate to accept.**
+  - JFK sample: RR-025, usable with restrictions (bench input only, fetched at run time).
+  - 90-day retention: approved as a maximum, with conditions; it needs an ADR amending DATA_POLICY §4 before the first external response.
+- Reproduced: cost rows/median/P90 within 0.01 %; recipe cells byte-identical; ffprobe matches; 404 tests green; no media in git; no blocked auto-pushes.
+
+## Founder S1 correction (late afternoon)
+- The H-0024 catalog labelled clips with Arabic speech as English or no-speech. **ASR fails on Arabic; the footage is fine.**
+- Recorded as **ADR-0022**: data claims need a Founder spot-check before they count as evidence.
+- Inventory: only **11 MP4s** reached the Codespace, not the ~15 uploaded.
+  - `Download (9)` and `(10)` moved to `quarantine/dev/` (RR-023/024).
+  - `Download (4)` deleted (byte-identical to `(2)`).
+  - 10 clips remain.
+- `quarantine/dev/LABELS.csv` was created (git-ignored). **Waiting on the Founder to fill it in.** No ASR runs until then.
+- Next: register EXP-012, the ASR diagnostic (multi-window language ID, VAD on/off/low, Demucs vocals vs raw, turbo vs large-v3, auto vs forced `ar`). Demucs is a new dependency (T2). large-v3 still has to be downloaded (~3 GB).
+
+## Bench instructions (Founder, on a phone)
+1. In the Codespace: `cd bench && python3 -m http.server 8000`.
+2. Ports tab → copy the HTTPS address for port 8000 and keep it **Private**.
+3. Open it in Chrome (Android) or Safari (iPhone) and sign in to GitHub once.
+4. Tap **Run benchmark** and keep the screen on until it says "done". Then tap **Copy results** and paste them to the Operator. Run it twice (the second run shows the cached model load).
+
+Note F5: under I-9 the bench's libraries and weights need RR rows before results count. Assurance can add them in the next fast-lane batch.
+
+## Tokens today (final estimate)
+About **1.45 M**. Subagents ~1.18 M:
+- H-0024 144k, H-0025 184k, H-0026 89k
+- H-0027 179k, H-0028 42k, H-0029 167k
+- H-0030 107k, H-0031 27k, H-0032 147k, H-0033 98k
+
+The Operator used ~270k. No LLM is in the product loop yet, so a Short costs 0 tokens.
+
+## Needed from the Founder
+1. **Fill `quarantine/dev/LABELS.csv`.** It blocks EXP-012.
+2. Re-upload the ~4 clips that didn't arrive.
+3. Accept ADR-0014 now, or defer it to the M1 gate.
+4. Pricing-door anchor numbers; pick the form tool (no collection before F1–F3 are fixed).
+5. Still open: the F1 render-determinism standard, and the failure/miss rate to budget for.
