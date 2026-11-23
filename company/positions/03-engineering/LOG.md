@@ -78,3 +78,9 @@
 - Evidence: company/handoffs/H-0032-return.md; 381 passed + 8 skipped; ruff clean; report byte-identical on rerun; old §3 output unchanged. Per successful export median/P90: 0 % $0.0080/$0.0111, 5 % $0.0084/$0.0117, 20 % $0.0100/$0.0139.
 - Learned: a 20 % failure rate uses up the whole ceiling at the median; cached retries save only ~0.4 m$ because planning + render dominate a retry; Sonnet/Opus 5.5 cache-read prices are not 0.1x of input (they are 0.05x), so price dicts carry explicit cache prices.
 - Next: wire Ledger.add and log_llm_call into the first orchestrator/LLM-stage brief; replace OBSERVED with ledger actuals.
+
+### 2026-11-23 · H-0030 · T2 · DONE
+- Did: static `bench/` page (no build): Whisper ladder base/WebGPU → tiny/WebGPU → tiny/WASM via transformers.js 4.3.2; 30 s 1080×1920 H.264 export via WebCodecs + mp4-muxer 5.2.2 with logged 720 retry; EXP-008 webfonts; per-step isolation; localStorage crash watchdog; Copy results; README (hosting, URLs, licences, schema); tests/unit/test_bench_static.py; experiments/bench_smoke.mjs. Commits 902e2ed, 1942c6c (not pushed).
+- Evidence: company/handoffs/H-0030-return.md; experiments/results/H-0030_*; headless Chrome for Testing 143: 0 console errors, export_1080 ffprobe h264 High 1080x1920 30/1 900 frames 30.000 s; tiny/WASM RTF 0.47; 404 passed + 8 skipped.
+- Learned: open-source Chromium and the headless shell have no H.264 WebCodecs encoder (use Playwright channel "chromium" = Chrome for Testing); Linux Chrome has no AAC encoder (Opus fallback); WebCodecs H.264 is not byte-identical run to run (audio is); performance.memory is coarse, so a crash is the real memory signal.
+- Next: Assurance H-0030 review; Founder phone runs; ADR on determinism scope if render moves on-device; Mediabunny replaces deprecated mp4-muxer later.
