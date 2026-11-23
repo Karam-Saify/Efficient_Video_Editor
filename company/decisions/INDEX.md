@@ -25,3 +25,4 @@
 | ADR-0014 | Timeline `provenance.recipe` (additive, meta only) | Proposed (engineering-lead, H-0029) | two-way | 2026-11-23 |
 | ADR-0022 | Data claims need a Founder spot-check before they count as evidence | Accepted (Founder) | two-way | 2026-11-23 |
 | ADR-0023 | Founding Creator Data Program: zero-cost concierge pilot | Accepted (Founder) | one-way-ish | 2026-11-23 |
+| ADR-0024 | Retention: 90 days max for external personal data (amends DATA_POLICY item 4) | Proposed (assurance-lead, H-0034; Founder signs) | two-way | 2026-11-23 |
