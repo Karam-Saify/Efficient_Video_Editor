@@ -1,0 +1,276 @@
+# H-0026 repro log (assurance-lead, 2026-11-23)
+HEAD: b9c477bba2970ed8017571ea4b530bd36d159a00
+
+## A. Media / derived data committed? (git ls-files, full history in range)
+render/exp008/AR-01.png
+render/exp008/AR-02.png
+render/exp008/AR-03.png
+render/exp008/AR-04.png
+render/exp008/AR-05.png
+render/exp008/AR-06.png
+render/exp008/AR-07.png
+render/exp008/AR-08.png
+render/exp008/AR-09.png
+render/exp008/AR-10.png
+render/exp008/control/CTRL-01.png
+render/frames_check/AR-01.png
+render/frames_check/AR-02.png
+render/frames_check/AR-03.png
+render/frames_check/AR-04.png
+render/frames_check/AR-05.png
+render/frames_check/AR-06.png
+render/frames_check/AR-07.png
+render/frames_check/AR-08.png
+render/frames_check/AR-09.png
+render/frames_check/AR-10.png
+-- added in 85dca48..HEAD:
+-- check-ignore:
+.gitignore:28:quarantine/	quarantine/dev/x.mp4
+.gitignore:12:out/	out/h0026/x
+.gitignore:9:cache/	cache/x
+.gitignore:28:quarantine/	quarantine/dev/dev_manifest.csv
+
+## diff stat 85dca48..HEAD
+ tests/unit/test_ingest_language.py                 |  44 +++
+ tests/unit/test_manifest.py                        |  25 +-
+ tests/unit/test_stage_cli.py                       |  21 +-
+ tests/unit/test_validate.py                        |  32 ++-
+ 53 files changed, 2530 insertions(+), 80 deletions(-)
+
+## A2. Dev-derived content in tracked files changed in range (grep 'Download (' / quarantine)
+company/handoffs/H-0024-return.md
+company/handoffs/H-0025-brief.md
+company/handoffs/H-0025-return.md
+company/handoffs/H-0026-brief.md
+company/positions/03-engineering/LOG.md
+experiments/dev_catalog.py
+src/demo/__init__.py
+src/edit/ops.py
+src/render/__init__.py
+src/render/__main__.py
+src/validate/__init__.py
+src/validate/__main__.py
+tests/unit/test_validate.py
+-- examples/ops contents:
+### examples/ops/delete_words_zoom.json
+{"ops": [
+  {"op": "delete_words", "words": {"nth": [1, 2]}},
+  {"op": "set_caption_style", "preset": "clean"},
+  {"op": "add_zoom", "at": {"word": 4, "edge": "start"}, "scale": 1.25, "duration_ms": 1200},
+  {"op": "add_zoom", "at": {"fraction": 0.6}, "scale": 1.4, "duration_ms": 1500}
+]}
+
+### examples/ops/fit_30s.json
+{"ops": [
+  {"op": "set_caption_style", "preset": "bold_box"},
+  {"op": "set_duration", "target_ms": 30000},
+  {"op": "add_zoom", "at": {"word": 0, "edge": "start"}, "scale": 1.2, "duration_ms": 1000}
+]}
+
+### examples/ops/trim_and_style.json
+{"ops": [
+  {"op": "trim", "start": {"word": 0, "edge": "start"}, "end": {"segment": 2, "edge": "end"}},
+  {"op": "set_caption_style", "preset": "hook"}
+]}
+
+
+## B. Clean worktree (/tmp/claude-1000/-workspaces-Efficient-Video-Editor/69db1e28-4beb-47f2-9ebd-9e99a29d608c/scratchpad/wt, detached b9c477b); git status:
+-- ruff:
+All checks passed!
+ruff exit=0
+-- pytest:
+=========================== short test summary info ============================
+SKIPPED [7] tests/unit/test_runtime_imports.py:13: full runtime lock not installed
+SKIPPED [1] tests/unit/test_runtime_imports.py:18: full runtime lock not installed
+266 passed, 8 skipped in 4.14s
+pytest exit=0
+
+## C. Demo run 1 reproduced in clean worktree (no cache/, no out/), output to main out/h0026 (fresh, did not exist before)
+sha256 source copy: f4da94a6fb29bf28 / original f4da94a6fb29bf28
+cache/ in worktree: ls: cannot access 'cache': No such file or directory
+/bin/bash: line 1: /usr/bin/time: No such file or directory
+demo exit=127
+(retry 1: /usr/bin/time missing, using bash SECONDS)
+note: quarantine/dev/ source, internal development testing only (ADR-0006)
+op 0 trim: 17333 ms, 1 clips
+op 1 set_caption_style: 17333 ms, 1 clips
+output:   /workspaces/Efficient_Video_Editor/out/h0026/Download_5__trim_and_style.mp4
+duration: 17333 ms (timeline), 17.333 s (ffprobe)
+language: en (p=1.0)
+{"output": "/workspaces/Efficient_Video_Editor/out/h0026/Download_5__trim_and_style.mp4", "timeline_ms": 17333, "ffprobe_s": 17.333333, "fps": 30.0, "size": "1080x1920", "language": "en", "language_probability": 1.0, "versions": 2, "wall_s": 80.0}
+demo exit=0 wall=80s
+
+## C2. Hash comparison (clean-cache repro vs H-0025 original vs H-0025 rerun)
+38eb3fe5ddb14385 out/h0026/Download_5__trim_and_style.mp4
+c63fc6dc12a2f214 out/h0025/Download_5__trim_and_style.mp4
+c63fc6dc12a2f214 out/h0025_rerun/Download_5__trim_and_style.mp4
+bda8d7ebf84a2fa5 out/h0026/Download_5__trim_and_style.timeline.json
+bda8d7ebf84a2fa5 out/h0025/Download_5__trim_and_style.timeline.json
+bda8d7ebf84a2fa5 out/h0025_rerun/Download_5__trim_and_style.timeline.json
+45e76b3ecb12d728 out/h0026/Download_5__trim_and_style.ass
+45e76b3ecb12d728 out/h0025/Download_5__trim_and_style.ass
+45e76b3ecb12d728 out/h0025_rerun/Download_5__trim_and_style.ass
+
+## D. ffprobe of all 3 demo outputs (+ repro) vs timeline sum of clip lengths
+### out/h0026/Download_5__trim_and_style  timeline_ms,clips,target=17333 1 17333
+stream|codec_type=video|width=1080|height=1920|r_frame_rate=30/1|avg_frame_rate=30/1|duration=17.333333|nb_frames=520
+stream|codec_type=audio|r_frame_rate=0/0|avg_frame_rate=0/0|duration=17.333000|nb_frames=814
+format|duration=17.333333
+### out/h0025/Download_5__trim_and_style  timeline_ms,clips,target=17333 1 17333
+stream|codec_type=video|width=1080|height=1920|r_frame_rate=30/1|avg_frame_rate=30/1|duration=17.333333|nb_frames=520
+stream|codec_type=audio|r_frame_rate=0/0|avg_frame_rate=0/0|duration=17.333000|nb_frames=814
+format|duration=17.333333
+### out/h0025/Download_6__delete_words_zoom  timeline_ms,clips,target=35755 2 35755
+stream|codec_type=video|width=1080|height=1920|r_frame_rate=30/1|avg_frame_rate=30/1|duration=35.766667|nb_frames=1073
+stream|codec_type=audio|r_frame_rate=0/0|avg_frame_rate=0/0|duration=35.756000|nb_frames=1678
+format|duration=35.766667
+### out/h0025/Download_3__fit_30s  timeline_ms,clips,target=30000 11 30000
+stream|codec_type=video|width=1080|height=1920|r_frame_rate=30/1|avg_frame_rate=30/1|duration=30.000000|nb_frames=900
+stream|codec_type=audio|r_frame_rate=0/0|avg_frame_rate=0/0|duration=30.002000|nb_frames=1408
+format|duration=30.002000
+### out/h0025/Download_8__fit_30s  timeline_ms,clips,target=30033 2 30000
+stream|codec_type=video|width=1080|height=1920|r_frame_rate=30/1|avg_frame_rate=30/1|duration=30.033333|nb_frames=901
+stream|codec_type=audio|r_frame_rate=0/0|avg_frame_rate=0/0|duration=30.012000|nb_frames=1408
+format|duration=30.033333
+
+## C3. Why the MP4 bytes differ: decoded-stream hashes and container tags
+### out/h0026
+MD5=f553fe9786dbd50c8546b5db271e2774
+MD5=82a4337dc2a3c496fefbad259c8b6d1a
+stream|tag:language=und|tag:handler_name=VideoHandler|tag:vendor_id=[0][0][0][0]|tag:encoder=Lavc60.31.102 libx264
+stream|tag:language=und|tag:handler_name=SoundHandler|tag:vendor_id=[0][0][0][0]
+format|tag:major_brand=isom|tag:minor_version=512|tag:compatible_brands=isomiso2avc1mp41|tag:encoder=Lavf60.16.100|tag:comment=vid:<REDACTED third-party platform video id>
+size=24388416
+### out/h0025
+MD5=6d74b95863fdc577e81a99bd27590672
+MD5=82a4337dc2a3c496fefbad259c8b6d1a
+stream|tag:language=und|tag:handler_name=VideoHandler|tag:vendor_id=[0][0][0][0]|tag:encoder=Lavc60.31.102 libx264
+stream|tag:language=und|tag:handler_name=SoundHandler|tag:vendor_id=[0][0][0][0]
+format|tag:major_brand=isom|tag:minor_version=512|tag:compatible_brands=isomiso2avc1mp41|tag:encoder=Lavf60.16.100|tag:comment=vid:<REDACTED third-party platform video id>
+size=24388443
+-- cmp first diffs:
+cmp: EOF on out/h0026/Download_5__trim_and_style.mp4 after byte 24388416
+1141331
+out/h0026/Download_5__trim_and_style.mp4 out/h0025/Download_5__trim_and_style.mp4 differ: byte 652, line 1
+
+## C4. Isolate: re-render the identical timeline.json (bda8d7eb) twice in main repo and once more in worktree
+main render 1 exit=0 bb6a966744902c93
+main render 2 exit=0 38eb3fe5ddb14385
+worktree render exit=0 1a89ebed5b562b87
+2
+
+## E. Caption frames (timestamps chosen by Assurance from the caption/effect tracks)
+F1 run4 Download_8 t=0.600 s: caption 'لنصنع لبن أمو' [20,1940) rtl bold_box; zoom x1.2 [20,1020) -> mid-zoom
+F2 run2 Download_6 t=22.700 s: caption 'velociraptor we are slashing' [22166,24646) clean; zoom x1.4 [21453,22953) -> mid-zoom
+F3 presets_ar_en t=3.300 s: caption 'وين بتلاقيه؟ Link in bio' [3000,4500) rtl hook; zoom x1.3 [3000,4500)
+62edf5fb6d17dcf0 PNG image data, 1080 x 1920 out/h0026/F1_run8_0.600.png
+c6b41b3edddd85af PNG image data, 1080 x 1920 out/h0026/F2_run6_22.700.png
+ca8f08d5218841fd PNG image data, 1080 x 1920 out/h0026/F3_arEn_3.300.png
+-- libass fontselect / glyph lines per .ass (rendered over synthetic bg.mp4):
+### out/h0025/Download_8__fit_30s.ass
+frame=    0 fps=0.0 q=-0.0 size=       0kB time=00:00:00.04 bitrate=   0.0kbits/s speed=6.75x    [Parsed_ass_1 @ 0x57cc86201740] fontselect: (Noto Sans Arabic, 400, 0) -> NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+### out/h0025/Download_6__delete_words_zoom.ass
+[Parsed_ass_1 @ 0x555611a070c0] fontselect: (Noto Sans Arabic, 400, 0) -> NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+[Parsed_ass_1 @ 0x555611a070c0] fontselect: (Noto Sans, 400, 0) -> NotoSans-Regular.ttf, 0, NotoSans-Regular
+### out/h0025/presets_ar_en.ass
+[Parsed_ass_1 @ 0x60c355809080] fontselect: (Noto Sans Arabic, 400, 0) -> NotoSansArabic-Regular.ttf, 0, NotoSansArabic-Regular
+[Parsed_ass_1 @ 0x60c355809080] fontselect: (Noto Sans, 400, 0) -> NotoSans-Regular.ttf, 0, NotoSans-Regular
+
+## F. Adversarial + allow_dev probes (script: assurance scratch adv.py, run in the clean worktree; paths below are worktree-local, no held-out path named)
+ROOT <WT> words 88 v0 total 37466
+
+## G. allow_dev scope (D1)
+G1 v0 timeline, default (no allow_dev): ["E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/dev/Download (5).mp4' is under the protected root 'quarantine/'"]
+G2 v0 timeline, allow_dev=True: [] (valid)
+G allow_dev=True path='quarantine/devX/a.mp4': ["E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/devX/a.mp4' is under the protected root 'quarantine/'"]
+G allow_dev=True path='quarantine/other/a.mp4': ["E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/other/a.mp4' is under the protected root 'quarantine/'"]
+G allow_dev=True path='quarantine/dev/../other/a.mp4': ["E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/dev/../other/a.mp4' is under the protected root 'quarantine/'"]
+G allow_dev=True path='quarantine/dev/link_golden.mp4': ["E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/dev/link_golden.mp4' is under the protected root 'data/golden/'"]
+G allow_dev=True path='data/golden/x.mp4': ["E_SOURCE_PATH /sources/0/path: source 'src0' path 'data/golden/x.mp4' is under the protected root 'data/golden/'"]
+G allow_dev=True path='quarantine/dev': ["E_SOURCE_MISSING /sources/0/path: source 'src0' file not found: quarantine/dev"]
+G allow_dev=True path='<WT>/quarantine/dev/Download (5).mp4': ["E_SOURCE_PATH /sources/0/path: source 'src0' path '<WT>/quarantine/dev/Download (5).mp4' is absolute; use a path relative to the repo root"]
+
+## H. ops adversarial (via src.demo._apply, the ops.json path)
+H1 empty ops list -> (no-op, demo renders v0): n/a
+H2 trim word 9999: RAISES OpError: E_OP_RANGE E_OP_RANGE: word index 9999 out of range: the timeline has 88 words
+H3 trim end before start: RAISES OpError: E_OP_RANGE E_OP_RANGE: trim needs 0 <= start_ms < end_ms <= 37466, got [4980, 520)
+H4 add_zoom scale 2.5: RAISES OpError: E_OP_RANGE E_OP_RANGE: zoom scale 2.5 outside [1.0, 2.0]
+H5 add_zoom scale NaN: RAISES OpError: E_OP_RANGE E_OP_RANGE: zoom scale nan outside [1.0, 2.0]
+H6 add_zoom past end: RAISES OpError: E_OP_RANGE E_OP_RANGE: zoom [37091, 42091) must lie in [0, 37466] and last at least one frame
+H7 add_zoom negative duration: RAISES OpError: E_OP_RANGE E_OP_RANGE: zoom [18733, 18233) must lie in [0, 37466] and last at least one frame
+H8 add_zoom scale 'abc': RAISES ValueError:  could not convert string to float: 'abc'
+H9 set_duration 0: RAISES OpError: E_OP_RANGE E_OP_RANGE: set_duration needs 0 < target_ms <= 37466 (cannot lengthen), got 0
+H10 set_duration -1: RAISES OpError: E_OP_RANGE E_OP_RANGE: set_duration needs 0 < target_ms <= 37466 (cannot lengthen), got -1
+H11 set_duration 10**9 (longer than source): RAISES OpError: E_OP_RANGE E_OP_RANGE: set_duration needs 0 < target_ms <= 37466 (cannot lengthen), got 1000000000
+H12 set_duration 5000 (far below speech): OK total=4999 clips=2 caps=4 eff=None
+H13 delete all words: OK total=5501 clips=11 caps=0 eff=None
+H14 set_caption_style cta: RAISES OpError: E_OP_PRESET E_OP_PRESET: unknown preset 'cta'; known: clean, bold_box, hook
+H15 unknown op: RAISES OpError: E_OP_UNKNOWN E_OP_UNKNOWN: unknown op 'explode'; known: trim, delete_words, set_caption_style, add_zoom, set_duration, undo
+H16 non-dict step 'trim': RAISES AttributeError:  'str' object has no attribute 'get'
+H17 undo at v0: RAISES OpError: E_OP_UNDO E_OP_UNDO: nothing to undo (only v0 or no version)
+H18 v0 unchanged after all ops (no mutation): True
+
+## I. Arabic edge strings / caption text through validate
+I AR-05: [] (valid)
+I AR-08: [] (valid)
+I empty: ["E_SCHEMA /tracks/captions/0/text: '' should be non-empty"]
+I emoji: [] (valid)
+I RLM-led: [] (valid)
+I very long 2000 chars: [] (valid)
+I out-of-range caption time: ["E_CAPTION_BOUNDS /tracks/captions/0/end_ms: caption 'k1': end_ms (1000000) is after the timeline end (37466 ms)"]
+
+## J. CAPABILITIES spot-check: tracks.audio[].gain_db (doc: rendered n -> UNSUPPORTED_FIELD)
+J1: ['UNSUPPORTED_FIELD /tracks/audio/0/gain_db: tracks.audio[].gain_db is valid v0 but not implemented by the renderer: not rendered', 'UNSUPPORTED_FIELD /tracks/audio/0/source: tracks.audio[].source is valid v0 but not implemented by the renderer: extra audio tracks are not mixed: UNSUPPORTED_FIELD']
+
+## K. Stub stages (honesty)
+src.score exit=2 stderr=python -m src.score: error: the following arguments are required: --input, --out new_manifests=0
+src.select exit=2 stderr=python -m src.select: error: the following arguments are required: --input, --out new_manifests=0
+
+## L. demo CLI with malformed ops files (cached ingest)
+bad1 exit=1 last-stderr: AttributeError: 'str' object has no attribute 'get' traceback_lines=1
+bad2 exit=1 last-stderr: ValueError: could not convert string to float: 'abc' traceback_lines=1
+(K retry 1 with --input/--out)
+src.score exit=2 stderr=NOT_IMPLEMENTED: score files_in_out=0
+src.select exit=2 stderr=NOT_IMPLEMENTED: select files_in_out=0
+-- pre-existing stale manifest is deleted?
+exit=2 manifest_still_there=no
+
+## M. CAPABILITIES spot-check: tracks.effects[].scale (doc: rendered y). Synthetic 2 s timeline on out/h0025/bg.mp4 (lavfi), no zoom vs zoom x2.0 on [0,1000)
+z_none render exit=0
+z_2x render exit=0
+PSNR none vs 2x, frame at 0.5 s (inside zoom) and 1.5 s (after zoom):
+t=0.5 PSNR y:13.558681 u:16.899532 v:5.850914 average:11.185618 min:11.178272 max:11.207072
+t=1.5 PSNR y:33.608646 u:30.696563 v:29.590840 average:32.107489 min:25.268758 max:45.928239
+(in-zoom frames differ strongly, 11 dB; post-zoom frames are near-equal, 32 dB, the residual being encoder state: zoom renders)
+
+## N. Saved demo timelines: CLI validate default vs --allow-dev; ops reflected
+out/h0026/Download_5__trim_and_style | default: 'E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/dev/Download (5).mp4' is under the protected root 'quarantine/'' | --allow-dev exit=0 | ass styles:      12 hook | effects: None
+out/h0025/Download_6__delete_words_zoom | default: 'E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/dev/Download (6).mp4' is under the protected root 'quarantine/'' | --allow-dev exit=0 | ass styles:      21 clean | effects: [{'type': 'zoom', 'target': 'c2', 'at_ms': 1026, 'duration_ms': 1200, 'scale': 1.25}, {'type': 'zoom', 'target': 'c2', 'at_ms': 21453, 'duration_ms': 1500, 'scale': 1.4}]
+out/h0025/Download_3__fit_30s | default: 'E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/dev/Download (3).mp4' is under the protected root 'quarantine/'' | --allow-dev exit=0 | ass styles:      31 bold_box | effects: [{'type': 'zoom', 'target': 'c1', 'at_ms': 144, 'duration_ms': 1000, 'scale': 1.2}]
+out/h0025/Download_8__fit_30s | default: 'E_SOURCE_PATH /sources/0/path: source 'src0' path 'quarantine/dev/Download (8).mp4' is under the protected root 'quarantine/'' | --allow-dev exit=0 | ass styles:       1 bold_box | effects: [{'type': 'zoom', 'target': 'c1', 'at_ms': 20, 'duration_ms': 1000, 'scale': 1.2}]
+
+## O. set_duration docstring
+def set_duration(tl: Timeline, ctx: EditContext, target_ms: int) -> Timeline:
+    """Shorten vN to target_ms (within one frame). Deterministic; never lengthens (target_ms > total fails).
+
+    1. Silence first. Gaps are the stretches with no word: before the first word, between words, after the last.
+       Each gap keeps PAD_MS next to speech; the rest is removable (gaps with < MIN_GAP_CUT_MS removable are
+       skipped). Gaps are taken longest first (ties: earlier first), each fully, the last one only as much as is
+       still needed. These cuts snap inward, so they never remove more than planned.
+    2. If silence was not enough, the tail is cut at target_ms (nearest frame): the end of the clip goes.
+    No word is cut in step 1; step 2 drops whatever speech lies after the target."""
+    total, fps = total_ms(tl), tl["canvas"]["fps"]
+    if not 0 < target_ms <= total:
+        raise OpError("E_OP_RANGE", f"set_duration needs 0 < target_ms <= {total} (cannot lengthen), got {target_ms}")
+    need = total - target_ms
+    if need * fps > 1000:
+
+## P. allow_dev setters in src/ (grep allow_dev)
+src/render/__main__.py:27:    render(read_json(a.timeline), a.out, a.preset, a.crf, allow_dev=a.allow_dev)
+src/demo/__main__.py:75:    allow_dev = video.is_relative_to(ROOT / DEV_SOURCE_ROOT)
+src/validate/__main__.py:31:    allow_dev = "--allow-dev" in argv  # admit quarantine/dev/ sources (ADR-0006, dev testing only)
+src/validate/__init__.py:32:`allow_dev=True` (H-0025, ADR-0006) lets a source live under `quarantine/dev/` only, for internal development
+src/validate/__init__.py:51:DEV_SOURCE_ROOT = "quarantine/dev"  # ADR-0006: internal development testing only; needs allow_dev=True
+
+## Q. presets_ar_en determinism (H-0025 claim 1bc7fc2e)
+1bc7fc2e02a85b25

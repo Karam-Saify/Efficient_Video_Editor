@@ -1,0 +1,5 @@
+{"ops": [
+  {"op": "set_caption_style", "preset": "bold_box"},
+  {"op": "set_duration", "target_ms": 30000},
+  {"op": "add_zoom", "at": {"word": 0, "edge": "start"}, "scale": 1.2, "duration_ms": 1000}
+]}

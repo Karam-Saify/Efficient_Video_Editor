@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "timeline.schema.json",
+  "title": "Timeline v0",
+  "description": "An edit as data (ARCHITECTURE.md 'Timeline schema v0'). All times are integer milliseconds. Video clips play back-to-back in array order, so timeline positions are derived by code (cumulative) and the total duration is the sum of (out_ms - in_ms). Clip in_ms/out_ms are source time; caption and effect times are output (timeline) time. Semantic rules the schema cannot express are enforced by src/validate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "canvas", "target_duration_ms", "sources", "tracks"],
+  "$defs": {
+    "ms": { "type": "integer", "minimum": 0 },
+    "id": { "type": "string", "minLength": 1 }
+  },
+  "properties": {
+    "version": { "const": "0.1" },
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "fps"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 16 },
+        "height": { "type": "integer", "minimum": 16 },
+        "fps": { "type": "integer", "minimum": 1, "description": "Integer so the one-frame tolerance is exact integer arithmetic." }
+      }
+    },
+    "target_duration_ms": { "type": "integer", "minimum": 1 },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Media assets. Filled from ingest metadata; the LLM does not edit these.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "path", "duration_ms"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "path": { "type": "string", "minLength": 1, "description": "Relative to the working directory (the repo root, as the renderer runs). The validator rejects absolute paths, paths that resolve outside the repo, and protected roots (E_SOURCE_PATH)." },
+          "duration_ms": { "type": "integer", "minimum": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "has_audio": { "type": "boolean", "default": true, "description": "False when the file has no audio stream (e.g. no-speech product or sports clips); the renderer then uses silence for this source's clips. To be filled by ingest from ffprobe (not yet implemented; set by hand until then), never by the LLM (ADR-0004). Optional; absent means true." }
+        }
+      }
+    },
+    "tracks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["video"],
+      "properties": {
+        "video": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "source", "in_ms", "out_ms"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "source": { "$ref": "#/$defs/id" },
+              "in_ms": { "$ref": "#/$defs/ms" },
+              "out_ms": { "$ref": "#/$defs/ms" },
+              "crop": { "enum": ["auto_face", "center"], "default": "center" }
+            }
+          }
+        },
+        "captions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "text", "start_ms", "end_ms", "dir"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "text": { "type": "string", "minLength": 1 },
+              "start_ms": { "$ref": "#/$defs/ms" },
+              "end_ms": { "$ref": "#/$defs/ms" },
+              "style": { "type": "string", "minLength": 1, "description": "Named style from the style guide, e.g. 'hook'." },
+              "dir": { "enum": ["rtl", "ltr"] }
+            }
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "target", "at_ms", "duration_ms"],
+            "properties": {
+              "type": { "enum": ["zoom"] },
+              "target": { "$ref": "#/$defs/id" },
+              "at_ms": { "$ref": "#/$defs/ms" },
+              "duration_ms": { "type": "integer", "minimum": 1 },
+              "scale": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          }
+        },
+        "audio": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source"],
+            "properties": {
+              "source": { "$ref": "#/$defs/id" },
+              "gain_db": { "type": "number" },
+              "duck_under_speech": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "selection": { "type": "string" },
+        "prompt_versions": { "type": "object" },
+        "model_ids": { "type": "object" },
+        "recipe": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version", "params", "principles", "unrendered"],
+          "description": "Set by src.recipe (H-0029, ADR-0014 Proposed): what the timeline was compiled from, for ADR-0009 explanations. Meta only; never a render instruction.",
+          "properties": {
+            "id": { "type": "string", "pattern": "^(R[0-9]{2}|[a-z][a-z0-9_]*)$" },
+            "version": { "type": "integer", "minimum": 1 },
+            "params": { "type": "object", "additionalProperties": { "type": ["integer", "number", "boolean", "string"] } },
+            "principles": { "type": "array", "items": { "type": "string", "pattern": "^P-[A-Z0-9-]+$" } },
+            "unrendered": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          }
+        }
+      }
+    }
+  }
+}

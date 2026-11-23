@@ -1,0 +1,135 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R01",
+  "version": 1,
+  "name": "One-tip talking head",
+  "tier": "A",
+  "use_case": "coach / consultant / educator; goal: authority and follows",
+  "source": {
+    "speech": "required"
+  },
+  "beats": [
+    {
+      "id": "hook",
+      "label": "Hook claim",
+      "share_pct": 10
+    },
+    {
+      "id": "tip",
+      "label": "Tip body",
+      "share_pct": 65
+    },
+    {
+      "id": "recap",
+      "label": "Recap",
+      "share_pct": 15
+    },
+    {
+      "id": "cta",
+      "label": "CTA line",
+      "share_pct": 10
+    }
+  ],
+  "hook": {
+    "rule": "Begin at the sentence that states the benefit or the mistake; delete any greeting in the first 2 s; first caption on screen at <= 0.3 s.",
+    "cut_greeting": true,
+    "lead_in_ms": 300
+  },
+  "pacing": {
+    "duration_mode": "tighten",
+    "wpm": {
+      "hook": [
+        170,
+        190
+      ],
+      "tip": [
+        150,
+        170
+      ],
+      "recap": [
+        150,
+        150
+      ],
+      "cta": [
+        130,
+        130
+      ]
+    },
+    "max_dead_air_ms": 400
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    },
+    "per_beat": {
+      "hook": "hook"
+    }
+  },
+  "zoom": {
+    "placement": "rhythm",
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "speech",
+    "music_bed": {
+      "kind": "soft",
+      "gain_db": [
+        -22,
+        -18
+      ],
+      "duck_under_speech": true
+    }
+  },
+  "needs": [
+    "keyword_highlight"
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 35,
+      "min": 20,
+      "max": 60,
+      "label": "How long"
+    },
+    "cut_fillers": {
+      "type": "bool",
+      "default": true,
+      "label": "Remove ums and pauses"
+    },
+    "punch_in_every_s": {
+      "type": "float",
+      "default": 4.0,
+      "min": 3,
+      "max": 8,
+      "label": "How often to zoom in"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.1,
+      "min": 1.05,
+      "max": 1.2,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "clean",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-HOOK-3S",
+    "P-MUTED-CAPTION",
+    "P-ZOOM-RHYTHM"
+  ],
+  "language": {
+    "ar": "Same shape, hook caption RTL; x0.95 pace (uncalibrated, H-0028 OQ2); captions keep the ASR words (dialect never normalised to MSA); direction from the first strong character.",
+    "en": "Base.",
+    "fr": "Same; x1.05 pace (uncalibrated).",
+    "mixed": "Brand/term keeps its own script; mixed lines stay out of the golden set until the EXP-008 size fix."
+  }
+}

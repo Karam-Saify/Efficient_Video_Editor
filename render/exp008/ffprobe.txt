@@ -1,0 +1,12 @@
+render/exp008/AR-01.png  png,1080,1920,rgb24
+render/exp008/AR-02.png  png,1080,1920,rgb24
+render/exp008/AR-03.png  png,1080,1920,rgb24
+render/exp008/AR-04.png  png,1080,1920,rgb24
+render/exp008/AR-05.png  png,1080,1920,rgb24
+render/exp008/AR-06.png  png,1080,1920,rgb24
+render/exp008/AR-07.png  png,1080,1920,rgb24
+render/exp008/AR-08.png  png,1080,1920,rgb24
+render/exp008/AR-09.png  png,1080,1920,rgb24
+render/exp008/AR-10.png  png,1080,1920,rgb24
+PNG_OK=True
+instrument sha256 step1=c98d1c699ade6b94fb941711d120f1c81ec9de0a3f6d9547eece5ff55b660af6 step9=c98d1c699ade6b94fb941711d120f1c81ec9de0a3f6d9547eece5ff55b660af6 INSTRUMENT_UNCHANGED=True

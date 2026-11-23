@@ -1,0 +1,50 @@
+# Source of truth for dependencies. Direct deps are pinned exactly (==), versions taken from .venv
+# (`pip freeze`, 2026-11-22). Lock files with transitive pins:
+#   requirements.txt      runtime: core + milp + media (what `.venv` runs)
+#   requirements-dev.txt  CI/test: core + dev
+# tests/unit/test_pins.py fails if a direct pin here and a lock file disagree.
+#
+# Python floor 3.12 (ADR-0002): av, cpsat-logutils, numpy, orloge and PuLP in the runtime lock publish no
+# 3.11 wheels (H-0003 review F1). CI runs 3.12 and 3.14 (the .venv minor version).
+
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "video-as-code"
+version = "0.1.0"
+description = "Edit video by editing timeline.json: LLM decides, code enforces, local FFmpeg renders."
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = [
+    "jsonschema==4.26.0",
+]
+
+[project.optional-dependencies]
+milp = ["PuLP==4.3.1"]
+media = [
+    "faster-whisper==1.2.1",
+    "scenedetect==0.7.3",  # pulls opencv-python; no -headless twin (both write cv2/, H-0003 review F4)
+]
+dev = [
+    "pytest==9.2.0",
+    "ruff==0.17.6",
+]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+# .claude/ (hooks) and company/ (position artifacts) are owned outside src/ and not linted here.
+extend-exclude = ["backup", "quarantine", "cache", "samples", "data", ".claude", "company"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"

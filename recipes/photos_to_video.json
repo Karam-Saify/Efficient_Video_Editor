@@ -1,0 +1,96 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "photos_to_video",
+  "version": 1,
+  "name": "Photos to video",
+  "tier": "C",
+  "use_case": "shops, venues, real estate, events with only photos; goal: reach (Founder, replaces R11 music-only promo)",
+  "source": {
+    "speech": "any",
+    "kind": "images"
+  },
+  "beats": [
+    {
+      "id": "hook",
+      "label": "Strongest photo",
+      "share_pct": 15
+    },
+    {
+      "id": "showcase",
+      "label": "Showcase photos",
+      "share_pct": 65
+    },
+    {
+      "id": "card",
+      "label": "Brand / offer card",
+      "share_pct": 20
+    }
+  ],
+  "hook": {
+    "rule": "The strongest photo first, already moving (pan or zoom) from frame 0.",
+    "cut_greeting": false,
+    "lead_in_ms": 2000
+  },
+  "pacing": {
+    "duration_mode": "window",
+    "cut_interval_s": [
+      2,
+      3
+    ]
+  },
+  "captions": {
+    "preset": "none"
+  },
+  "zoom": {
+    "placement": "none"
+  },
+  "sound": {
+    "available": "source",
+    "music_bed": {
+      "kind": "licensed_library"
+    }
+  },
+  "overlays": [
+    {
+      "id": "photo_text",
+      "kind": "title",
+      "beat": "showcase"
+    },
+    {
+      "id": "brand_offer",
+      "kind": "brand_card",
+      "beat": "card",
+      "required": true
+    }
+  ],
+  "needs": [
+    "image_source",
+    "pan_zoom",
+    "transitions"
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 15,
+      "min": 6,
+      "max": 60,
+      "label": "How long"
+    },
+    "seconds_per_image": {
+      "type": "float",
+      "default": 3.0,
+      "min": 1.5,
+      "max": 6,
+      "label": "Seconds per photo"
+    }
+  },
+  "principles": [
+    "P-HOOK-VISUAL",
+    "P-ZOOM-RHYTHM",
+    "P-LOOP-END"
+  ],
+  "language": {
+    "ar": "Text overlays follow ADR-0010 once the overlay renderer exists."
+  },
+  "notes": "Deterministic pans/zooms, text and music over still images, no generative AI (Founder scope change to H-0029). Today: image sources, pan/zoom, text overlay and music are all unrendered, so the compile fails with E_RECIPE_SOURCE_KIND and lists them as UNRENDERED."
+}

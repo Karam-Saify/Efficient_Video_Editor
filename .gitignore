@@ -1,0 +1,28 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+.env
+.env.*
+.claude/settings.local.json
+# Media and caches are large: keep them out of git.
+cache/
+samples/*
+!samples/README.md
+out/
+*.mp4
+*.mov
+*.mkv
+*.wav
+*.mp3
+data/golden/*
+!data/golden/MANIFEST.md
+data/heldout/*
+!data/heldout/MANIFEST.md
+!data/heldout/ACCESS_LOG.md
+
+# Archives
+*.zip
+
+# Quarantined files (unverified origin; never open or use)
+quarantine/

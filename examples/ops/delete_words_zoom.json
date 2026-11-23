@@ -1,0 +1,6 @@
+{"ops": [
+  {"op": "delete_words", "words": {"nth": [1, 2]}},
+  {"op": "set_caption_style", "preset": "clean"},
+  {"op": "add_zoom", "at": {"word": 4, "edge": "start"}, "scale": 1.25, "duration_ms": 1200},
+  {"op": "add_zoom", "at": {"fraction": 0.6}, "scale": 1.4, "duration_ms": 1500}
+]}

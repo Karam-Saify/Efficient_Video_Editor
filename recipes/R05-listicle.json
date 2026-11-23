@@ -1,0 +1,132 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R05",
+  "version": 1,
+  "name": "Listicle (N things)",
+  "tier": "B",
+  "use_case": "finance, education, fitness; goal: saves and follows",
+  "source": {
+    "speech": "required"
+  },
+  "beats": [
+    {
+      "id": "promise",
+      "label": "Promise hook",
+      "share_pct": 12
+    },
+    {
+      "id": "item",
+      "label": "Item",
+      "share_pct": 75,
+      "repeat_param": "item_count"
+    },
+    {
+      "id": "close",
+      "label": "Close + CTA",
+      "share_pct": 13
+    }
+  ],
+  "hook": {
+    "rule": "The number and the payoff in the first sentence; the count in the hook must equal item_count. The source must already be spoken in item order (no reorder).",
+    "cut_greeting": true,
+    "lead_in_ms": 300
+  },
+  "pacing": {
+    "duration_mode": "tighten",
+    "wpm": {
+      "promise": [
+        175,
+        175
+      ],
+      "item": [
+        150,
+        170
+      ],
+      "close": [
+        140,
+        140
+      ]
+    },
+    "cut_interval_s": [
+      3,
+      6
+    ]
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    }
+  },
+  "zoom": {
+    "placement": "beats",
+    "beats": [
+      "item"
+    ],
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "speech",
+    "sfx": [
+      "tick"
+    ]
+  },
+  "overlays": [
+    {
+      "id": "number_badge",
+      "kind": "badge",
+      "beat": "item",
+      "required": true
+    }
+  ],
+  "needs": [
+    "transitions"
+  ],
+  "params": {
+    "item_count": {
+      "type": "int",
+      "default": 3,
+      "min": 2,
+      "max": 7,
+      "label": "How many items"
+    },
+    "length_s": {
+      "type": "int",
+      "default": 35,
+      "min": 20,
+      "max": 60,
+      "label": "How long"
+    },
+    "cut_fillers": {
+      "type": "bool",
+      "default": true,
+      "label": "Remove ums and pauses"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.1,
+      "min": 1.05,
+      "max": 1.2,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "bold_box",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-LIST-COUNT",
+    "P-HOOK-3S",
+    "P-MUTED-CAPTION"
+  ],
+  "language": {
+    "ar": "Numbers in the hook come from ASR (word or digit); never rewritten.",
+    "en": "Base.",
+    "mixed": "Fine if no Latin digit/word sits mid-RTL line until the size fix passes."
+  }
+}

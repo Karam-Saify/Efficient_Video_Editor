@@ -1,0 +1,80 @@
+# H-0033 repro log (assurance-lead, 2026-11-23). Commands run at HEAD e655739. Outputs under out/h0033/ (git-ignored).
+# Clean state: suite + ruff + cost report ran in a fresh detached worktree of HEAD (scratchpad/wt, .venv symlinked).
+
+## A. Cost: independent recomputation (own script, does not import experiments/cost_baseline.py)
+$ .venv/bin/python <scratchpad>/cost_hand.py experiments/results/H-0027_cost_measurements.json
+HAND row Download (1).mp4 m$ asr 0.330 und 0.152 plan 5.400 rend 0.355 sto 0.126 total 6.363
+HAND median 7.986  P90 11.087
+{'Download (1).mp4': 6.363, 'Download (2).mp4': 11.087, 'Download (3).mp4': 9.806, 'Download (5).mp4': 8.111, 'Download (6).mp4': 7.857, 'Download (7).mp4': 6.701, 'Download (8).mp4': 8.024, 'Download.mp4': 7.948}
+HAND per-success f=0.2 cold median 9.983 P90 13.859
+HAND per-success f=0.05 cold median 8.406 P90 11.671
+
+$ (worktree) .venv/bin/python experiments/cost_baseline.py report   -> exit 0, 100 lines; key rows:
+| **median** | 0.636 | 0.225 | 5.412 | 0.980 | 0.580 | **7.986** | under | OVER |
+| **P90 (nearest rank)** | 1.718 | 1.879 | 5.613 | 1.401 | 1.995 | **11.087** | OVER | OVER |
+| 0.0% | 0.2 | **7.986** | **11.087** | 7.986 | 11.087 | under / OVER |
+| 0.0% | 0.0 | **2.975** | **6.087** | 2.975 | 6.087 | under / under |
+| 5.0% | 0.2 | **8.407** | **11.671** | 8.324 | 11.446 | under / OVER |
+| 5.0% | 0.0 | **3.132** | **6.408** | 3.049 | 6.183 | under / under |
+| 20.0% | 0.2 | **9.983** | **13.859** | 9.601 | 12.822 | under / OVER |
+| 20.0% | 0.0 | **3.719** | **7.609** | 3.338 | 6.572 | under / under |
+Doc vs code vs hand: Download (1) row 6.363 m$ (all three); median 7.986 / P90 11.087 (all three); per-success 20% cold 9.983 / 13.859, 5% 8.407 vs hand 8.406 (rounding). Deviation 0.0%-0.01%.
+
+## A2. Ledger + closed form
+$ .venv/bin/python -m pytest -q tests/unit/test_cost.py  -> 17 passed
+f= 0 -> 1.0
+f= 0.2 -> 1.25
+f= 0.999 -> 1000.0000000000003
+f= 1.0 -> raises ValueError failure_rate must be in [0, 1), got 1.0
+f= -0.1 -> raises ValueError failure_rate must be in [0, 1), got -0.1
+f= 1.5 -> raises ValueError failure_rate must be in [0, 1), got 1.5
+f= nan -> raises ValueError failure_rate must be in [0, 1), got nan
+hand f=0.2 c=6.363: 7.95375 code: 7.95375
+
+## C. Recipes: 3 matrix cells
+$ python -m src.recipes compile --recipe R05 --video 'quarantine/dev/Download (3).mp4' --allow-dev --out out/h0033/D3_R05.timeline.json  -> exit 0; cmp vs out/h0029/Download3__R05.timeline.json: BYTE-IDENTICAL; unrendered [sound.sfx, overlays[0]:number_badge, needs[]=transitions]
+$ python -m src.recipes compile --recipe R01 --video 'quarantine/dev/Download (5).mp4' --allow-dev --out out/h0033/D5_R01.timeline.json  -> exit 0; BYTE-IDENTICAL; 35000 ms, 6 clips, 27 captions, 8 zooms; unrendered [sound.music_bed, captions.per_beat, needs[]=keyword_highlight]
+$ python -m src.recipes compile --recipe photos_to_video --images out/h0029/img_set2 --out out/h0033/p2v.timeline.json -> exit 2, E_RECIPE_SOURCE_KIND, no timeline written; UNRENDERED = sound.music_bed, overlays[0]:photo_text, overlays[1]:brand_offer, needs[]=image_source, needs[]=pan_zoom, needs[]=transitions (matches recipe fields)
+Degraded recipe R02 (recipes/R02*.json) field-by-field: sound.music_bed, sound.sfx, overlays[0]:price_cta, captions.per_beat, needs[]=b_roll -> all 5 in result.unrendered; hook.rule, pacing.wpm, pacing.cut_interval_s, use_case, language -> result.advisory; beats -> proportional windows, disclosed in RECIPE_LANGUAGE.md:83. Nothing missing.
+
+## C2. ffprobe out/h0029/Download5__R01.mp4 vs its timeline (canvas 1080x1920 @30, total 35000 ms)
+stream|codec_type=video|width=1080|height=1920|r_frame_rate=30/1|duration=35.000000|nb_frames=1050
+stream|codec_type=audio|r_frame_rate=0/0|duration=35.001000|nb_frames=1642
+format|duration=35.001000
+-> 1050 frames = 35.000 s x 30; audio 35.001 s. PASS.
+Frame: ffmpeg -ss 14.4 -> out/h0033/f1_14400.png (1 of max 3 viewed). Caption cap11 (13573-15253 ms) present, white clean style, centred low; it overlaps the source's own burned-in price card (F8). Caption text not reproduced here (dev-derived).
+
+## C3. ADR-0014 adversarial (src.validate.validate(tl, allow_dev=True))
+fn validate (tl: 'Any', base_dir: 'Path | None' = None, *, check_support: 'bool' = True, allow_dev: 'bool' = False) -> 'list[Issue]'
+out/h0029/Download5__R01.timeline.json VALID
+adv_norecipe.json VALID
+adv_extra.json ["E_SCHEMA /provenance/recipe: Additional properties are not allowed ('extra' was unexpected)"]
+adv_badid.json ["E_SCHEMA /provenance/recipe/id: 'R5; rm' does not match '^(R[0-9]{2}|[a-z][a-z0-9_]*)$'"]
+adv_missingkey.json ["E_SCHEMA /provenance/recipe: 'unrendered' is a required property"]
+adv_freetext.json VALID
+
+## Adversarial (recipes CLI, cost model)
+set length_s=0 -> exit 2 recipes: error: E_PARAM_RANGE: length_s=0 outside [20, 60]
+set length_s=99999999 -> exit 2 recipes: error: E_PARAM_RANGE: length_s=99999999 outside [20, 60]
+set length_s=-5 -> exit 2 recipes: error: E_PARAM_RANGE: length_s=-5 outside [20, 60]
+set caption_look=hook‏ -> exit 2 recipes: error: E_PARAM_RANGE: caption_look='hook\u200f' not one of ['clean', 'bold_box', 'hook']
+set caption_look=عنوان -> exit 2 recipes: error: E_PARAM_RANGE: caption_look='عنوان' not one of ['clean', 'bold_box', 'hook']
+set punch_in_strength=nan -> exit 2 recipes: error: E_PARAM_RANGE: punch_in_strength=nan outside [1.05, 1.2]
+set length_s= -> exit 2 recipes: error: E_PARAM_TYPE: length_s='' is not a int
+set start_at_s=1e308 -> exit 2 recipes: error: E_PARAM_UNKNOWN: recipe R01 has no param 'start_at_s'; known: caption_look, cut_fillers, length_s, punch_in_every_s, punch_in_strength
+no --allow-dev -> exit 2 recipes: error: E_RECIPE_OP: set_duration {'target_ms': 35000}: E_OP_INVALID: the result is not a valid renderable timeline
+  E_SOURCE_PATH /sources/0/path: sou
+empty imgs -> exit 2 recipes: error: E_RECIPE_SOURCE: no images (.png, .jpg, .jpeg, .webp) in out/h0033/empty_imgs
+R01 on images -> exit 2 recipes: error: E_RECIPE_SOURCE_KIND: recipe R01 needs a video source, got images
+path recipe -> exit 2 recipes: error: E_RECIPE_UNKNOWN: unknown recipe id '../../etc/passwd'; known: R01, R02, R03, R04, R05, R06, R07, R08, R09, R10, R12, photos_to_video
+
+## B. Bench static read
+git ls-files bench -> README.md asr.js bench.js env.js export.js index.html libs.js (no media). grep for fetch/import/sendBeacon/XHR/WebSocket/POST: only import() of 2 pinned CDN modules (libs.js) + fetch(SPEECH_SAMPLE_URL). No POST, no beacon, no analytics. Local file: URL.createObjectURL + arrayBuffer in memory; results JSON records size_bytes and MIME type only.
+Pins: transformers@4.3.2, onnxruntime-web@1.31.0-dev.20260914-8d85527a0 (prerelease), mp4-muxer@5.2.2, fontsource 5.3.0, HF weights pinned to commit, jfk.wav pinned to dataset commit 542437c2. No SRI.
+Smoke JSON transcripts: H-0030_smoke_main.json = JFK sentence (public domain); H-0030_smoke_fallback_file.json step 5 = one fluent English sentence from a 28,028,273-byte local file. find out quarantine -size 28028273c -> no match; quarantine/dev sizes: 2.0, 32.2, 110.8, 20.8, 8.7, 7.0, 3.2, 18.0, 58.6, 15.9 MB -> not a dev clip; consistent with the synthetic beep export (out/h0030/export_1080.mp4 is 28,011,307 B, encoder non-deterministic). => hallucination on non-speech (F9), not dev-derived text.
+
+## Hygiene
+$ git log --stat 511dbb7~1..HEAD | media extensions (mp4 mov wav flac mp3 m4a png jpg webp ass srt vtt woff ttf onnx bin) -> none. 103 files changed in range.
+$ git status -sb -> ahead 3 of origin at 14:25 (loop cadence 5 min; last push 14:20 -> 0e5234b).
+Auto-push log (tasks/bvuh44pgb.output): 4 lines, all 'pushed N commit(s)': 13:55 7c34ad1, 14:00 8e64de2, 14:05 d257db4, 14:20 0e5234b. No blocked/rejected/failed line.
+$ (worktree) pytest -q -> 404 passed, 8 skipped in 33.13s ; ruff check . -> All checks passed!

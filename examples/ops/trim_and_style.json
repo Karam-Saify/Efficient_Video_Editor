@@ -1,0 +1,4 @@
+{"ops": [
+  {"op": "trim", "start": {"word": 0, "edge": "start"}, "end": {"segment": 2, "edge": "end"}},
+  {"op": "set_caption_style", "preset": "hook"}
+]}

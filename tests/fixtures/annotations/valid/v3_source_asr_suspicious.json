@@ -1,0 +1,96 @@
+{
+  "record_type": "source",
+  "annotation_version": "0.1",
+  "video_id": "synthetic-0000000001",
+  "rights_id": "RR-P001-01",
+  "media": {
+    "duration_ms": 6000,
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "has_audio": true
+  },
+  "provenance": {
+    "asr_model": "large-v3-turbo",
+    "asr_language_requested": "auto",
+    "scene_detector": "scenedetect 0.7.3 ContentDetector",
+    "vad": "faster-whisper 1.2.1 silero",
+    "rules_version": "roles-v0",
+    "describer": null
+  },
+  "transcript": {
+    "label_origin": "machine",
+    "language": {
+      "value": "ar",
+      "label_origin": "machine"
+    },
+    "language_probability": 0.91,
+    "segments": []
+  },
+  "audio": {
+    "label_origin": "machine",
+    "integrated_lufs": -16.2,
+    "loudness_range_lu": 4.1,
+    "speech_ratio": 0.6,
+    "word_count": 0,
+    "words_per_speech_min": 0.0,
+    "nonspeech_sound_ratio": 0.1,
+    "energy_db_1s": [
+      -20.0,
+      -21.5,
+      -30.0,
+      -40.0,
+      -40.0,
+      -35.0
+    ],
+    "flags": [
+      "ASR_SUSPICIOUS"
+    ]
+  },
+  "scenes": [
+    {
+      "id": 0,
+      "start_ms": 0,
+      "end_ms": 3000,
+      "label_origin": "machine",
+      "keyframes": [
+        {
+          "file": "keyframes/scene000_0.jpg",
+          "t_ms": 1500,
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000001",
+          "label_origin": "machine"
+        }
+      ],
+      "description": {
+        "value": null,
+        "label_origin": "machine"
+      },
+      "role": {
+        "value": "hook",
+        "label_origin": "machine"
+      }
+    },
+    {
+      "id": 1,
+      "start_ms": 3000,
+      "end_ms": 6000,
+      "label_origin": "machine",
+      "keyframes": [
+        {
+          "file": "keyframes/scene001_0.jpg",
+          "t_ms": 4500,
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000001",
+          "label_origin": "machine"
+        }
+      ],
+      "description": {
+        "value": "عبوة على طاولة",
+        "label_origin": "machine"
+      },
+      "role": {
+        "value": "cta",
+        "label_origin": "machine"
+      }
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "../schemas/recipe.schema.json",
+  "id": "R07",
+  "version": 1,
+  "name": "Behind the scenes",
+  "tier": "A",
+  "use_case": "maker, cafe, studio; goal: relatability and follows",
+  "source": {
+    "speech": "required"
+  },
+  "beats": [
+    {
+      "id": "curiosity",
+      "label": "Curiosity hook",
+      "share_pct": 12
+    },
+    {
+      "id": "process",
+      "label": "Process",
+      "share_pct": 63
+    },
+    {
+      "id": "human",
+      "label": "Human moment",
+      "share_pct": 15
+    },
+    {
+      "id": "cta",
+      "label": "Soft CTA",
+      "share_pct": 10
+    }
+  ],
+  "hook": {
+    "rule": "A \"you never see this\" or surprising fact in the first sentence; no intro.",
+    "cut_greeting": true,
+    "lead_in_ms": 300
+  },
+  "pacing": {
+    "duration_mode": "tighten",
+    "wpm": {
+      "curiosity": [
+        130,
+        160
+      ],
+      "process": [
+        130,
+        160
+      ],
+      "human": [
+        130,
+        160
+      ],
+      "cta": [
+        130,
+        160
+      ]
+    },
+    "cut_interval_s": [
+      5,
+      8
+    ],
+    "max_dead_air_ms": 800
+  },
+  "captions": {
+    "preset": {
+      "param": "caption_look"
+    },
+    "per_beat": {
+      "curiosity": "hook"
+    }
+  },
+  "zoom": {
+    "placement": "rhythm",
+    "duration_ms": 800
+  },
+  "sound": {
+    "available": "source",
+    "music_bed": {
+      "kind": "light"
+    }
+  },
+  "needs": [
+    "speed_ramp",
+    "b_roll"
+  ],
+  "params": {
+    "length_s": {
+      "type": "int",
+      "default": 35,
+      "min": 20,
+      "max": 60,
+      "label": "How long"
+    },
+    "cut_fillers": {
+      "type": "bool",
+      "default": false,
+      "label": "Remove ums and pauses"
+    },
+    "punch_in_every_s": {
+      "type": "float",
+      "default": 6.0,
+      "min": 3,
+      "max": 12,
+      "label": "How often to zoom in"
+    },
+    "punch_in_strength": {
+      "type": "float",
+      "default": 1.06,
+      "min": 1.05,
+      "max": 1.15,
+      "label": "How strong the zoom"
+    },
+    "caption_look": {
+      "type": "enum",
+      "default": "clean",
+      "values": [
+        "clean",
+        "bold_box",
+        "hook"
+      ],
+      "label": "Caption style"
+    }
+  },
+  "principles": [
+    "P-AUTHENTIC-TONE",
+    "P-HOOK-3S",
+    "P-PAYOFF-END"
+  ],
+  "language": {
+    "ar": "Casual dialect is the point; leave spelling as spoken, including colloquial forms.",
+    "en": "Same.",
+    "fr": "Same."
+  }
+}

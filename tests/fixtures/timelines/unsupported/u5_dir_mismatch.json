@@ -1,0 +1,50 @@
+{
+  "version": "0.1",
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "target_duration_ms": 6000,
+  "sources": [
+    {
+      "id": "srcA",
+      "path": "tests/fixtures/media/src_a.txt",
+      "duration_ms": 10000,
+      "sha256": "889cb8fe52f0ec69bd7f55b82a89798fcc50ec39a90ee756e4e6eb1580533e1a"
+    }
+  ],
+  "tracks": {
+    "video": [
+      {
+        "id": "c1",
+        "source": "srcA",
+        "in_ms": 2000,
+        "out_ms": 8000
+      }
+    ],
+    "captions": [
+      {
+        "id": "t1",
+        "text": "السعر الحقيقي؟",
+        "start_ms": 0,
+        "end_ms": 1800,
+        "dir": "rtl"
+      },
+      {
+        "id": "t2",
+        "text": "وين بتلاقيه؟",
+        "start_ms": 1800,
+        "end_ms": 4000,
+        "dir": "rtl"
+      },
+      {
+        "id": "t3",
+        "text": "Link in bio",
+        "start_ms": 4000,
+        "end_ms": 6000,
+        "dir": "rtl"
+      }
+    ]
+  }
+}
