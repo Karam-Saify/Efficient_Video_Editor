@@ -7,3 +7,5 @@
 | G-C04 | Download (3).mp4 | 84.0 s | many (group) | Lebanese | 3 | group sketch, single static shot (3 scenes), New-Year wishes | 9:16 576×1024 | **NONE** | DRAFT. ASR mean word p 0.72, intelligible. Hallucinated outro "اشتركوا في القناة" during final 3 s silence. Longest; closest to a cuttable source. |
 
 > 2026-11-23 (ADR-0006): media moved to `quarantine/dev/` (git-ignored); internal development testing only. These are not a golden set.
+
+> 2026-11-23 (later): Download (9) and (10) moved to `quarantine/dev/`; Download (4) deleted (duplicate of (2)). Ground-truth labels: `quarantine/dev/LABELS.csv` (Founder-filled, ADR-0022).
