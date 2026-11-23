@@ -44,12 +44,15 @@
   (Cohen's kappa for categorical, Spearman for ordinal 1–5). If agreement is below 0.4, fix the rubric before trusting results.
 
 ## Planned experiment register
-| ID | Question | Milestone |
-|---|---|---|
-| EXP-001 | Arabic ASR quality (WER, timestamp drift) across ≥ 2 models | M1 |
-| EXP-002 | Transcript-only vs transcript + visual captions | M3 |
-| EXP-003 | Timeline JSON validity rate from the LLM | M4 |
-| EXP-004 | LLM-scored + MILP selection vs no-LLM baseline | M3 |
-| EXP-005 | Cost per Short by stage | M3 |
-| EXP-006 | Arabic caption rendering correctness: FFmpeg/libass vs Remotion | M1 |
-| EXP-007 | Revision diff size and tokens | M4 |
+| ID | Question | Milestone | Status |
+|---|---|---|---|
+| EXP-001 | Arabic ASR quality (WER, timestamp drift) across ≥ 2 models | M1 | DRAFT (H-0022); not to be locked until footage with rights exists (Founder) |
+| EXP-002 | Transcript-only vs transcript + visual captions | M3 | Planned |
+| EXP-003 | Timeline JSON validity rate from the LLM | M4 | Planned |
+| EXP-004 | LLM-scored + MILP selection vs no-LLM baseline | M3 | Planned |
+| EXP-005 | Cost per Short by stage | M3 | Planned |
+| EXP-006 | Arabic caption rendering correctness: FFmpeg/libass vs Remotion | M1 | **INVALID** (`company/experiments/EXP-006-results.md`); superseded by EXP-008 |
+| EXP-007 | Revision diff size and tokens | M4 | Planned (reserved) |
+| EXP-008 | Arabic + Latin caption rendering, FFmpeg + libass, declared Noto font pair | M0 (0.7) | **FAIL**, E2 (`company/experiments/EXP-008-results.md`): N_correct 8/10, N_sev1 0 |
+| EXP-009 | Trend coding work (referenced in `company/positions/05-assurance/DATA_RIGHTS.md` RR-014) | — | Referenced, not drafted (id reserved) |
+| EXP-010 | Latin font size factor in the caption style (successor to EXP-008) | M0/M1 | Registered, not drafted; needs the Founder-calibrated size band before lock |

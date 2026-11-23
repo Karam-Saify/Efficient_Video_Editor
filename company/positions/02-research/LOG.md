@@ -42,3 +42,9 @@
 - Evidence: company/experiments/EXP-008-results.md §8; company/handoffs/H-0018-return.md; grep for EXP-010 returned no hits.
 - Learned: a single nominal font size cannot match Latin caps, digits and x-height to Arabic alef at once (x-height already 1.24×); the successor needs a Founder-calibrated band (upper and lower), set before lock.
 - Next: Assurance T2 review; Founder calibrates the ratio band; Operator adds A-11 and registers EXP-010; then draft EXP-010.
+
+### 2026-11-22 · H-0022 · T1 · DONE
+- Did: drafted EXP-001 (Arabic ASR, 2 faster-whisper models, blind human references, 9-step normalisation with 10 test vectors, WER_LB + P90 boundary error primary, Eng/Creative/Assurance consultation block); Lock stays DRAFT per Founder. Fast-lane docs: A-11 added to ASSUMPTIONS.md; register now has Status (EXP-006 INVALID, EXP-008 FAIL, EXP-009 reserved, EXP-010 registered). Not committed.
+- Evidence: company/experiments/EXP-001.md (line 2 DRAFT); scratch normaliser reproduces all 10 vectors; company/handoffs/H-0022-return.md.
+- Learned: write the normalisation test vectors and run them before they go into a prereg; one of my expected values (رئيس) was wrong. E1's "hand-correct one model's output" reference method biases toward that model, so EXP-001 requires blind references.
+- Next: Founder answers O1 (thresholds) to O5; three consultation sign-offs; lock only when footage with verified rights exists.

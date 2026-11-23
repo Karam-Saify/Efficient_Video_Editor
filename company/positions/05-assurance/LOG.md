@@ -45,3 +45,9 @@
 - Evidence: company/state/RISK_REGISTER.md; company/handoffs/H-0019-return.md
 - Learned: R-15's "secret scan in CI" mitigation does not exist (grep of the workflows: no match). A register mitigation is a claim and needs I-1 evidence like any other.
 - Next: re-run the hook self-test with shell-write and quoted-text cases on the H-0020 return; verify RR-002 before the first real ingest.
+
+### 2026-11-22 · H-0023-review · T2 · DONE
+- Did: T2 review of Task C (EXP-006 INVALID, EXP-008 FAIL) plus N1 spot check. Lock history checked with `git log --follow`: both locks predate their render commits and nothing changed after them. EXP-008 rerun in a clean detached worktree of 43556ca (a `git archive` export fails on the instrument's git-status precondition): 26/26 PNG, .ass and check-txt hashes match the committed SHA256SUMS. Logs differ, which is non-invalidating. Controls and coverage confirmed, plus an independent log grep. 17 adversarial attempts. N1 closed (6 path cases give E_SOURCE_PATH, exit 1; 155 tests pass). Verdict ACCEPT WITH FINDINGS (S1:0, S2:4, S3:7). Founder combined verdict to be recorded as an appended, non-decisive §9 in EXP-008-results.md (F3).
+- Evidence: company/handoffs/H-0023-review.md; company/handoffs/H-0023-repro.txt
+- Learned: a rerun recipe that regenerates its own SHA256SUMS proves nothing. Always save the committed sums before rerunning. Self-slip: a non-gate command named the held-out path (`ls`, output discarded). This is self-reported as F11 and the Operator must record it in ACCESS_LOG. New personal check: never name that path outside gates.
+- Next: add an RR row for NotoSansThai-Regular and update the RR-011 usage text (F8). Verify the Founder §9 append (F3) and the fixed rerun recipe (F1) before EXP-010 is locked.

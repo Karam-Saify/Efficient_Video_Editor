@@ -16,3 +16,4 @@ When an assumption is invalidated, Product must open a scope review within one s
 | A-08 | Creators will accept a code/text-based editing workflow (or a UI on top of it) | Market | Need full GUI before value | Founder usage at M4, interviews at M6 | — | Untested |
 | A-09 | Our rubric score predicts audience retention | Quality | Optimising the wrong target | M5 correlation | — | Untested |
 | A-10 | Cost per Short can be < 10% of comparable paid AI-editing tools | Business | Thesis fails | M3 cost + competitor pricing log | — | Untested |
+| A-11 | FFmpeg + libass renders Arabic captions correctly on our caption style | Technical | Caption-style fix (Latin/digit size factor) or an alternative renderer needed | EXP-006 (INVALID), EXP-008 (FAIL), successor EXP-010 (registered, not drafted) | E2, `company/experiments/EXP-008-results.md` §8 | Refuted for the EXP-008 configuration (Latin/digit size mismatch; Arabic shaping and bidi passed, E2) |
