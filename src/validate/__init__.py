@@ -21,6 +21,10 @@ Codes (rule numbers from brief H-0004 / ARCHITECTURE.md):
   E_EFFECT_TYPE     rule 7: effect `type` not in the schema enum
   E_DUPLICATE_ID    a source, clip or caption id is used twice
   E_EFFECT_TARGET   an effect `target` is not a video clip id
+  UNSUPPORTED_FIELD the field (or field value) is valid v0 but the renderer does not implement it, so it would
+                    silently do nothing (H-0024 G2b). The list lives in src/capabilities.py (also the source of
+                    docs/CAPABILITIES.md). Also raised for a caption `dir` that disagrees with the base
+                    direction libass will apply (first strong character). Checked only when the schema passes.
 """
 from __future__ import annotations
 
@@ -31,6 +35,8 @@ from typing import Any
 
 import jsonschema
 
+from src.bidi import first_strong_dir
+from src.capabilities import unsupported_fields
 from src.common import ROOT, SCHEMA_PATH, read_json
 
 # Repo-relative roots a timeline source may never point into (CONSTITUTION I-6 held-out, I-9 rights).
@@ -216,10 +222,28 @@ def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
     return errs
 
 
-def validate(tl: Any, base_dir: Path | None = None) -> list[Issue]:
+def support_issues(tl: dict[str, Any]) -> list[Issue]:
+    """UNSUPPORTED_FIELD for every present field the renderer does not implement (src/capabilities.py)."""
+    errs = [Issue("UNSUPPORTED_FIELD", ptr, f"{f.path}" + (f" = {f.value!r}" if f.value is not None else "")
+                  + f" is valid v0 but not implemented by the renderer: {f.notes}")
+            for ptr, f in unsupported_fields(tl)]
+    for i, c in enumerate(tl["tracks"].get("captions", [])):
+        laid_out = first_strong_dir(c["text"])
+        if laid_out is not None and laid_out != c["dir"]:
+            errs.append(Issue("UNSUPPORTED_FIELD", f"/tracks/captions/{i}/dir", f"caption '{c['id']}' has dir "
+                              f"'{c['dir']}' but the renderer lays it out '{laid_out}' (libass auto base direction "
+                              "follows the first strong character; it cannot be forced)"))
+    return sorted(errs, key=lambda e: e.path)
+
+
+def validate(tl: Any, base_dir: Path | None = None, *, check_support: bool = True) -> list[Issue]:
     """Return every issue found; empty list means valid. Relative source paths resolve against `base_dir`
-    (default: the current working directory, which is what the renderer's ffmpeg call uses)."""
+    (default: the current working directory, which is what the renderer's ffmpeg call uses).
+    `check_support=False` skips UNSUPPORTED_FIELD (tests of the schema/semantic rules only); the renderer
+    always uses the default."""
     errs = schema_issues(tl)
     if any(e.code == "E_SCHEMA" for e in errs):
         return errs  # semantic rules need a well-formed document
-    return errs + semantic_issues(tl, base_dir if base_dir is not None else Path.cwd())
+    schema_ok = not errs  # coded schema errors (e.g. E_CAPTION_DIR) let semantics run, but not the support check
+    errs += semantic_issues(tl, base_dir if base_dir is not None else Path.cwd())
+    return errs + support_issues(tl) if check_support and schema_ok else errs

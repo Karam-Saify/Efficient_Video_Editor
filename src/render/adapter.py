@@ -1,9 +1,11 @@
 """Timeline v0 (integer ms, ARCHITECTURE.md) -> the renderer's internal model (seconds, pre-H-0004 shape).
 
 Input adapter only: the FFmpeg graph and ASS writer are unchanged (H-0004 keeps rendering out of scope).
-Not rendered yet (v0 fields accepted by the schema but ignored here): clip `crop` (always centre crop),
-caption `style` and `dir` (ASS uses one default style with Encoding -1, see experiments/E6.md),
-`effects`, `audio`. ms -> s conversion is code, never LLM (I-4).
+Fields the renderer does not implement are rejected by the validator (UNSUPPORTED_FIELD, src/capabilities.py,
+docs/CAPABILITIES.md; H-0024), so they never reach this adapter: clip `crop` other than centre,
+caption `style`, `effects`, `audio`. Caption `dir` is not passed on: ASS Encoding -1 lets libass pick the base
+direction from the first strong character, and the validator rejects a `dir` that disagrees (experiments/E6.md).
+ms -> s conversion is code, never LLM (I-4).
 Source `has_audio` (optional, default true; H-0009) is passed through: false makes the FFmpeg graph use
 silence (anullsrc) for that source's clips instead of `[i:a]`, so silent sources render.
 """

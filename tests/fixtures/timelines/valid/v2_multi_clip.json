@@ -33,7 +33,7 @@
         "source": "srcB",
         "in_ms": 1000,
         "out_ms": 4000,
-        "crop": "auto_face"
+        "crop": "center"
       },
       {
         "id": "c3",

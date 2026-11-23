@@ -34,6 +34,11 @@ def codes(tl: Any) -> list[str]:
     return [e.code for e in validate(tl, base_dir=ROOT)]
 
 
+def rule_codes(tl: Any) -> list[str]:
+    """Schema + semantic rules only, for fixtures that also carry unsupported fields (H-0024 G2b)."""
+    return [e.code for e in validate(tl, base_dir=ROOT, check_support=False)]
+
+
 def base() -> dict[str, Any]:
     return copy.deepcopy(load(FIX / "valid" / "v3_captions_rtl_ltr.json"))
 
@@ -66,9 +71,10 @@ def test_rule6_caption_dir_missing_or_unknown(value: str | None) -> None:
 
 
 def test_rule7_unknown_effect_type() -> None:
-    tl = load(FIX / "valid" / "v4_effects.json")
+    tl = load(FIX / "unsupported" / "u1_effects.json")
     tl["tracks"]["effects"][1]["type"] = "blur"
-    assert codes(tl) == ["E_EFFECT_TYPE"]
+    assert rule_codes(tl) == ["E_EFFECT_TYPE"]
+    assert codes(tl) == ["E_EFFECT_TYPE"]  # a schema error stops the support check too
 
 
 # Rule 1 variants: missing file, hash mismatch, undeclared audio source.
@@ -87,9 +93,9 @@ def test_rule1_hash_mismatch_only_when_sha256_given() -> None:
 
 
 def test_rule1_undeclared_audio_source() -> None:
-    tl = load(FIX / "valid" / "v5_audio.json")
+    tl = load(FIX / "unsupported" / "u2_audio.json")
     tl["tracks"]["audio"][0]["source"] = "nope"
-    assert codes(tl) == ["E_SOURCE_MISSING"]
+    assert rule_codes(tl) == ["E_SOURCE_MISSING"]
 
 
 def test_relative_paths_resolve_against_base_dir() -> None:
@@ -130,9 +136,9 @@ def test_rule5_one_frame_tolerance_is_integer_exact(fps: int, delta: int, ok: bo
 
 
 def test_extra_rules_duplicate_id_and_effect_target() -> None:
-    tl = load(FIX / "valid" / "v4_effects.json")
+    tl = load(FIX / "unsupported" / "u1_effects.json")
     tl["tracks"]["video"][1]["id"] = "c1"
-    assert codes(tl) == ["E_DUPLICATE_ID", "E_EFFECT_TARGET"]  # effect on 'c2' now has no clip
+    assert rule_codes(tl) == ["E_DUPLICATE_ID", "E_EFFECT_TARGET"]  # effect on 'c2' now has no clip
 
 
 def test_structural_error_is_e_schema_and_stops_semantics() -> None:
