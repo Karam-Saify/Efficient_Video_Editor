@@ -1,0 +1,317 @@
+{
+  "url": "http://localhost:8765/",
+  "channel": "chromium",
+  "browserVersion": "143.0.7499.4",
+  "flags": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": [
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED",
+    "blob:http://localhost:8765/1dc826aa-fd4f-4cd1-87eb-5428eb4815f7 net::ERR_ABORTED"
+  ],
+  "consoleAll": [
+    "info: WebGPU is experimental on this platform. See https://github.com/gpuweb/gpuweb/wiki/Implementation-Status#implementation-status",
+    "warning: Failed to create WebGPU Context Provider",
+    "info: WebGPU is experimental on this platform. See https://github.com/gpuweb/gpuweb/wiki/Implementation-Status#implementation-status",
+    "warning: Failed to create WebGPU Context Provider"
+  ],
+  "summary": "bench H-0030 v1 run mwtchh03 finished\ndevice: mem 8 GB, 2 cores, WebGPU no\nenv: OK peak 2 MB\nfonts: OK peak 2 MB\nexport_1080: FAIL peak 3 MB (simulated FAIL (?simulate=fail1080 test hook))\nexport_720: OK 720x1280 15475 ms 58.16 fps avc1.64001f+opus peak 22 MB\nsample_asr: OK whisper-tiny/wasm load 4453 ms RTF 0.4183 peak 92 MB\nfile_asr: OK whisper-tiny/wasm load 1305 ms RTF 0.1304 peak 38 MB\nfile_export: OK peak 95 MB",
+  "results": {
+    "schema": "bench-results/1",
+    "page_version": "H-0030 v1",
+    "run_id": "mwtchh03",
+    "started_at": "2026-11-23T14:12:14.547Z",
+    "finished_at": "2026-11-23T14:14:45.522Z",
+    "options": {
+      "asr": true,
+      "also_720": false,
+      "local_file": {
+        "size_bytes": 28028273,
+        "type": "video/mp4"
+      },
+      "file_language": "english",
+      "simulate": "fail1080"
+    },
+    "libs": {
+      "transformers": "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2/dist/transformers.min.js",
+      "ort_wasm": "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.31.0-dev.20260914-8d85527a0/dist/",
+      "mp4_muxer": "https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.mjs",
+      "fonts": [
+        "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-arabic@5.3.0/files/noto-sans-arabic-arabic-400-normal.woff2",
+        "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans@5.3.0/files/noto-sans-latin-400-normal.woff2"
+      ],
+      "models": {
+        "whisper-base": {
+          "id": "Xenova/whisper-base",
+          "revision": "64da57285918e20ea79ea5c88eed7197933abaa8"
+        },
+        "whisper-tiny": {
+          "id": "Xenova/whisper-tiny",
+          "revision": "5332fcc35e32a33b86612b9a57a89be7906102b1"
+        }
+      },
+      "speech_sample": "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/542437c29cc5273cfd29e25c77696f2b349badd7/jfk.wav"
+    },
+    "device": {
+      "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/143.0.0.0 Safari/537.36",
+      "platform": "Linux",
+      "mobile": false,
+      "device_memory_gb": 8,
+      "hardware_concurrency": 2,
+      "screen": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "secure_context": true,
+      "cross_origin_isolated": false,
+      "webgpu_available": false,
+      "webgpu_adapter": null,
+      "webgpu_error": "navigator.gpu present but requestAdapter() returned null",
+      "webcodecs": {
+        "video_encoder": true,
+        "audio_encoder": true,
+        "video_frame": true
+      },
+      "memory_api": "performance.memory"
+    },
+    "steps": [
+      {
+        "id": "env",
+        "status": "ok",
+        "started_at": "2026-11-23T14:12:14.548Z",
+        "duration_ms": 2,
+        "error": null,
+        "peak_memory_bytes": 2309999,
+        "memory_source": "performance.memory.usedJSHeapSize"
+      },
+      {
+        "id": "fonts",
+        "status": "ok",
+        "started_at": "2026-11-23T14:12:14.551Z",
+        "duration_ms": 51,
+        "error": null,
+        "fonts": [
+          "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-arabic@5.3.0/files/noto-sans-arabic-arabic-400-normal.woff2",
+          "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans@5.3.0/files/noto-sans-latin-400-normal.woff2"
+        ],
+        "peak_memory_bytes": 2309999,
+        "memory_source": "performance.memory.usedJSHeapSize"
+      },
+      {
+        "id": "export_1080",
+        "status": "fail",
+        "started_at": "2026-11-23T14:12:14.602Z",
+        "duration_ms": 0,
+        "error": "simulated FAIL (?simulate=fail1080 test hook)",
+        "peak_memory_bytes": 2904204,
+        "memory_source": "performance.memory.usedJSHeapSize"
+      },
+      {
+        "id": "export_720",
+        "status": "ok",
+        "started_at": "2026-11-23T14:12:14.603Z",
+        "duration_ms": 15535,
+        "error": null,
+        "width": 720,
+        "height": 1280,
+        "fps": 30,
+        "seconds": 30,
+        "frames": 900,
+        "video_codec": "avc1.64001f",
+        "audio_codec": "opus",
+        "codec_candidates": [
+          "avc1.64001f:true"
+        ],
+        "export_ms": 15475,
+        "export_fps": 58.16,
+        "bytes": 14018849,
+        "reason": "retry after export_1080 FAIL",
+        "peak_memory_bytes": 23268830,
+        "memory_source": "performance.memory.usedJSHeapSize"
+      },
+      {
+        "id": "sample_asr",
+        "status": "ok",
+        "started_at": "2026-11-23T14:12:30.141Z",
+        "duration_ms": 9423,
+        "error": null,
+        "model": "whisper-tiny",
+        "model_id": "Xenova/whisper-tiny",
+        "revision": "5332fcc35e32a33b86612b9a57a89be7906102b1",
+        "backend": "wasm",
+        "dtype": {
+          "encoder_model": "q8",
+          "decoder_model_merged": "q8"
+        },
+        "language": "english",
+        "model_load_ms": 4453,
+        "audio_s": 11,
+        "transcribe_ms": 4601,
+        "rtf": 0.4183,
+        "text": "And so my fellow Americans ask not what your country can do for you, ask what you can do for your country.",
+        "attempts": [
+          {
+            "model": "whisper-base",
+            "device": "webgpu",
+            "dtype": {
+              "encoder_model": "fp32",
+              "decoder_model_merged": "q4"
+            },
+            "status": "skipped",
+            "error": "WebGPU unavailable"
+          },
+          {
+            "model": "whisper-tiny",
+            "device": "webgpu",
+            "dtype": {
+              "encoder_model": "fp32",
+              "decoder_model_merged": "q4"
+            },
+            "status": "skipped",
+            "error": "WebGPU unavailable"
+          },
+          {
+            "model": "whisper-tiny",
+            "device": "wasm",
+            "dtype": {
+              "encoder_model": "q8",
+              "decoder_model_merged": "q8"
+            },
+            "status": "ok",
+            "error": null,
+            "model_load_ms": 4453,
+            "transcribe_ms": 4601,
+            "text": "And so my fellow Americans ask not what your country can do for you, ask what you can do for your country."
+          }
+        ],
+        "note": "model_load_ms includes the download on a first run; run twice for a cached load time",
+        "reference": "And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+        "peak_memory_bytes": 96661183,
+        "memory_source": "performance.memory.usedJSHeapSize"
+      },
+      {
+        "id": "file_asr",
+        "status": "ok",
+        "started_at": "2026-11-23T14:12:39.642Z",
+        "duration_ms": 6238,
+        "error": null,
+        "model": "whisper-tiny",
+        "model_id": "Xenova/whisper-tiny",
+        "revision": "5332fcc35e32a33b86612b9a57a89be7906102b1",
+        "backend": "wasm",
+        "dtype": {
+          "encoder_model": "q8",
+          "decoder_model_merged": "q8"
+        },
+        "language": "english",
+        "model_load_ms": 1305,
+        "audio_s": 30,
+        "transcribe_ms": 3911,
+        "rtf": 0.1304,
+        "text": "I think I have to do this.",
+        "attempts": [
+          {
+            "model": "whisper-base",
+            "device": "webgpu",
+            "dtype": {
+              "encoder_model": "fp32",
+              "decoder_model_merged": "q4"
+            },
+            "status": "skipped",
+            "error": "WebGPU unavailable"
+          },
+          {
+            "model": "whisper-tiny",
+            "device": "webgpu",
+            "dtype": {
+              "encoder_model": "fp32",
+              "decoder_model_merged": "q4"
+            },
+            "status": "skipped",
+            "error": "WebGPU unavailable"
+          },
+          {
+            "model": "whisper-tiny",
+            "device": "wasm",
+            "dtype": {
+              "encoder_model": "q8",
+              "decoder_model_merged": "q8"
+            },
+            "status": "ok",
+            "error": null,
+            "model_load_ms": 1305,
+            "transcribe_ms": 3911,
+            "text": "I think I have to do this."
+          }
+        ],
+        "note": "model_load_ms includes the download on a first run; run twice for a cached load time",
+        "peak_memory_bytes": 40187166,
+        "memory_source": "performance.memory.usedJSHeapSize"
+      },
+      {
+        "id": "file_export",
+        "status": "ok",
+        "started_at": "2026-11-23T14:12:45.881Z",
+        "duration_ms": 119628,
+        "error": null,
+        "width": 720,
+        "height": 1280,
+        "fps": 30,
+        "seconds": 30,
+        "frames": 900,
+        "video_codec": "avc1.64001f",
+        "audio_codec": "opus",
+        "codec_candidates": [
+          "avc1.64001f:true"
+        ],
+        "export_ms": 118336,
+        "export_fps": 7.61,
+        "bytes": 8649741,
+        "note": "seek-per-frame decode; export_fps is a lower bound",
+        "peak_memory_bytes": 99611279,
+        "memory_source": "performance.memory.usedJSHeapSize"
+      }
+    ]
+  }
+}
