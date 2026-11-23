@@ -27,3 +27,4 @@
 - The fake doors are now: **Brand Brain**, **auto-posting** and **per-video pricing**. For the pricing door, use AdKraft's ~$3/video only as a *reference point*; we do not copy it. "Extra variants" becomes an optional 4th door.
 - Add an **AdKraft** entry to `company/positions/01-product/COMPETITORS.md`: what it does, its pricing model, the ~$3/video figure with a cited primary source (pricing page URL + fetch date), and our differentiator. If you can't verify the figure from a primary source, write "unverified (Founder-reported)".
 - The Brand Brain protocol (EXP-011) stays in scope.
+- **Commit cadence (Founder):** commit each finished unit, with tests passing, about every 5 min of work. Do not push; the Operator pushes.

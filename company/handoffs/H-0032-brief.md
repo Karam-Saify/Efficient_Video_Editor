@@ -19,3 +19,4 @@
 8. **Escalate if:** moving the code would break the stage-contract CLI or the existing tests in a way that needs a schema change.
 9. **Termination condition:** committed, return written.
 10. **Consulted:** none (covered by the daily Assurance review).
+- **Commit cadence (Founder):** commit each finished unit, with tests passing, about every 5 min of work. Do not push; the Operator pushes.

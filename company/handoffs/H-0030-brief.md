@@ -27,3 +27,4 @@
 ## Addendum (Operator, Founder memo 2)
 - The Founder will include the **lowest-end phone** in the 3. Model choice is automatic: try base on WebGPU, then tiny on WebGPU, then tiny on WASM. Record which one ran. Also make the 30 s export resolution-safe: if 1080×1920 encoding is unsupported or fails, log it as FAIL and retry at 720×1280. Report both, and never silently downgrade.
 - Show the device's memory hints (`navigator.deviceMemory`, `hardwareConcurrency`) in the results.
+- **Commit cadence (Founder):** commit each finished unit, with tests passing, about every 5 min of work. Do not push; the Operator pushes.
