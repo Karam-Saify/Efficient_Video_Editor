@@ -1,0 +1,4 @@
+# ADR-0006: Build mode (2 weeks from 2026-11-23)
+- **Status:** Accepted · **Date:** 2026-11-23 · **Decider:** Founder · **Door:** two-way · **Review:** 2026-12-07
+
+**Decision (one line):** For 2 weeks, fast lane (ADR-0005) for all non-engine work; engine code (`src/`) gets ONE assurance-lead review per day on the end-to-end demo, not per task; product-, research- and creative-lead run on model sonnet; no parallel agents; no new governance docs; scraper/trend tooling postponed until the tool is validated; the TikTok MP4s (RR-006..009 and the new Download (4..8).mp4, now in `quarantine/dev/`) may be used for INTERNAL DEVELOPMENT TESTING ONLY (never committed, published, shipped or used for model training); the product is multilingual (auto-detect language, Arabic support remains a strength).

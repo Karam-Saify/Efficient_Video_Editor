@@ -6,3 +6,4 @@
 | ADR-0003 | Timeline v0 "overlap" = same-source range reuse | Proposed | two-way | 2026-11-22 |
 | ADR-0004 | Timeline v0 `sources[].has_audio` (optional, default true) | Proposed | two-way | 2026-11-22 |
 | ADR-0005 | Fast lane: docs/tests/fixtures/config-only changes are T1 | Accepted (Founder) | two-way | 2026-11-22 |
+| ADR-0006 | Build mode: daily engine review, dev-only TikTok clips, multilingual | Accepted (Founder) | two-way | 2026-11-23 |
