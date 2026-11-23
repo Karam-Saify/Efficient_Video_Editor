@@ -21,7 +21,7 @@ H1: brand-tuned wins >= 73 % of blind pairs. H0: win rate <= 50 % (no preference
 3 businesses (>= 1 Arabic-speaking small business; P3-like) x 5 posts = 15 pairs. Business footage/briefs are the businesses' own; not golden-set; no held-out use. Business selection is by the Founder's network (ADR scope: no cold contact in this brief).
 ## 5. Procedure
 1. Founder approves the consent tool and text (below). No business data is touched before that.
-2. Per business: collect a brand note (<= 150 words) and 5 post briefs/clips.
+2. Per business: the owner signs `company/positions/05-assurance/CONSENT_KIT.md` (CK-v0.1) and fills the per-clip rights table of `PARTNER_INTAKE_FORM.md` §C. Assurance records one DATA_RIGHTS row per clip (I-9) before any clip is touched. Then collect a brand note (<= 150 words) and 5 post briefs/clips.
 3. Generate A and B per post with the same pipeline; Engineering strips metadata; Creative randomises positions and keeps the key sealed.
 4. Each owner views 5 pairs blind and picks one + a one-line reason; Creative also rates quality blind (Arabic correctness gate must pass for both arms; failures excluded and counted).
 5. Unseal, tally, report per business and overall.
@@ -42,5 +42,6 @@ Founder minutes ~90 (recruit, consent, relay picks). Tokens <= 150k. Compute <= 
 Research (design/analysis, lock) · Engineering (identical pipelines, metadata strip) · Creative (blinding, Arabic quality rating) · Assurance (lock + consent check) · Product (this draft, go/no-go on the roadmap).
 
 ### Consent (AR / EN, short form for businesses)
-AR: نستخدم ملاحظات علامتك وفيديوهاتك فقط لهذا الاختبار، لا نشاركها ولا ندرّب نماذج عليها، ونحذفها بعد 90 يومًا أو فورًا عند طلبك. المشاركة اختيارية.
-EN: We use your brand notes and clips only for this test, do not share them or train models on them, and delete them after 90 days or on request. Taking part is optional.
+AR: نستخدم ملاحظات علامتك وفيديوهاتك فقط لهذا الاختبار، ولا ندرّب نماذج عليها. تُعالج على GitHub Codespaces (Microsoft)، وقد يقرأ Claude من Anthropic النص المنطوق وصورًا ثابتة قليلة منها، لا الفيديو كاملًا. لا نعطيها لأي جهة أخرى. تؤكد أن المقاطع ملكك أو لديك إذن باستعمالها، وأن كل شخص يظهر فيها وافق، ولا يظهر فيها أطفال دون 18 سنة. نحذفها بعد 90 يومًا كحدّ أقصى من تاريخ استلامها، أو خلال 7 أيام عند طلبك: أرسل «احذف» مع رمزك عبر واتساب أو الرسائل الخاصة. لا يبقى بعدها إلا أرقام إجمالية مجهولة. المشاركة اختيارية. النص الكامل: CONSENT_KIT.md.
+EN: We use your brand notes and clips only for this test and do not train models on them. They are processed on GitHub Codespaces (Microsoft), and Claude by Anthropic may read the spoken text and a few still frames, never the full video. We give them to no one else. You confirm the clips are yours or you have permission, that everyone shown in them agreed, and that no children under 18 appear. We delete them at most 90 days after we receive them, or within 7 days if you ask: send "DELETE" with your code on WhatsApp or DM. Only anonymous totals remain. Taking part is optional. Full text: CONSENT_KIT.md.
+(H-0034 fast-lane patch by assurance-lead for H-0033 F1-F3. EXP-011 is DRAFT; Assurance checks this again at lock.)
