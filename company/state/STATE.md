@@ -2,40 +2,33 @@
 <!-- The Operator updates this at the end of every session (/close). Keep it under 60 lines.
      If a HALT line exists at the very top, ALL work stops until the Founder clears it. -->
 
-**Last updated:** 2026-11-22 · **By:** Operator · **Session:** 2 (checkpoint, not yet /close)
+**Last updated:** 2026-11-23 · **By:** Operator · **Session:** 3 (closed)
 
 ## Current milestone
-**M0: Foundation** · started 2026-11-21 · Phase 3 of the Founder plan; next stop is STOP POINT 3. Daily report: `company/reports/2026-11-22/README.md`
+**M0 → M1 in BUILD MODE** (ADR-0006, 2026-11-23 → review 2026-12-07): fast lane for non-engine work; ONE Assurance review per day on the end-to-end demo; product/research/creative on sonnet; no parallel agents; no new governance docs; scraper/trend tooling postponed.
 
-## Now (in progress at checkpoint; if the session died, check these files exist)
-| ID | Task | Tier | Owner | Status | Handoff |
-|---|---|---|---|---|---|
-| H-0023 | Assurance review of Task C (EXP-006/008) + N1 spot check | T2 | assurance | running | `H-0023-review.md` |
-| H-0020 | Close hook gaps (shell writes, false positives) | T2 | engineering | running → then Assurance review | `H-0020-return.md` |
-| H-0022 | EXP-001 draft (DO NOT LOCK until footage), A-11 refuted, EXP-010 registered | T1 | research | running | `H-0022-return.md` |
+## Done this session
+- ADR-0006 build mode (Founder). TikTok MP4s moved to `quarantine/dev/` (git-ignored), INTERNAL DEV TESTING ONLY; RR-006..009 amended, RR-018..022 added
+- H-0024 (eng): `experiments/dev_catalog.py` → `quarantine/dev/dev_manifest.csv`; stubs exit `NOT_IMPLEMENTED`; validator `UNSUPPORTED_FIELD`; `docs/CAPABILITIES.md` generated + drift test; language auto-detect; transcript → caption track (dir by first strong char); EXP-008 font pair in renderer
+- H-0025 (eng): `src/edit/ops.py` (trim, delete_words, set_caption_style, add_zoom, set_duration) + history/undo; 3 caption presets + zoom rendered; `python -m src.demo`; `examples/ops/*.json` (3); demo on 3 English clips + 1 weak Arabic run, all within 1 frame
+- H-0026 (assurance): **ACCEPT WITH FINDINGS (S1 0 · S2 1 · S3 7)**; `allow_dev` (D1) accepted with condition F2
+- H-0020 WIP tests (59 red) parked in `company/handoffs/H-0020-wip/` (not collected)
 
-## Done this session (all reviewed where T2)
-- Phase 1–2: Company OS installed, live hook test 4/4 (M0 0.1 ✅)
-- Task A skeleton + CI 3.12/3.14 (0.2 ✅) · Task B schema v0 + validator, N1 fixed `890f225` (0.3 ✅ after the H-0023 spot check)
-- EXP-006 INVALID (undeclared font fallback) → EXP-008 LOCKED, rendered, **FAIL 8/10, 0 Sev-1, E2** (Latin/digits ~1.6× alef height vs 1.3× limit; Arabic passed)
-- ADR-0002 Python 3.12 (Accepted) · ADR-0003, ADR-0004 (Proposed) · ADR-0005 fast lane (Accepted, Founder)
-- Rights: 4 clips + zip UNVERIFIED/not usable (RR-006..010); fonts RR-001, RR-011; trend sources RR-012..017 pending
-- Risk register: 25 risks re-scored (0.8 ✅) · PR/FAQ v0 chat-editor MVP (0.9 drafted)
-
-## Next (ordered, Founder-set)
-1. Finish H-0023 + the H-0020 review → **STOP POINT 3** (Assurance verdicts A/B/C, PNGs, result table)
-2. Founder checks EXP-008 AR-02/05/07/08 (counts with Creative's verdict) and sets the Latin size ratio limits for EXP-010
-3. Phase 4: `/close`, then a PR `t2/install-company-os` → `main`
-4. MVP pivot (T3), with the Founder's pivot prompt **(Operator does not have it; ask)**; next free ADR = ADR-0006
-5. Trend & Technique T2 (Founder-approved) only after the pivot and after Assurance clears RR-012..017
-6. Fast-lane batch: CI secret scan (R-15 claims one that doesn't exist)
+## Next (ordered)
+1. Tomorrow's goal: fix H-0026 F1 (MP4 render not byte-deterministic: pin x264 threads/settings, or Founder-approved frame/PSNR equality), F2 (dev-only marker on outputs), F4 (coded error for malformed ops.json), F5/F6 (validator ↔ renderer caption text and length bounds)
+2. First Arabic speech demo run, once the Founder supplies a clip
+3. F3: set_duration/delete_words must not cut music/B-roll as "silence" (audio-energy gap check, with creative-lead)
+4. Still open from session 2: H-0020 hook gaps (no return); PR `t2/install-company-os` → `main`; EXP-008 co-verdict; MVP pivot prompt
 
 ## Blockers
-- No usable footage (R-21): blocks M0 0.4, 0.5 and EXP-001 lock. Founder must supply raw Arabic sources with rights.
-- Origin of the 4 Download*.mp4 clips and the quarantined zip: Founder to confirm.
+- **No Arabic speech clip in the dev set** (catalog: 6 en, 4 no speech, (8) ar 3 wpm). Founder to supply one Arabic (ideally Lebanese) clip, at least for dev testing
+- Rights for all footage still UNVERIFIED (dev-only under ADR-0006). F8: outputs carry the platform video ID in metadata, and zoom crops the watermark. Fine for internal use, a blocker for any publish path
 
 ## Open decisions (awaiting Founder)
-- EXP-008 co-verdict; EXP-010 size limits · PR/FAQ Q: chat editor on top of M1–M3, or replacing M2–M3 (T3)? · Sign ADR-0001
+- Drop the duplicate `Download (4).mp4` (identical to (2))?
+- Determinism standard (F1): byte-identical MP4, or decoded-frame / PSNR floor?
+- Caption dir for mostly-Arabic lines starting with a Latin word (needs an EXP-008 amendment); Latin/Arabic size ratio (EXP-010)
+- From session 2: EXP-008 co-verdict · PR/FAQ chat-editor scope (T3) · sign ADR-0001
 
 ## Last gate
 - None yet
@@ -43,6 +36,8 @@
 ## Key numbers
 | Metric | Value | Target |
 |---|---|---|
-| Tests | 155 pass, 8 skip; CI green | green |
-| M0 exit criteria | ~4.5 of 9 | 9 |
-| Tokens per Short | not measured | set at M3 |
+| Tests | 266 pass, 8 skip; ruff clean | green |
+| Demo duration error | 0 / 12 / 0 ms (3 runs), 33 ms weak run | ≤ 1 frame |
+| Demo wall time | 35–152 s per 17–36 s Short (CPU, 2 cores) | set at M1 |
+| Tokens today (est.) | ~0.55 M (subagents 417k + Operator ~130k) | set at M3 |
+| LLM tokens per Short | 0 (no LLM in the loop yet) | set at M3 |
