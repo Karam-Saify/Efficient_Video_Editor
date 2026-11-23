@@ -48,3 +48,9 @@
 - Evidence: company/experiments/EXP-001.md (line 2 DRAFT); scratch normaliser reproduces all 10 vectors; company/handoffs/H-0022-return.md.
 - Learned: write the normalisation test vectors and run them before they go into a prereg; one of my expected values (رئيس) was wrong. E1's "hand-correct one model's output" reference method biases toward that model, so EXP-001 requires blind references.
 - Next: Founder answers O1 (thresholds) to O5; three consultation sign-offs; lock only when footage with verified rights exists.
+
+### 2026-11-23 · H-0036 · T2 · BLOCKED
+- Did: stopped under brief field 3: Common Voice ar 27.0 (RR-026, CC0) needs an MDC account and terms acceptance by the Founder. No download, no EXP-013. Gave the Founder 5 exact steps. One endpoint probe was denied by the classifier and not retried.
+- Evidence: company/handoffs/H-0036-return.md; H-0034 F7; RR-026.
+- Learned: probe download gates with a plain page GET only; never guess API endpoints.
+- Next: Founder downloads the test split to quarantine/; then lock EXP-013 and run.
