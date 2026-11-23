@@ -45,6 +45,31 @@ path (inputs outside the repo are keyed by absolute path), so identical content 
 `duration_s` excludes hashing time. Skip key = input hashes + config (incl. `stage_version`) + code version;
 a `stub` manifest never satisfies real work; `--out` inside an `--input` dir is an error (H-0009).
 
+## Module map (ADR-0016, recorded by H-0032)
+Packages exist only when they hold real code; a stub stays `NOT_IMPLEMENTED` (H-0024). Status as of 2026-11-23:
+
+| Package | Role | Status |
+|---|---|---|
+| `src/orchestrator/` | Runs a job end to end: calls stages in order, owns retries and the abandon decision, writes one ledger entry per attempt | **Not created** (no code yet; `src.demo` is the current end-to-end path) |
+| `src/model_router/` | Decides who answers each decision, in the ADR-0017 order below | **Not created** (no code yet) |
+| `src/recipes/` | Recipe language v0: schema, 12 recipes, pure compiler recipe + ingest → timeline (H-0029, `docs/RECIPE_LANGUAGE.md`) | Exists |
+| `src/cost/` | `meter` (wall, CPU, peak RSS, bytes per stage → `cache/<id>/timings.json`), `model` (pure-code pricing, I-4), `usage` (LLM hook → `cache/<id>/usage.jsonl`, uncached + cache-read + cache-write + output tokens, ADR-0019), `ledger` (every attempt success / failed / retried → `cache/<id>/ledger.jsonl`; $ per successful export, ADR-0015) | Exists (H-0032). `src/timings.py` is a re-export |
+| `src/describe/` | New role: **cheap footage understanding** (scene text from a few keyframes; CLAUDE.md rule 1) | Stub (`NOT_IMPLEMENTED`) |
+| `src/score/` | New role: **scoring** segments for a recipe or task (small model, cached once) | Stub (`NOT_IMPLEMENTED`) |
+| `src/select/` | New role: **adaptive evidence selection** (`FrameBudgetAllocator`, ADR-0018) plus the MILP cut | Stub (`NOT_IMPLEMENTED`) |
+| `src/learning/` | Later: learns from accepted edits and the recipe backlog. No training or GPU (ADR-0020) | Not created |
+
+### Router order (ADR-0017, refines ADR-0008)
+Each decision tries the levels in this order and escalates only when validation or coverage checks fail
+("escalate when unverifiable"):
+1. **Deterministic code** (rules, recipe defaults, MILP).
+2. **Cache** (content hash + analysis/prompt version).
+3. **Small model** (Haiku-class: picks and fills a recipe). Up to 2 retries that feed back the validator error.
+4. **Large model** (only on a miss). Every miss is logged to the recipe backlog.
+
+Every LLM call logs to `usage.jsonl`, and every export attempt is recorded in the ledger, so the cost of each
+level shows up in the cost per successful export (`docs/COST_BASELINE.md`).
+
 ## LLM tool interface for stage 5 (from EditDuet, extended)
 `search(query) → top-5 segments` · `add_clip(segment_id, in_ms, out_ms, index)` · `remove_clip(index)` ·
 `move_clip(from, to)` · `set_caption(...)` · `add_effect(...)` · `done()`.
