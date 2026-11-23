@@ -150,11 +150,26 @@ def test_cli_prints_skip_on_rerun(tmp_path: Path, capsys: pytest.CaptureFixture[
     inp = tmp_path / "in.txt"
     inp.write_text("x", encoding="utf-8")
     argv = ["--input", str(inp), "--out", str(tmp_path / "o")]
-    assert m.cli("demo", argv) == 0
-    assert "demo: done (stub)" in capsys.readouterr().out
-    assert m.cli("demo", argv) == 0
+    work = Counter()
+    assert m.cli("demo", argv, work=work) == 0
+    assert "demo: done (ok)" in capsys.readouterr().out
+    assert m.cli("demo", argv, work=work) == 0
     assert "demo: skip" in capsys.readouterr().out
-    assert m.cli("demo", [*argv, "--set", "nope=1"]) == 1
+    assert m.cli("demo", [*argv, "--set", "nope=1"], work=work) == 1
+
+
+# H-0024 G2a: a stage without real work fails loudly and never writes a success manifest.
+def test_cli_stub_is_not_implemented(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    inp = tmp_path / "in.txt"
+    inp.write_text("x", encoding="utf-8")
+    out = tmp_path / "o"
+    assert m.cli("demo", ["--input", str(inp), "--out", str(out)]) == 2
+    cap = capsys.readouterr()
+    assert "NOT_IMPLEMENTED: demo" in cap.err and cap.out == ""
+    assert not (out / "manifest.json").exists()
+    with pytest.raises(m.StageNotImplemented):
+        m.run_stage("demo", [inp], out, CFG, m.stub_work)
+    assert not (out / "manifest.json").exists()
 
 
 def test_wants_stage_cli() -> None:
@@ -166,7 +181,7 @@ def test_wants_stage_cli() -> None:
 # H-0009 (H-0003 review F3): the skip key must not let a stub manifest stand in for real work.
 def test_stub_manifest_never_satisfies_real_work(setup: tuple[Path, Path, Counter]) -> None:
     inp, out, work = setup
-    ran, man = m.run_stage("demo", [inp], out, CFG, m.stub_work)
+    ran, man = m.run_stage("demo", [inp], out, CFG, lambda i, o, c: "stub")  # a pre-H-0024 stub manifest
     assert ran and man["status"] == "stub"
     ran, man = m.run_stage("demo", [inp], out, CFG, work)
     assert ran and work.calls == 1 and man["status"] == "ok"

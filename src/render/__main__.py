@@ -1,6 +1,6 @@
 """python -m src.render timeline.json out/short.mp4 [--preset veryfast] [--crf 20]
 
-Stage-contract interface (H-0003; manifest + skip, currently a stub that does not run ffmpeg):
+Stage-contract interface: not implemented yet (exits 2, `NOT_IMPLEMENTED: render`, no manifest; H-0024):
 
     python -m src.render --input <timeline.json> --out <dir> [--set key=value]
 """

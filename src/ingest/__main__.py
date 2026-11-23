@@ -4,7 +4,7 @@ Every output is cached in cache/<video_id>/ and skipped if present (use --force 
 
     python -m src.ingest samples/s01.mp4 [--model large-v3-turbo] [--language ar] [--no-scenes]
 
-Stage-contract interface (H-0003; manifest + skip, currently a stub that does not decode media):
+Stage-contract interface: not implemented yet (exits 2, `NOT_IMPLEMENTED: ingest`, no manifest; H-0024):
 
     python -m src.ingest --input <file> --out <dir> [--set key=value]
 """

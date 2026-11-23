@@ -1,7 +1,7 @@
 """python -m src.score --input <path> --out <dir> [--set key=value]
 
-Stage-contract stub (H-0003): hashes inputs + config, writes <dir>/manifest.json (status "stub"),
-skips on identical rerun. Real logic arrives in a later milestone; see ARCHITECTURE.md.
+Not implemented yet: exits 2 with `NOT_IMPLEMENTED: score` on stderr and writes no manifest (H-0024).
+Real logic arrives in a later brief; see ARCHITECTURE.md.
 """
 import sys
 

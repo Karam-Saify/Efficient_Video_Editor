@@ -1,4 +1,8 @@
-"""Every stage runs as `python -m src.<stage> --input X --out D`, writes a manifest and skips on rerun."""
+"""Every stage runs as `python -m src.<stage> --input X --out D`.
+
+A stage that really does its work writes a manifest and skips on rerun. A stage that does not yet do its
+work exits 2 with `NOT_IMPLEMENTED: <stage>` on stderr and writes no manifest (H-0024 G2a).
+"""
 from __future__ import annotations
 
 import json
@@ -10,7 +14,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "tests" / "fixtures" / "timeline_min.json"
-STAGES = ["ingest", "describe", "score", "select", "edit", "validate", "render"]
+STAGES = ["validate"]  # stage-contract paths that do real work
+NOT_IMPLEMENTED = ["ingest", "describe", "score", "select", "edit", "render"]
 
 
 def run(*args: str) -> subprocess.CompletedProcess[str]:
@@ -33,6 +38,18 @@ def test_stage_writes_manifest_then_skips(stage: str, tmp_path: Path) -> None:
     assert second.returncode == 0, second.stderr
     assert f"{stage}: skip" in second.stdout
     assert (out / "manifest.json").read_bytes() == before
+
+
+@pytest.mark.parametrize("stage", NOT_IMPLEMENTED)
+def test_unimplemented_stage_fails_loudly_without_manifest(stage: str, tmp_path: Path) -> None:
+    out = tmp_path / stage
+    out.mkdir()
+    (out / "manifest.json").write_text(json.dumps({"stage": stage, "status": "stub"}), encoding="utf-8")
+    r = run("-m", f"src.{stage}", "--input", str(FIXTURE), "--out", str(out))
+    assert r.returncode == 2
+    assert f"NOT_IMPLEMENTED: {stage}" in r.stderr
+    assert "done" not in r.stdout and "skip" not in r.stdout
+    assert not (out / "manifest.json").exists()  # stale stub manifest removed, none written
 
 
 def test_validate_stage_rejects_invalid_timeline_without_manifest(tmp_path: Path) -> None:

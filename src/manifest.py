@@ -5,8 +5,9 @@ Every stage CLI (`python -m src.<stage> --input <path> --out <dir>`) goes throug
 Skip rule: a rerun is skipped (exit 0, no work) iff `<out>/manifest.json` exists, was written by the
 same stage, has identical `input_hashes` and `config_hash`, the same `versions.code` (package version),
 and every recorded output file still has its recorded sha256. `config` always contains the stage's
-`stage_version`, so bumping it forces a rerun. A `status: "stub"` manifest only satisfies stub work:
-once real `work` replaces `stub_work`, the stage reruns even if nobody bumped a version (H-0009).
+`stage_version`, so bumping it forces a rerun. A `status: "stub"` manifest (written before H-0024) never satisfies
+real work: the stage reruns even if nobody bumped a version (H-0009). Since H-0024 `stub_work` raises
+`StageNotImplemented`: the CLI exits 2, prints `NOT_IMPLEMENTED: <stage>` and writes no manifest.
 `versions.python` / `versions.tools` are recorded for provenance but are not part of the skip key.
 `--out` may not be inside an `--input` directory (the stage would hash its own outputs and never skip).
 
@@ -40,6 +41,13 @@ Work = Callable[[list[Path], Path, dict[str, Any]], str]
 
 class StageError(RuntimeError):
     """A stage failed in a way the user must see; no manifest is written."""
+
+
+class StageNotImplemented(StageError):
+    """The stage has no real work yet (H-0024 G2a): CLI exits 2 with `NOT_IMPLEMENTED: <stage>`."""
+
+
+EXIT_NOT_IMPLEMENTED = 2
 
 
 def sha256_file(path: Path) -> str:
@@ -152,7 +160,7 @@ def run_stage(
     ins = hash_inputs(inputs)
     ch = config_hash(config)
     out_dir.mkdir(parents=True, exist_ok=True)
-    if is_fresh(out_dir, stage, ins, ch, stub=work is stub_work):
+    if work is not stub_work and is_fresh(out_dir, stage, ins, ch):
         return False, read_manifest(out_dir) or {}
     (out_dir / MANIFEST).unlink(missing_ok=True)
     t0 = time.perf_counter()
@@ -173,8 +181,8 @@ def run_stage(
 
 
 def stub_work(inputs: list[Path], out_dir: Path, config: dict[str, Any]) -> str:
-    """Placeholder for stages without logic yet: produces no outputs, manifest says status=stub."""
-    return "stub"
+    """Placeholder for stages without logic yet: fails loudly, so nothing pretends to work (H-0024)."""
+    raise StageNotImplemented(out_dir.name)
 
 
 def _parse_value(raw: str) -> Any:
@@ -215,6 +223,9 @@ def cli(
     try:
         cfg = build_config(stage_version, defaults or {}, a.set)
         ran, m = run_stage(stage, a.input, a.out, cfg, work, tools)
+    except StageNotImplemented:
+        print(f"NOT_IMPLEMENTED: {stage}", file=sys.stderr)
+        return EXIT_NOT_IMPLEMENTED
     except StageError as e:
         print(f"{stage}: error: {e}", file=sys.stderr)
         return 1
