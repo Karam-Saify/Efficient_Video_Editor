@@ -42,3 +42,14 @@ def test_assumptions_match_cited_sources() -> None:
     assert a["vcpu_hour_usd"] == pytest.approx(0.040478, abs=1e-6)
     assert a["gb_hour_usd"] == pytest.approx(0.004446, abs=1e-6)
     assert a["haiku_5_5"] == {"input_usd_per_mtok": 0.10, "output_usd_per_mtok": 0.50}
+
+
+def test_per_success_is_the_attempt_cost_at_zero_failures_and_grows_with_failures() -> None:
+    base = cb.price_clip(CLIP, cb.ASSUMPTIONS, cb.ESTIMATE, miss_rate=0.2)["total"]
+    kw = {"miss_rate": 0.2, "cached_retry": False}
+    assert cb.per_success(CLIP, cb.ASSUMPTIONS, cb.ESTIMATE, failure_rate=0.0, **kw) == pytest.approx(base)
+    f = 0.2
+    cold = cb.per_success(CLIP, cb.ASSUMPTIONS, cb.ESTIMATE, failure_rate=f, **kw)
+    assert cold == pytest.approx(base * (1 + f + f * f) / (1 - f**3))
+    warm = cb.per_success(CLIP, cb.ASSUMPTIONS, cb.ESTIMATE, failure_rate=f, miss_rate=0.2, cached_retry=True)
+    assert base < warm < cold

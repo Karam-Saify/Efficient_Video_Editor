@@ -30,9 +30,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.common import cache_dir, probe, video_id  # noqa: E402
-from src.timings import (  # noqa: E402
+from src.cost import (  # noqa: E402
     TIMINGS,
     compute_cost,
+    expected_cost_per_success,
     llm_cost,
     percentile,
     planning_cost,
@@ -64,6 +65,13 @@ ASSUMPTIONS: dict[str, Any] = {
     "opus_5_5": {"input_usd_per_mtok": 4.00, "output_usd_per_mtok": 20.00},
 }
 CEILING, STRETCH = 0.01, 0.005
+
+# ---- failures and retries (ADR-0015, H-0032) ----
+# Observed so far. No ledger existed before H-0032, so this is reconstructed from the H-0027 return (D1):
+# 8 clips exported, plus 1 failed attempt (E_OP_PRESET on Download (1): an ops-file error, attempt 1 of 2).
+OBSERVED = {"attempts": 9, "failed_attempts": 1}
+FAILURE_SWEEP = (0.0, 0.05, 0.2)
+MAX_RETRIES = 2  # the LLM retry cap (engineering-lead charter): after 2 retries the export is abandoned
 
 # ---- LLM token estimate (ADR-0008; no LLM exists yet, so every row using this is an ESTIMATE) ----
 ESTIMATE: dict[str, Any] = {
@@ -187,6 +195,17 @@ def price_clip(c: dict[str, Any], a: dict[str, Any], e: dict[str, Any], *, miss_
 STAGES = ("asr", "understanding", "planning", "render", "storage")
 
 
+def per_success(c: dict[str, Any], a: dict[str, Any], e: dict[str, Any], *, miss_rate: float,
+                failure_rate: float, cached_retry: bool) -> float:
+    """$ per successful export for one clip. A failed attempt costs a full attempt (it failed late). A retry
+    costs a full attempt (cold) or only planning + render (cached: ingest and understanding are reused,
+    CLAUDE.md rule 4; storage is not charged again)."""
+    r = price_clip(c, a, e, miss_rate=miss_rate)
+    retry = r["planning"] + r["render"] if cached_retry else r["total"]
+    return expected_cost_per_success(r["total"], failure_rate=failure_rate, max_retries=MAX_RETRIES,
+                                     retry_cost_usd=retry)
+
+
 def report() -> None:
     d = json.loads(RESULTS.read_text(encoding="utf-8"))
     a, e, clips = ASSUMPTIONS, ESTIMATE, d["clips"]
@@ -234,6 +253,23 @@ def report() -> None:
             tot = [price_clip(clips[n], a, e, miss_rate=mr, big=big)["total"] for n in names]
             cells += [f"{percentile(tot, 50) * u:.3f}", f"{percentile(tot, 90) * u:.3f}"]
         print(f"| {mr} | " + " | ".join(cells) + " |")
+
+    print("\n### Cost per successful export (ADR-0015): failure rate sweep, median / P90 (m$)\n")
+    obs = OBSERVED["failed_attempts"] / OBSERVED["attempts"]
+    print(f"Observed attempt failure rate so far: {OBSERVED['failed_attempts']}/{OBSERVED['attempts']} = "
+          f"{obs * 100:.1f}% (H-0027 run, reconstructed; no ledger existed). Each attempt fails independently; "
+          f"a failed attempt is charged in full; up to {MAX_RETRIES} retries, then the export is abandoned.\n")
+    print("| attempt failure rate | miss rate | cold retry median | P90 | cached retry median | P90 | "
+          "vs $0.01 (cold median / P90) |")
+    print("|---|---|---|---|---|---|---|")
+    for fr in sorted({*FAILURE_SWEEP, round(obs, 4)}):
+        for mr in (e["miss_rate"], 0.0):
+            cold = [per_success(clips[n], a, e, miss_rate=mr, failure_rate=fr, cached_retry=False) for n in names]
+            warm = [per_success(clips[n], a, e, miss_rate=mr, failure_rate=fr, cached_retry=True) for n in names]
+            cm, cp = percentile(cold, 50), percentile(cold, 90)
+            print(f"| {fr * 100:.1f}% | {mr} | **{cm * u:.3f}** | **{cp * u:.3f}** | {percentile(warm, 50) * u:.3f} | "
+                  f"{percentile(warm, 90) * u:.3f} | {'under' if cm <= CEILING else 'OVER'} / "
+                  f"{'under' if cp <= CEILING else 'OVER'} |")
 
     print("\n### Client-side alternative (ASR + render on the user's device: cost to us = 0)\n")
     tot = [price_clip(clips[n], a, e, miss_rate=e["miss_rate"], on_device=True)["total"] for n in names]
