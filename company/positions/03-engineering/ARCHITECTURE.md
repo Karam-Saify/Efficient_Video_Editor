@@ -54,7 +54,7 @@ Packages exist only when they hold real code; a stub stays `NOT_IMPLEMENTED` (H-
 | `src/model_router/` | Decides who answers each decision, in the ADR-0017 order below | **Not created** (no code yet) |
 | `src/recipes/` | Recipe language v0: schema, 12 recipes, pure compiler recipe + ingest → timeline (H-0029, `docs/RECIPE_LANGUAGE.md`) | Exists |
 | `src/cost/` | `meter` (wall, CPU, peak RSS, bytes per stage → `cache/<id>/timings.json`), `model` (pure-code pricing, I-4), `usage` (LLM hook → `cache/<id>/usage.jsonl`, uncached + cache-read + cache-write + output tokens, ADR-0019), `ledger` (every attempt success / failed / retried → `cache/<id>/ledger.jsonl`; $ per successful export, ADR-0015) | Exists (H-0032). `src/timings.py` is a re-export |
-| `src/describe/` | New role: **cheap footage understanding** (scene text from a few keyframes; CLAUDE.md rule 1) | Stub (`NOT_IMPLEMENTED`) |
+| `src/describe/` | **Footage Intelligence v0**: annotation record (ADR-0025), audio signals, roles-v0, descriptions to-do for a session (≤ 4 keyframes), offline storyboard, import-corrections (`docs/FOOTAGE_INTELLIGENCE.md`) | Exists (H-0035). The `--input/--out` stage contract is still `NOT_IMPLEMENTED` |
 | `src/score/` | New role: **scoring** segments for a recipe or task (small model, cached once) | Stub (`NOT_IMPLEMENTED`) |
 | `src/select/` | New role: **adaptive evidence selection** (`FrameBudgetAllocator`, ADR-0018) plus the MILP cut | Stub (`NOT_IMPLEMENTED`) |
 | `src/learning/` | Later: learns from accepted edits and the recipe backlog. No training or GPU (ADR-0020) | Not created |
