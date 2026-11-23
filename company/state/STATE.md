@@ -29,7 +29,7 @@
 4. Still open from session 2: H-0020 hook gaps (no return); PR `t2/install-company-os` → `main`; EXP-008 co-verdict; MVP pivot prompt
 
 ## Blockers
-- **No Arabic speech clip in the dev set** (catalog: 6 en, 4 no speech, (8) ar 3 wpm). Founder to supply one Arabic (ideally Lebanese) clip, at least for dev testing
+- **ASR fails on Arabic** (Founder S1): the catalog's "6 en, 4 no speech" labels are wrong. Ground truth = `quarantine/dev/LABELS.csv` (Founder to fill); EXP-012 diagnoses the failure
 - Rights for all footage still UNVERIFIED (dev-only under ADR-0006). F8: outputs carry the platform video ID in metadata, and zoom crops the watermark. Fine for internal use, a blocker for any publish path
 
 ## Open decisions (awaiting Founder)
