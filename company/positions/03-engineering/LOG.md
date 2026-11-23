@@ -66,3 +66,9 @@
 - Evidence: company/handoffs/H-0027-return.md; experiments/results/H-0027_cost_measurements.json; ruff clean; 279 passed + 8 skipped. Median $0.0080 (under $0.01, over $0.005); P90 $0.0111; planning big-model miss is 68% (estimate).
 - Learned: RUSAGE_CHILDREN maxrss is the largest child ever reaped, so it is useless for per-stage RSS (use wait4 per child); whisper model load is a ~20 CPU-s floor per ASR run; the 1080x1920 CRF-20 export is larger than the TikTok source.
 - Next: replace the token ESTIMATE with count_tokens/usage.jsonl actuals once the recipe prompt exists.
+
+### 2026-11-23 · H-0029 · T2 · DONE
+- Did: recipe language v0: `schemas/recipe.schema.json`, 12 recipes (R11 replaced by `photos_to_video`, Founder), pure compiler `src/recipes/` + CLI compile/check, UNRENDERED via `FEATURES` in src/capabilities.py, `provenance.recipe` (ADR-0014 Proposed), F2 `ADR-0006 dev-only` marker in compiler and demo, docs/RECIPE_LANGUAGE.md. Stretch (text overlay) not done.
+- Evidence: company/handoffs/H-0029-return.md (36-cell matrix: 33 valid timelines + 3 designed E_RECIPE_SOURCE_KIND); 363 passed + 8 skipped; ruff clean; R05 recompile cmp IDENTICAL; renders out/h0029/{Download5__R01,Download3__R05,Download6__R10}.mp4 at 35.001/35.001/18.000 s.
+- Learned: without a model, beats can only be proportional windows; clean/bold_box presets sit at ~83 % height, below the style guide's 72 % bound; a schema-property classification test is what keeps "never silently dropped" true.
+- Next: Assurance H-0029 review; text-overlay op (unblocks 7 recipes); image sources need a source-type ADR.
