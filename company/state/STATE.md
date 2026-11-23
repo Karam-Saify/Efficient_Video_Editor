@@ -4,6 +4,8 @@
 
 **Last updated:** 2026-11-23 (evening) · **By:** Operator · **Session:** 3 (continued; waiting on Founder LABELS.csv)
 
+**Work items live in `company/state/TRACKER.md`** (single source of truth; `python tools/tracker.py --check` runs in CI). This file is the session snapshot.
+
 ## Current milestone
 **M0 → M1 in BUILD MODE** (ADR-0006, 2026-11-23 → review 2026-12-07): fast lane for non-engine work; ONE Assurance review per day on the end-to-end demo; product/research/creative on sonnet; no parallel agents; no new governance docs; scraper/trend tooling postponed.
 
