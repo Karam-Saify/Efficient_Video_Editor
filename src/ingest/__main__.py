@@ -2,7 +2,10 @@
 
 Every output is cached in cache/<video_id>/ and skipped if present (use --force to redo).
 
-    python -m src.ingest samples/s01.mp4 [--model large-v3-turbo] [--language ar] [--no-scenes]
+    python -m src.ingest samples/s01.mp4 [--model large-v3-turbo] [--language auto|ar|en|...] [--no-scenes]
+
+The language is auto-detected by default (H-0024); the transcript records `language`,
+`language_probability` and `language_requested`. `--language <code>` forces one.
 
 Stage-contract interface: not implemented yet (exits 2, `NOT_IMPLEMENTED: ingest`, no manifest; H-0024):
 
@@ -56,6 +59,7 @@ def transcribe(src: Path, out: Path, model_name: str, language: str | None, beam
         })
     data = {
         "model": model_name,
+        "language_requested": language or "auto",
         "language": info.language,
         "language_probability": round(info.language_probability, 3),
         "audio_duration": round(info.duration, 3),
@@ -96,17 +100,31 @@ def keyframes(src: Path, scenes: list[dict[str, Any]], out_dir: Path, per_scene:
             )
 
 
-def main() -> None:
+def asr_language(requested: str) -> str | None:
+    """'auto' -> None (faster-whisper detects); anything else is passed through as an ISO code."""
+    return None if requested == "auto" else requested
+
+
+def transcript_name(model: str, language: str) -> str:
+    """The requested language is part of the cache key: a forced-language transcript is a different output."""
+    return f"transcript.{model}.{language}.json"
+
+
+def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("video", type=Path)
     ap.add_argument("--model", default="large-v3-turbo",
                     help="faster-whisper model name (e.g. large-v3, large-v3-turbo, small)")
-    ap.add_argument("--language", default="ar", help="ISO code, or 'auto' to detect")
+    ap.add_argument("--language", default="auto", help="'auto' (default) to detect, or an ISO code to force")
     ap.add_argument("--beam", type=int, default=5)
     ap.add_argument("--no-scenes", action="store_true")
     ap.add_argument("--keyframes", type=int, default=1, help="keyframes per scene (0 to skip)")
     ap.add_argument("--force", action="store_true", help="recompute even if cached")
-    a = ap.parse_args()
+    return ap
+
+
+def main() -> None:
+    a = build_parser().parse_args()
 
     src = a.video.resolve()
     vid = video_id(src)
@@ -119,12 +137,13 @@ def main() -> None:
     meta = read_json(meta_p)
     print(f"duration: {meta['duration']:.1f}s  {meta.get('width')}x{meta.get('height')} @ {meta.get('fps')}fps")
 
-    tr_p = d / f"transcript.{a.model}.json"
+    tr_p = d / transcript_name(a.model, a.language)
     if a.force or not tr_p.exists():
         print(f"transcribing with {a.model} (cpu/int8)…")
-        tr = transcribe(src, tr_p, a.model, None if a.language == "auto" else a.language, a.beam)
+        tr = transcribe(src, tr_p, a.model, asr_language(a.language), a.beam)
         rtf = tr["runtime_sec"] / max(tr["audio_duration"], 1e-6)
-        print(f"  {len(tr['segments'])} segments in {tr['runtime_sec']}s (RTF {rtf:.2f})")
+        print(f"  {len(tr['segments'])} segments in {tr['runtime_sec']}s (RTF {rtf:.2f}); "
+              f"language {tr['language']} (p={tr['language_probability']})")
     else:
         print(f"transcript cached: {tr_p.name}")
 
@@ -136,7 +155,7 @@ def main() -> None:
             keyframes(src, scenes, d / "keyframes", a.keyframes)
 
 
-STAGE_DEFAULTS: dict[str, Any] = {"asr_model": "large-v3-turbo", "language": "ar", "beam": 5}
+STAGE_DEFAULTS: dict[str, Any] = {"asr_model": "large-v3-turbo", "language": "auto", "beam": 5}
 
 if __name__ == "__main__":
     from src.manifest import cli, wants_stage_cli

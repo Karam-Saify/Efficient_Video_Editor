@@ -1,6 +1,8 @@
 """FFmpeg renderer: timeline.json → MP4 (cuts + reframe + burned-in ASS captions via libass).
 
-libass shapes Arabic with HarfBuzz and handles RTL with FriBidi, so captions need no pre-processing.
+libass shapes Arabic with HarfBuzz and handles RTL with FriBidi. Fonts are the EXP-008 pair (H-0024):
+the style font is Noto Sans Arabic (Regular), Latin/digit runs get `{\fnNoto Sans}` tags by the locked
+§5.3 rule (src/render/fontrun.py); a character outside both fonts fails the render instead of falling back.
 """
 from __future__ import annotations
 
@@ -9,12 +11,13 @@ from pathlib import Path
 from typing import Any
 
 from src.render.adapter import to_render_model
+from src.render.fontrun import FONT_A, tag_lines
 from src.validate import validate
 
 POSITION_ALIGN = {"bottom": 2, "middle": 5, "top": 8}  # ASS numpad alignment, centered
 STYLE_DEFAULTS = {
-    "font": "Noto Naskh Arabic", "size": 80, "color": "#FFFFFF", "outline_color": "#000000",
-    "outline": 4, "bold": True, "position": "bottom", "margin_v": 320,
+    "font": FONT_A, "size": 80, "color": "#FFFFFF", "outline_color": "#000000",
+    "outline": 4, "bold": False, "position": "bottom", "margin_v": 320,
 }
 
 
@@ -48,7 +51,7 @@ def write_ass(tl: dict[str, Any], path: Path) -> None:
         "", "[Events]", "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
     for it in sorted(cap["items"], key=lambda x: x["start"]):
-        text = it["text"].replace("{", "(").replace("}", ")").replace("\n", r"\N")
+        text = tag_lines(it["text"].replace("{", "(").replace("}", ")"))
         lines.append(f"Dialogue: 0,{_ass_time(it['start'])},{_ass_time(it['end'])},Default,,0,0,0,,{text}")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
