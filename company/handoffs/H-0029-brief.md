@@ -21,3 +21,9 @@
 8. **Escalate if:** fewer than 9 recipes can compile with today's ops; a timeline-schema change would break existing valid timelines.
 9. **Termination condition:** committed (do not push), return written.
 10. **Consulted:** creative-lead's H-0028 is the content source. If you change a recipe's meaning, list it under DEVIATIONS.
+
+## Addendum (Operator, after H-0028 return)
+- **Escalation reading:** degraded recipes count toward the "≥ 9 compile" rule **only if** the compile result lists every missing feature as `UNRENDERED` (by recipe field). Creative's status per recipe: 4 full (R01, R03, R07, R08), 7 degraded (R02, R04, R05, R06, R09, R10, R12), 1 not worth building (R11, music-only).
+- **R11:** it must still have a recipe file. On speech clips and on clips without captions it either compiles with captions off, or fails with a designed coded error. Pick one, document it, and test it.
+- **Stretch (only if the core is done within ~40 tool calls):** a text overlay (non-spoken on-screen text, rendered via ASS with the EXP-008 font pair). It unblocks 8 recipes. It must be added to `src/capabilities.py` and CAPABILITIES.md; if you skip it, it stays UNRENDERED. Do not do a reorder op, a music bed or per-beat style today. List them as backlog in RECIPE_LANGUAGE.md.
+- R12 stays out of the golden set until the EXP-008 per-script size fix lands. Compile only.
