@@ -49,3 +49,39 @@ Fix F1, F2, F4, F5/F6, F7 and F8 in one engineering brief. Then the daily Assura
 2. **The render check standard (F1):** byte-identical MP4s, or matching frames / a PSNR floor?
 3. **Drop `Download (4).mp4`?** It is identical to `(2)`.
 4. Caption direction for mostly-Arabic lines that start with a Latin word needs an EXP-008 amendment. Until then they display left-to-right.
+
+---
+
+# Part 2 (afternoon): Founder strategy memos + Week 1 tasks
+Status at the time of writing: A and C done, B running, D and the daily Assurance review not started.
+
+## Decisions recorded (all Accepted, Founder; no position vote held, dissent may be filed at the M1 gate)
+- **Memo 1 (3 stakeholder memos):** ADR-0007 product = Creative Director (one-tap preview cards; chat as fallback) · 0008 recipe-first intelligence · 0009 explanations come from provenance · 0010 code-switching ar/en/fr, Arabic-first launch · 0011 cost ceiling $0.01 (stretch $0.005) · 0012 experiment decision brief · 0013 edit diffs are sensitive personal data.
+- **Memo 2 (CFO/CTO + competitor scan):** ADR-0015 cost per *successful* export, and quality ÷ cost · 0016 module map (orchestrator, model_router, recipes, cost) · 0017 router order: deterministic → cache → small → large · 0018 adaptive evidence selection (research-lead must verify the AKS/CSES citations) · 0019 prompt caching · 0020 no training or GPU · 0021 `photos_to_video` recipe.
+- ADR-0014 (Proposed, engineering-lead): an additive `provenance.recipe` field. Assurance to rule.
+- Also new: `company/positions/05-assurance/DATA_POLICY.md`, `company/positions/01-product/RECIPE_BACKLOG.md`, 2 METRICS.md rows, and an EXPERIMENT.md §0 decision brief.
+
+## Week 1 tasks
+| Task | Status | Key result | Evidence |
+|---|---|---|---|
+| **A. Cost** (`src/cost`, `docs/COST_BASELINE.md`) | Done | Cost per successful export, median / P90: **$0.0080 / $0.0111** at 0 % failures; $0.0084 / $0.0117 at 5 %; **$0.0100 / $0.0139 at 20 %**. Assumes a 0.2 miss rate with Sonnet 5.5 on a miss. Top drivers: planning big-model miss 68 % (estimate), render 11 %, ASR 9 %. 8 unique clips, not 10 (2 short) | H-0027, H-0032 |
+| **C. Recipes** (`docs/RECIPE_LANGUAGE.md`, `schemas/recipe.schema.json`, `recipes/`, `src/recipes`) | Done, with a gap | **33 of 36** compiles give valid timelines (11 video recipes × clips 3, 5, 6). **`photos_to_video` fails by design** (`E_RECIPE_SOURCE_KIND`): the renderer has no still-image sources yet. Creative: 4 recipes full, 7 degraded (gaps reported as UNRENDERED). Text overlay not built. Renders in `out/h0029/`. 363 → 381 tests pass | H-0028, H-0029 |
+| **B. Bench** (`bench/`) | Running | First commit in (static page, ASR, export modules). Waiting for test evidence and phone instructions | H-0030 |
+| **D. Product** (prompt form, fake doors incl. per-video pricing, AdKraft entry, EXP-011) | Not started | — | H-0031 |
+| Daily Assurance review | Not started | — | — |
+
+## New findings
+- The `clean` and `bold_box` caption presets sit at about 83 % of the frame height, below the style guide's 72 % bound. They need fixing (H-0029).
+- Nothing calls the ledger or the usage hook yet. The first orchestrator or LLM brief must wire them in (H-0032).
+
+## Tokens today (estimate)
+About **1.2 M** in total. Subagents used about 950k: H-0024 144k, H-0025 184k, H-0026 89k, H-0027 179k, H-0028 42k, H-0029 167k, H-0032 147k. The Operator used about 250k. The H-0030 bench run is still going and is not counted.
+
+## Needed from the Founder (updated)
+1. One Arabic speech clip, since the dev set has none.
+2. The render reproducibility standard (F1): byte-identical files, or a frame / PSNR check.
+3. What failure and miss rates the budget should assume. At 20 % failures, the median uses up the whole $0.01 ceiling.
+4. Where to host the bench page for the phone tests. Asked when B returns.
+5. Whether to drop the duplicate `Download (4).mp4`.
+
+Process: since the Founder's instruction, finished units are committed as they complete and pushed every 5 min by an Operator loop. The loop never commits and refuses to push media, cache or quarantine paths.
