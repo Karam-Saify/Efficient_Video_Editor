@@ -26,13 +26,13 @@ A field with kind `render` and rendered `n` is rejected by `src.validate` with `
 | `tracks.captions[].text` | render | y | y | burned in via libass; EXP-008 font pair (Noto Sans Arabic + Noto Sans, `\fn` run tags); a character outside both fonts' ranges fails the render |
 | `tracks.captions[].start_ms` | render | y | y | output time (E_CAPTION_BOUNDS) |
 | `tracks.captions[].end_ms` | render | y | y | output time (E_CAPTION_BOUNDS) |
-| `tracks.captions[].style` | render | y | n | one default style only: UNSUPPORTED_FIELD (presets arrive in H-0025) |
+| `tracks.captions[].style` | render | y | y | preset from src/presets.py: clean (default), bold_box, hook; one ASS style each, EXP-008 pair, Regular weight, Encoding -1; any other name: UNSUPPORTED_FIELD |
 | `tracks.captions[].dir` | render | y | y | libass auto base direction (ASS Encoding -1) follows the first strong character; a `dir` that disagrees with it cannot be rendered: UNSUPPORTED_FIELD |
-| `tracks.effects[].type` | render | y | n | effects are not rendered yet: UNSUPPORTED_FIELD (zoom arrives in H-0025) |
-| `tracks.effects[].target` | render | y | n | must be a clip id (E_EFFECT_TARGET); not rendered |
-| `tracks.effects[].at_ms` | render | y | n | not rendered |
-| `tracks.effects[].duration_ms` | render | y | n | not rendered |
-| `tracks.effects[].scale` | render | y | n | not rendered |
+| `tracks.effects[].type` | render | y | y | zoom = punch-in on the output: centre crop by 1/scale, scaled back to the canvas, instant in/out, under the captions (overlay with `enable`) |
+| `tracks.effects[].target` | meta | y | n | must be a clip id (E_EFFECT_TARGET); the clip that contains at_ms, bookkeeping only (the zoom applies to output time) |
+| `tracks.effects[].at_ms` | render | y | y | output time, zoom start (E_EFFECT_BOUNDS) |
+| `tracks.effects[].duration_ms` | render | y | y | zoom length; window must end by the timeline end (E_EFFECT_BOUNDS) |
+| `tracks.effects[].scale` | render | y | y | 1.0 to 2.0, default 1.2 (src/presets.py); outside: UNSUPPORTED_FIELD (no zoom-out) |
 | `tracks.audio[].source` | render | y | n | extra audio tracks are not mixed: UNSUPPORTED_FIELD |
 | `tracks.audio[].gain_db` | render | y | n | not rendered |
 | `tracks.audio[].duck_under_speech` | render | y | n | not rendered |

@@ -16,11 +16,10 @@ from src.validate import validate
 ROOT = Path(__file__).resolve().parents[2]
 FIX = ROOT / "tests" / "fixtures" / "timelines"
 UNSUPPORTED_EXPECTED = {  # fixture -> exact (code, path) list
-    "u1_effects.json": [f"/tracks/effects/0/{k}" for k in ("at_ms", "duration_ms", "scale", "target", "type")]
-    + [f"/tracks/effects/1/{k}" for k in ("at_ms", "duration_ms", "target", "type")],
+    "u1_effects.json": ["/tracks/effects/0/scale"],  # H-0025: zoom renders; scale 0.8 (zoom-out) does not
     "u2_audio.json": [f"/tracks/audio/0/{k}" for k in ("duck_under_speech", "gain_db", "source")],
     "u3_crop_auto_face.json": ["/tracks/video/1/crop"],
-    "u4_caption_style.json": ["/tracks/captions/0/style", "/tracks/captions/2/style"],
+    "u4_caption_style.json": ["/tracks/captions/2/style"],  # H-0025: "hook" is a preset, "cta" is not
     "u5_dir_mismatch.json": ["/tracks/captions/2/dir"],
 }
 
@@ -121,3 +120,17 @@ def test_table_values_are_y_or_n() -> None:
 def test_find_reports_json_pointers() -> None:
     tl = copy.deepcopy(load("u1_effects.json"))
     assert [p for p, _ in cap.find(tl, "tracks.effects[].type")] == ["/tracks/effects/0/type", "/tracks/effects/1/type"]
+
+
+@pytest.mark.parametrize("scale, ok", [(1.0, True), (1.2, True), (2.0, True), (0.99, False), (2.01, False)])
+def test_zoom_scale_range(scale: float, ok: bool) -> None:
+    tl = load("u1_effects.json")
+    tl["tracks"]["effects"][0]["scale"] = scale
+    assert issues(tl) == ([] if ok else [("UNSUPPORTED_FIELD", "/tracks/effects/0/scale")])
+
+
+@pytest.mark.parametrize("preset", ["clean", "bold_box", "hook"])
+def test_every_preset_is_supported(preset: str) -> None:
+    tl = load("u4_caption_style.json")
+    tl["tracks"]["captions"][2]["style"] = preset
+    assert issues(tl) == []

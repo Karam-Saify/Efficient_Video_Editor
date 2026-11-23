@@ -1,4 +1,5 @@
-"""python -m src.validate timeline.json  — exits 0 if valid; exits 1 and prints one issue per line if invalid.
+"""python -m src.validate timeline.json [--allow-dev]  — exits 0 if valid; exits 1 and prints one issue per line
+if invalid.
 
 Relative source paths resolve against the current working directory (run from the repo root).
 
@@ -27,6 +28,8 @@ def load_timeline(path: Path) -> Any:
 
 
 def main(argv: list[str]) -> None:
+    allow_dev = "--allow-dev" in argv  # admit quarantine/dev/ sources (ADR-0006, dev testing only)
+    argv = [a for a in argv if a != "--allow-dev"]
     if len(argv) != 1:
         sys.exit(__doc__)
     try:
@@ -34,7 +37,7 @@ def main(argv: list[str]) -> None:
     except StageError as e:
         print(f"validate: error: {e}", file=sys.stderr)
         sys.exit(1)
-    errors = validate(tl)
+    errors = validate(tl, allow_dev=allow_dev)
     if errors:
         print("\n".join(map(str, errors)))
         sys.exit(1)

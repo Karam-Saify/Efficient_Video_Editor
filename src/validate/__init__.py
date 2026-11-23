@@ -21,10 +21,16 @@ Codes (rule numbers from brief H-0004 / ARCHITECTURE.md):
   E_EFFECT_TYPE     rule 7: effect `type` not in the schema enum
   E_DUPLICATE_ID    a source, clip or caption id is used twice
   E_EFFECT_TARGET   an effect `target` is not a video clip id
+  E_EFFECT_BOUNDS   an effect window [at_ms, at_ms + duration_ms) ends after the timeline end (H-0025)
   UNSUPPORTED_FIELD the field (or field value) is valid v0 but the renderer does not implement it, so it would
                     silently do nothing (H-0024 G2b). The list lives in src/capabilities.py (also the source of
                     docs/CAPABILITIES.md). Also raised for a caption `dir` that disagrees with the base
-                    direction libass will apply (first strong character). Checked only when the schema passes.
+                    direction libass will apply (first strong character), a caption `style` that is not a
+                    preset in src/presets.py, and a zoom `scale` outside [ZOOM_MIN_SCALE, ZOOM_MAX_SCALE]
+                    (H-0025). Checked only when the schema passes.
+
+`allow_dev=True` (H-0025, ADR-0006) lets a source live under `quarantine/dev/` only, for internal development
+testing; every other protected root stays refused. Only `python -m src.demo` sets it, and it says so.
 """
 from __future__ import annotations
 
@@ -38,9 +44,11 @@ import jsonschema
 from src.bidi import first_strong_dir
 from src.capabilities import unsupported_fields
 from src.common import ROOT, SCHEMA_PATH, read_json
+from src.presets import CAPTION_PRESETS, ZOOM_MAX_SCALE, ZOOM_MIN_SCALE
 
 # Repo-relative roots a timeline source may never point into (CONSTITUTION I-6 held-out, I-9 rights).
 PROTECTED_SOURCE_ROOTS = ("data/heldout", "data/golden", "quarantine")
+DEV_SOURCE_ROOT = "quarantine/dev"  # ADR-0006: internal development testing only; needs allow_dev=True
 
 # v0 says "integer milliseconds": a Python int, not an integral float and not a bool.
 _STRICT_TYPES = jsonschema.Draft202012Validator.TYPE_CHECKER.redefine(
@@ -116,7 +124,7 @@ def _duplicates(items: list[dict[str, Any]], prefix: str) -> list[Issue]:
     return out
 
 
-def _source_path_problem(raw: str, base_dir: Path) -> str | None:
+def _source_path_problem(raw: str, base_dir: Path, allow_dev: bool = False) -> str | None:
     """Why `raw` may not be used as a source path, or None.
 
     Never opens the file; it resolves path metadata only (`resolve()` runs lstat/readlink on the path
@@ -137,13 +145,15 @@ def _source_path_problem(raw: str, base_dir: Path) -> str | None:
     root = ROOT.resolve()
     if not resolved.is_relative_to(root):
         return "resolves outside the repository"
+    if allow_dev and resolved.is_relative_to(root / DEV_SOURCE_ROOT):
+        return None
     for r in PROTECTED_SOURCE_ROOTS:
         if resolved.is_relative_to(root / r):
             return f"is under the protected root '{r}/'"
     return None
 
 
-def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
+def semantic_issues(tl: dict[str, Any], base_dir: Path, allow_dev: bool = False) -> list[Issue]:
     """Assumes `tl` passed the structural part of the schema (no E_SCHEMA issues)."""
     errs: list[Issue] = []
     tracks = tl["tracks"]
@@ -154,7 +164,7 @@ def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
 
     # Rule 1: declared source files exist (the renderer opens every declared source); hash only if given.
     for i, s in enumerate(tl["sources"]):
-        why = _source_path_problem(s["path"], base_dir)
+        why = _source_path_problem(s["path"], base_dir, allow_dev)
         if why:
             errs.append(Issue("E_SOURCE_PATH", f"/sources/{i}/path", f"source '{s['id']}' path {s['path']!r} {why}"))
             continue
@@ -219,6 +229,9 @@ def semantic_issues(tl: dict[str, Any], base_dir: Path) -> list[Issue]:
         if eff["target"] not in clip_ids:
             errs.append(Issue("E_EFFECT_TARGET", f"/tracks/effects/{i}/target", f"effect target '{eff['target']}' "
                               "is not a video clip id"))
+        if eff["at_ms"] + eff["duration_ms"] > total:
+            errs.append(Issue("E_EFFECT_BOUNDS", f"/tracks/effects/{i}", f"effect window [{eff['at_ms']}, "
+                              f"{eff['at_ms'] + eff['duration_ms']}) ends after the timeline end ({total} ms)"))
     return errs
 
 
@@ -233,10 +246,18 @@ def support_issues(tl: dict[str, Any]) -> list[Issue]:
             errs.append(Issue("UNSUPPORTED_FIELD", f"/tracks/captions/{i}/dir", f"caption '{c['id']}' has dir "
                               f"'{c['dir']}' but the renderer lays it out '{laid_out}' (libass auto base direction "
                               "follows the first strong character; it cannot be forced)"))
+        if "style" in c and c["style"] not in CAPTION_PRESETS:
+            errs.append(Issue("UNSUPPORTED_FIELD", f"/tracks/captions/{i}/style", f"caption '{c['id']}' style "
+                              f"{c['style']!r} is not a renderer preset ({', '.join(CAPTION_PRESETS)})"))
+    for i, e in enumerate(tl["tracks"].get("effects", [])):
+        if "scale" in e and not ZOOM_MIN_SCALE <= e["scale"] <= ZOOM_MAX_SCALE:
+            errs.append(Issue("UNSUPPORTED_FIELD", f"/tracks/effects/{i}/scale", f"zoom scale {e['scale']} is outside "
+                              f"the rendered range [{ZOOM_MIN_SCALE}, {ZOOM_MAX_SCALE}] (punch-in only, no zoom-out)"))
     return sorted(errs, key=lambda e: e.path)
 
 
-def validate(tl: Any, base_dir: Path | None = None, *, check_support: bool = True) -> list[Issue]:
+def validate(tl: Any, base_dir: Path | None = None, *, check_support: bool = True,
+             allow_dev: bool = False) -> list[Issue]:
     """Return every issue found; empty list means valid. Relative source paths resolve against `base_dir`
     (default: the current working directory, which is what the renderer's ffmpeg call uses).
     `check_support=False` skips UNSUPPORTED_FIELD (tests of the schema/semantic rules only); the renderer
@@ -245,5 +266,5 @@ def validate(tl: Any, base_dir: Path | None = None, *, check_support: bool = Tru
     if any(e.code == "E_SCHEMA" for e in errs):
         return errs  # semantic rules need a well-formed document
     schema_ok = not errs  # coded schema errors (e.g. E_CAPTION_DIR) let semantics run, but not the support check
-    errs += semantic_issues(tl, base_dir if base_dir is not None else Path.cwd())
+    errs += semantic_issues(tl, base_dir if base_dir is not None else Path.cwd(), allow_dev)
     return errs + support_issues(tl) if check_support and schema_ok else errs

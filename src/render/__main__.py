@@ -1,4 +1,4 @@
-"""python -m src.render timeline.json out/short.mp4 [--preset veryfast] [--crf 20]
+"""python -m src.render timeline.json out/short.mp4 [--preset veryfast] [--crf 20] [--allow-dev]
 
 Stage-contract interface: not implemented yet (exits 2, `NOT_IMPLEMENTED: render`, no manifest; H-0024):
 
@@ -21,9 +21,10 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("out", type=Path)
     ap.add_argument("--preset", default="veryfast")
     ap.add_argument("--crf", type=int, default=20)
+    ap.add_argument("--allow-dev", action="store_true", help="admit quarantine/dev/ sources (ADR-0006, dev only)")
     a = ap.parse_args(argv)
     t0 = time.time()
-    render(read_json(a.timeline), a.out, a.preset, a.crf)
+    render(read_json(a.timeline), a.out, a.preset, a.crf, allow_dev=a.allow_dev)
     print(f"rendered {a.out} in {time.time() - t0:.1f}s")
 
 

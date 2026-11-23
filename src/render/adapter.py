@@ -3,7 +3,9 @@
 Input adapter only: the FFmpeg graph and ASS writer are unchanged (H-0004 keeps rendering out of scope).
 Fields the renderer does not implement are rejected by the validator (UNSUPPORTED_FIELD, src/capabilities.py,
 docs/CAPABILITIES.md; H-0024), so they never reach this adapter: clip `crop` other than centre,
-caption `style`, `effects`, `audio`. Caption `dir` is not passed on: ASS Encoding -1 lets libass pick the base
+`audio`, a caption `style` that is not a preset, a zoom `scale` outside the rendered range.
+H-0025: caption `style` (preset name, default clean) and zoom effects (`at`, `duration`, `scale` in seconds /
+factor) are passed on. Caption `dir` is not passed on: ASS Encoding -1 lets libass pick the base
 direction from the first strong character, and the validator rejects a `dir` that disagrees (experiments/E6.md).
 ms -> s conversion is code, never LLM (I-4).
 Source `has_audio` (optional, default true; H-0009) is passed through: false makes the FFmpeg graph use
@@ -12,6 +14,8 @@ silence (anullsrc) for that source's clips instead of `[i:a]`, so silent sources
 from __future__ import annotations
 
 from typing import Any
+
+from src.presets import DEFAULT_PRESET, ZOOM_DEFAULT_SCALE
 
 
 def to_render_model(tl: dict[str, Any]) -> dict[str, Any]:
@@ -25,6 +29,10 @@ def to_render_model(tl: dict[str, Any]) -> dict[str, Any]:
     }
     caps = tl["tracks"].get("captions", [])
     if caps:
-        model["captions"] = {"items": [{"text": t["text"], "start": t["start_ms"] / 1000, "end": t["end_ms"] / 1000}
-                                       for t in caps]}
+        model["captions"] = {"items": [{"text": t["text"], "start": t["start_ms"] / 1000, "end": t["end_ms"] / 1000,
+                                        "style": t.get("style", DEFAULT_PRESET)} for t in caps]}
+    effects = tl["tracks"].get("effects", [])
+    if effects:
+        model["zooms"] = [{"at": e["at_ms"] / 1000, "end": (e["at_ms"] + e["duration_ms"]) / 1000,
+                           "scale": e.get("scale", ZOOM_DEFAULT_SCALE)} for e in effects if e["type"] == "zoom"]
     return model

@@ -23,6 +23,7 @@ INVALID_EXPECTED = {  # fixture -> the one code it must produce (rule number in 
     "i5_duration.json": "E_DURATION",  # rule 5
     "i6_float_ms.json": "E_SCHEMA",  # H-0009: integral float (2000.0) where v0 needs an int
     "i7_source_path.json": "E_SOURCE_PATH",  # H-0009: source path escapes the repo
+    "i8_effect_bounds.json": "E_EFFECT_BOUNDS",  # H-0025: zoom window ends after the timeline end
 }
 
 
@@ -195,7 +196,7 @@ def test_render_accepts_valid_v0_timeline_dry_run(tmp_path: Path, monkeypatch: p
     graph = cmd[cmd.index("-filter_complex") + 1]
     assert "trim=start=2.0:end=8.0" in graph and "ass=filename=" in graph
     ass = (tmp_path / "o.ass").read_text(encoding="utf-8")
-    assert "Dialogue: 0,0:00:00.00,0:00:01.80,Default,,0,0,0,,السعر الحقيقي؟" in ass
+    assert "Dialogue: 0,0:00:00.00,0:00:01.80,clean,,0,0,0,,السعر الحقيقي؟" in ass
 
 
 def test_render_rejects_invalid_timeline(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -314,3 +315,14 @@ def test_e6_captions_is_deprecated_with_clear_error() -> None:
     r = subprocess.run([sys.executable, "experiments/e6_captions.py"], cwd=ROOT, capture_output=True, text=True,
                        timeout=60)
     assert r.returncode == 2 and "deprecated" in r.stderr and "Traceback" not in r.stderr
+
+
+def test_allow_dev_admits_quarantine_dev_only() -> None:
+    """ADR-0006: quarantine/dev/ is usable for dev testing only when the caller opts in; other roots never."""
+    from src.validate import DEV_SOURCE_ROOT, PROTECTED_SOURCE_ROOTS, _source_path_problem
+    dev = f"{DEV_SOURCE_ROOT}/x.mp4"
+    assert _source_path_problem(dev, ROOT) is not None
+    assert _source_path_problem(dev, ROOT, allow_dev=True) is None
+    others = [f"{r}/x.mp4" for r in PROTECTED_SOURCE_ROOTS] + [f"{DEV_SOURCE_ROOT}il/x.mp4"]
+    for p in others:
+        assert _source_path_problem(p, ROOT, allow_dev=True) is not None, p

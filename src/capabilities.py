@@ -59,16 +59,19 @@ FIELDS: tuple[Field, ...] = (
           "Arabic + Noto Sans, `\\fn` run tags); a character outside both fonts' ranges fails the render"),
     Field("tracks.captions[].start_ms", "render", "y", "y", "output time (E_CAPTION_BOUNDS)"),
     Field("tracks.captions[].end_ms", "render", "y", "y", "output time (E_CAPTION_BOUNDS)"),
-    Field("tracks.captions[].style", "render", "y", "n", "one default style only: UNSUPPORTED_FIELD "
-          "(presets arrive in H-0025)"),
+    Field("tracks.captions[].style", "render", "y", "y", "preset from src/presets.py: clean (default), bold_box, "
+          "hook; one ASS style each, EXP-008 pair, Regular weight, Encoding -1; any other name: UNSUPPORTED_FIELD"),
     Field("tracks.captions[].dir", "render", "y", "y", "libass auto base direction (ASS Encoding -1) follows the "
           "first strong character; a `dir` that disagrees with it cannot be rendered: UNSUPPORTED_FIELD"),
-    Field("tracks.effects[].type", "render", "y", "n", "effects are not rendered yet: UNSUPPORTED_FIELD "
-          "(zoom arrives in H-0025)"),
-    Field("tracks.effects[].target", "render", "y", "n", "must be a clip id (E_EFFECT_TARGET); not rendered"),
-    Field("tracks.effects[].at_ms", "render", "y", "n", "not rendered"),
-    Field("tracks.effects[].duration_ms", "render", "y", "n", "not rendered"),
-    Field("tracks.effects[].scale", "render", "y", "n", "not rendered"),
+    Field("tracks.effects[].type", "render", "y", "y", "zoom = punch-in on the output: centre crop by 1/scale, "
+          "scaled back to the canvas, instant in/out, under the captions (overlay with `enable`)"),
+    Field("tracks.effects[].target", "meta", "y", "n", "must be a clip id (E_EFFECT_TARGET); the clip that contains "
+          "at_ms, bookkeeping only (the zoom applies to output time)"),
+    Field("tracks.effects[].at_ms", "render", "y", "y", "output time, zoom start (E_EFFECT_BOUNDS)"),
+    Field("tracks.effects[].duration_ms", "render", "y", "y", "zoom length; window must end by the timeline end "
+          "(E_EFFECT_BOUNDS)"),
+    Field("tracks.effects[].scale", "render", "y", "y", "1.0 to 2.0, default 1.2 (src/presets.py); outside: "
+          "UNSUPPORTED_FIELD (no zoom-out)"),
     Field("tracks.audio[].source", "render", "y", "n", "extra audio tracks are not mixed: UNSUPPORTED_FIELD"),
     Field("tracks.audio[].gain_db", "render", "y", "n", "not rendered"),
     Field("tracks.audio[].duck_under_speech", "render", "y", "n", "not rendered"),

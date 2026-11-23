@@ -63,3 +63,29 @@ def test_multiline_caption_tags_each_line(tmp_path: Path) -> None:
 def test_unsupported_character_fails_the_render(tmp_path: Path) -> None:
     with pytest.raises(UnsupportedCharacter):
         _ass(tmp_path, [{"id": "a", "text": "שלום", "start_ms": 0, "end_ms": 1000, "dir": "rtl"}])
+
+
+def test_every_preset_is_an_ass_style_with_the_pair_regular_and_auto_direction(tmp_path: Path) -> None:
+    """H-0025: one ASS style per preset; each Dialogue line uses its caption's preset (default clean)."""
+    from src.presets import CAPTION_PRESETS
+    caps = [{"id": n, "text": "مرحبا Link", "start_ms": i * 500, "end_ms": i * 500 + 400, "dir": "rtl", "style": n}
+            for i, n in enumerate(CAPTION_PRESETS)]
+    caps.append({"id": "d", "text": "plain", "start_ms": 1600, "end_ms": 1900, "dir": "ltr"})
+    ass = _ass(tmp_path, caps)
+    styles = [ln[len("Style: "):].split(",") for ln in ass.splitlines() if ln.startswith("Style:")]
+    assert [s[0] for s in styles] == list(CAPTION_PRESETS)
+    assert all(s[1] == "Noto Sans Arabic" and s[7] == "0" and s[-1] == "-1" for s in styles)
+    used = [ln.split(",")[3] for ln in ass.splitlines() if ln.startswith("Dialogue:")]
+    assert used == [*CAPTION_PRESETS, "clean"]
+
+
+def test_zoom_is_an_enabled_overlay_before_the_captions(tmp_path: Path) -> None:
+    from src.render import build_command
+    tl = json.loads((ROOT / "tests/fixtures/timelines/valid/v4_effects_zoom.json").read_text("utf-8"))
+    graph = build_command(to_render_model(tl), tmp_path / "o.mp4", tmp_path / "o.ass", "veryfast", 20)
+    graph = graph[graph.index("-filter_complex") + 1]
+    assert "crop=w=trunc(iw/1.15/2)*2:h=trunc(ih/1.15/2)*2,scale=1080:1920" in graph
+    assert "enable='gte(t,1.0)*lt(t,1.4)'" in graph and "enable='gte(t,5.0)*lt(t,5.3)'" in graph  # default 1.2
+    assert "crop=w=trunc(iw/1.2/2)*2" in graph
+    assert graph.index("[z1]ass=filename=") > graph.index("overlay")
+    assert "[0:v]fps=30,trim=start=0.0:end=4.0" in graph  # fps before trim: frame-exact cuts
