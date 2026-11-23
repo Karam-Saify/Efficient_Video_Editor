@@ -54,3 +54,9 @@
 - Evidence: company/handoffs/H-0024-return.md; ruff clean; 221 passed + 8 skipped; out/h0024/frame_ar_en.png libass resolves only NotoSansArabic-Regular + NotoSans-Regular, byte-identical on rerun.
 - Learned: ASS cannot force RTL (Encoding -1 = first strong char), so `dir` is only honest when it matches that; Download (2)=(4) duplicate; faster-whisper reports en 0.601 on no-speech clips; dev set has no Arabic speech clip.
 - Next: H-0025 flips style/zoom rows in src/capabilities.py; resolve majority-vs-first-strong dir for Latin-initial Arabic lines.
+
+### 2026-11-23 · H-0025 · T2 · DONE
+- Did: G4 pure edit ops (trim/delete_words/set_caption_style/add_zoom/set_duration, frame-grid snapping, caption re-timing, History+undo); G4 render presets clean/bold_box/hook + punch-in zoom, E_EFFECT_BOUNDS, fps-before-trim; G5 `python -m src.demo` + 3 rule-based ops files; 3 English runs + weak Arabic run. Commits cd00569, 8352262, c7b9690 (not pushed).
+- Evidence: company/handoffs/H-0025-return.md; ruff clean; 266 passed + 8 skipped; all runs within 1 frame of timeline; run 1 rerun byte-identical mp4/timeline/ass; fontselect only the EXP-008 pair.
+- Learned: validator's quarantine protection blocks dev renders, so I added an explicit allow_dev opt-in (D1, needs Assurance ruling); "no ASR words" is not silence on music clips; tail snap in source time can land exactly at the 1-frame limit.
+- Next: Assurance H-0026 reproduces run 1; fix tail snap to output grid; audio-energy gap test with creative-lead.
